@@ -33,6 +33,7 @@ public class PrimaryDrive extends LinearOpMode {
         spinner=hardwareMap.crservo.get("servo2");
         tilt=hardwareMap.servo.get("servoE5");
 
+        spinnerPivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Reset Encoder
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -42,10 +43,10 @@ public class PrimaryDrive extends LinearOpMode {
         // On Play
         while(opModeIsActive()) {
             /// LINEAR SLIDE
-            if (gamepad2.left_stick_y<-.4 && linearSlide.getCurrentPosition()>-10000) {
+            if (gamepad2.left_stick_y<-.4 && linearSlide.getCurrentPosition()>-6000) {
                 linearSlide.setPower(.3);
             }
-            else if(gamepad2.left_stick_y>.4&&linearSlide.getCurrentPosition()<-600){
+            else if(gamepad2.left_stick_y>.4&&linearSlide.getCurrentPosition()<0){
                 linearSlide.setPower(-.3);
             } else {
                 linearSlide.setPower(0);
@@ -53,10 +54,10 @@ public class PrimaryDrive extends LinearOpMode {
             telemetry.addData("Current Pos", linearSlide.getCurrentPosition());
             // SPINNER PIVOT
             if(gamepad2.right_stick_y>.4) {
-                spinnerPivot.setPower(.5);
+                spinnerPivot.setPower(-.6);
             } else if(gamepad2.right_stick_y<-.4) {
-                spinnerPivot.setPower(-.5);
-            } else {
+                spinnerPivot.setPower(.6);
+            } else{
                 spinnerPivot.setPower(0);
             }
             // SPINNER

@@ -40,7 +40,6 @@ public class PrimaryDrive extends LinearOpMode {
         waitForStart();
         // Making the Drive Class
         MecanumDrive drive = new MecanumDrive(leftFront, leftRear, rightFront, rightRear, .7, false, false, true, true);
-        // On Play
         while(opModeIsActive()) {
             /// LINEAR SLIDE
             if (gamepad2.left_stick_y<-.4 && linearSlide.getCurrentPosition()>-6000) {
@@ -48,7 +47,7 @@ public class PrimaryDrive extends LinearOpMode {
             }
             else if(gamepad2.left_stick_y>.4&&linearSlide.getCurrentPosition()<0){
                 linearSlide.setPower(-.3);
-            } else {
+            } else{
                 linearSlide.setPower(0);
             }
             telemetry.addData("Current Pos", linearSlide.getCurrentPosition());

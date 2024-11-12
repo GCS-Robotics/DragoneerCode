@@ -81,25 +81,25 @@ public class PrimaryDrive extends LinearOpMode {
             if (Math.abs(gamepad1.right_stick_x) >.4) { // If the right stick is being moved sufficiently
                 // Tank Turn
                 if(gamepad1.right_stick_x>.4) {
-                    drive.turnRightTank(1);
+                    drive.turnRightTank(1*gamepad1.right_stick_x);
                 }
                 if(gamepad1.right_stick_x<-.4) {
-                    drive.turnLeftTank(1);
+                    drive.turnLeftTank(1*-gamepad1.right_stick_x);
                 }
             } else if(Math.abs(gamepad1.left_stick_x)>.4 || Math.abs(gamepad1.left_stick_y)>.4) { // If the left stick is being moved sufficiently
                 // Forward/Back
                 if (gamepad1.left_stick_y < -.4 && Math.abs(gamepad1.left_stick_x) < .4) {
-                    drive.moveForward(1);
+                    drive.moveForward(1*-gamepad1.left_stick_y);
                 }
                 if (gamepad1.left_stick_y > .4 && Math.abs(gamepad1.left_stick_x) < .4) {
-                    drive.moveBackward(1);
+                    drive.moveBackward(1*gamepad1.left_stick_y);
                 }
                 // Left/Right
                 if (gamepad1.left_stick_x < -.4 && Math.abs(gamepad1.left_stick_y) < .4) {
-                    drive.moveRight(1);
+                    drive.moveRight(1*-gamepad1.left_stick_x);
                 }
                 if (gamepad1.left_stick_x > .4 && Math.abs(gamepad1.left_stick_y) < .4) {
-                    drive.moveLeft(1);
+                    drive.moveLeft(1*gamepad1.left_stick_x);
                 }
                 // Diagonals
                 if (gamepad1.left_stick_y < -.4 && gamepad1.left_stick_x > .4) {

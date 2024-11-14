@@ -37,21 +37,21 @@ public class PrimaryDrive extends LinearOpMode {
         spinnerPivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Reset Encoder
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlide.setTargetPosition(linearSlide.getCurrentPosition());
-        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         waitForStart();
         // Making the Drive Class
         MecanumDrive drive = new MecanumDrive(leftFront, leftRear, rightFront, rightRear, .7, false, false, true, true);
         while(opModeIsActive()) {
             /// LINEAR SLIDE
-            if (gamepad2.left_stick_y<-.4){
-                linearSlide.setPower(1);
+            if (gamepad2.left_stick_y<-.4 && linearSlide.getCurrentPosition()>-4200) {
+                linearSlide.setPower(.5);
             }
-            if (gamepad2.left_stick_y>.4){
-                linearSlide.setPower(-1);
-            } else{
+            else if(gamepad2.left_stick_y>.4){
+                linearSlide.setPower(-.5);
+            } else {
                 linearSlide.setPower(0);
             }
+            telemetry.addData("Y-Stick", gamepad2.left_stick_y);
             telemetry.addData("Current Pos", linearSlide.getCurrentPosition());
             // SPINNER PIVOT
             if(gamepad2.right_stick_y>.4) {
@@ -79,6 +79,7 @@ public class PrimaryDrive extends LinearOpMode {
             telemetry.addData("Basket Position: ", tilt.getPosition());
             telemetry.update();
             // DRIVING
+            // TODO: Add QOL Driving Updates
             if (Math.abs(gamepad1.right_stick_x) >.4) { // If the right stick is being moved sufficiently
                 // Tank Turn
                 if(gamepad1.right_stick_x>.4) {

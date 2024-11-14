@@ -6,7 +6,7 @@ public class MecanumDrive {
     // All the motors
     private final DcMotor frontLeft, frontRight, backLeft, backRight;
     // The factor by which all motor speeds should be multiplied
-    private final double driveSpeed;
+    private double driveSpeed;
     // Used in case motor spins opposite way as intended. Set as -1 or 1
     private final int fLFactor, fRFactor, bLFactor, bRFactor;
 
@@ -249,5 +249,12 @@ public class MecanumDrive {
         backLeft.setPower(0);
         frontRight.setPower(0);
         backRight.setPower(0);
+    }
+    /**
+    * Sets the Driving Speed to whatever double you input.
+     * @param newSpeed Sets the new speed of the robot.
+     */
+    public void setDriveSpeed(double newSpeed){
+        driveSpeed=newSpeed;
     }
 }

@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -36,17 +37,18 @@ public class PrimaryDrive extends LinearOpMode {
         spinnerPivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Reset Encoder
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        linearSlide.setTargetPosition(linearSlide.getCurrentPosition());
+        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         waitForStart();
         // Making the Drive Class
         MecanumDrive drive = new MecanumDrive(leftFront, leftRear, rightFront, rightRear, .7, false, false, true, true);
         while(opModeIsActive()) {
             /// LINEAR SLIDE
-            if (gamepad2.left_stick_y<-.4 && linearSlide.getCurrentPosition()>-6000) {
-                linearSlide.setPower(.3);
+            if (gamepad2.left_stick_y<-.4){
+                linearSlide.setPower(1);
             }
-            else if(gamepad2.left_stick_y>.4&&linearSlide.getCurrentPosition()<0){
-                linearSlide.setPower(-.3);
+            if (gamepad2.left_stick_y>.4){
+                linearSlide.setPower(-1);
             } else{
                 linearSlide.setPower(0);
             }

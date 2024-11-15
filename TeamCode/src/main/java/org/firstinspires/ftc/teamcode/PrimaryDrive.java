@@ -39,6 +39,7 @@ public class PrimaryDrive extends LinearOpMode {
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         waitForStart();
+        tilt.setPosition(.5);
         // Making the Drive Class
         MecanumDrive drive = new MecanumDrive(leftFront, leftRear, rightFront, rightRear, .7, false, false, true, true);
         while(opModeIsActive()) {
@@ -80,6 +81,13 @@ public class PrimaryDrive extends LinearOpMode {
             /// DRIVING
             // QOL #1: Set the Speed
             double speed = 1-gamepad1.right_trigger;
+            if(speed<=0.1){
+                speed=.1;
+            }
+            // QOL #2: Reverse Controls
+            if(gamepad1.left_trigger>.3){
+                speed=speed*(-1);
+            }
             drive.setDriveSpeed(speed);
             telemetry.addData("Speed", speed);
             if (Math.abs(gamepad1.right_stick_x) >.4) { // If the right stick is being moved sufficiently

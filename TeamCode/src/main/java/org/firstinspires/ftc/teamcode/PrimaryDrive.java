@@ -53,7 +53,7 @@ public class PrimaryDrive extends LinearOpMode {
             }
             telemetry.addData("Y-Stick", gamepad2.left_stick_y);
             telemetry.addData("Current Pos", linearSlide.getCurrentPosition());
-            // SPINNER PIVOT
+            /// SPINNER PIVOT
             if(gamepad2.right_stick_y>.4) {
                 spinnerPivot.setPower(-.6);
             } else if(gamepad2.right_stick_y<-.4) {
@@ -61,7 +61,7 @@ public class PrimaryDrive extends LinearOpMode {
             } else{
                 spinnerPivot.setPower(0);
             }
-            // SPINNER
+            /// SPINNER
             if(gamepad2.right_bumper) {
                 spinner.setPower(.7);
             } else if(gamepad2.left_bumper) {
@@ -69,17 +69,19 @@ public class PrimaryDrive extends LinearOpMode {
             } else {
                 spinner.setPower(0);
             }
-            // TILT
+            /// TILT
             if(gamepad2.a) {
                 tilt.setPosition(tilt.getPosition()-.01);
             } if(gamepad2.b) {
                 tilt.setPosition(tilt.getPosition()+.01);
             }
-            // TELEMETRY
+            // Telemetry Stuff
             telemetry.addData("Basket Position: ", tilt.getPosition());
-            telemetry.update();
-            // DRIVING
-            // TODO: Add QOL Driving Updates
+            /// DRIVING
+            // QOL #1: Set the Speed
+            double speed = 1-gamepad1.right_trigger;
+            drive.setDriveSpeed(speed);
+            telemetry.addData("Speed", speed);
             if (Math.abs(gamepad1.right_stick_x) >.4) { // If the right stick is being moved sufficiently
                 // Tank Turn
                 if(gamepad1.right_stick_x>.4) {
@@ -119,6 +121,7 @@ public class PrimaryDrive extends LinearOpMode {
             } else { // If the sticks aren't being touched
                 drive.stop();
             }
+            telemetry.update();
         }
     }
 }

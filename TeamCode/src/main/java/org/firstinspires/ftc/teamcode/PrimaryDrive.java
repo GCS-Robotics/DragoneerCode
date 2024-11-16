@@ -24,26 +24,57 @@ public class PrimaryDrive extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        // On Init (Hardwaremap Motors Here)
+        // Motor Inits
         leftFront=hardwareMap.dcMotor.get("motor1");
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftRear=hardwareMap.dcMotor.get("motor2");
         rightFront=hardwareMap.dcMotor.get("motor3");
         rightRear=hardwareMap.dcMotor.get("motor4");
+        // Setting Brake Mode for Motors
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // More Motor Inits
         linearSlide=hardwareMap.dcMotor.get("motor5");
         spinnerPivot=hardwareMap.dcMotor.get("motor6");
+        spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        spinnerPivot.setTargetPosition(0);
+        spinnerPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         spinner=hardwareMap.crservo.get("servo2");
         tilt=hardwareMap.servo.get("servoE5");
-
+        spinnerPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         spinnerPivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Reset Encoder
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        linearSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        linearSlide.setTargetPosition(linearSlide.getCurrentPosition());
+        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         waitForStart();
-        tilt.setPosition(.5);
+        tilt.setPosition(1);
         // Making the Drive Class
         MecanumDrive drive = new MecanumDrive(leftFront, leftRear, rightFront, rightRear, .7, false, false, true, true);
         while(opModeIsActive()) {
             /// LINEAR SLIDE
+            if(gamepad2.dpad_up){
+                linearSlide.setTargetPosition(4200);
+                linearSlide.setPower(1);
+            }
+            if(gamepad2.dpad_left||gamepad2.dpad_right){
+                linearSlide.setTargetPosition(2400);
+                linearSlide.setPower(1);
+            }
+            if(gamepad2.dpad_down){
+                linearSlide.setTargetPosition(0);
+                if(linearSlide.getCurrentPosition()>0){
+                    linearSlide.setPower(1);
+                } else{
+                    linearSlide.setPower(0);
+                }
+            }
+            /*
             if (gamepad2.left_stick_y<-.4 && linearSlide.getCurrentPosition()>-4200) {
                 linearSlide.setPower(.5);
             }
@@ -52,6 +83,7 @@ public class PrimaryDrive extends LinearOpMode {
             } else {
                 linearSlide.setPower(0);
             }
+            */
             telemetry.addData("Y-Stick", gamepad2.left_stick_y);
             telemetry.addData("Current Pos", linearSlide.getCurrentPosition());
             /// SPINNER PIVOT
@@ -91,6 +123,10 @@ public class PrimaryDrive extends LinearOpMode {
             drive.setDriveSpeed(speed);
             telemetry.addData("Speed", speed);
             if (Math.abs(gamepad1.right_stick_x) >.4) { // If the right stick is being moved sufficiently
+                if(speed<0){
+                    speed=Math.abs(speed);
+                    drive.setDriveSpeed(speed);
+                }
                 // Tank Turn
                 if(gamepad1.right_stick_x>.4) {
                     drive.turnRightTank(1*gamepad1.right_stick_x);

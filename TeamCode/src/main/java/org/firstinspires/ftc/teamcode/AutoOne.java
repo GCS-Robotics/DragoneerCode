@@ -42,7 +42,8 @@ public class AutoOne extends LinearOpMode {
         spinner=hardwareMap.crservo.get("servo2");
         tilt=hardwareMap.servo.get("servoE5");
         spinnerPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        spinnerPivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Reset Encoder
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlide.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -63,7 +64,33 @@ public class AutoOne extends LinearOpMode {
         imu.resetYaw();
         easy = new easyIMU(imu);
         waitForStart();
-
+        // Arm
+        while(spinnerPivot.getCurrentPosition()>-420&&opModeIsActive()){
+            spinnerPivot.setPower(-.6);
+            telemetry.addData("Pos", spinnerPivot.getCurrentPosition());
+            telemetry.update();
+        }
+        spinnerPivot.setPower(0);
+        // Movement
+        while(leftFront.getCurrentPosition()>-250&&opModeIsActive()){
+            drive.moveForward(.5);
+            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
+            telemetry.update();
+        }
+        drive.stop();
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // Strafe
+        while(leftFront.getCurrentPosition()<1000&&opModeIsActive()){
+            drive.moveRight(.5);
+            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
+            telemetry.update();
+        }
+        drive.stop();
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        /*
+        // Turn
         while(turn(easy.getYaw(), 90)&&opModeIsActive()){
             drive.turnLeftTank(.5);
             telemetry.addData("Yaw", easy.getYaw());
@@ -72,16 +99,18 @@ public class AutoOne extends LinearOpMode {
         drive.stop();
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // Movement
         while(move(leftFront.getCurrentPosition(), -2000)&&opModeIsActive()){
             drive.moveForward(.5);
             telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
             telemetry.update();
         }
         drive.stop();
-        while(move(linearSlide.getCurrentPosition(), 4200)&&opModeIsActive()    ){
+        while(move(linearSlide.getCurrentPosition(), 4200)&&opModeIsActive()){
             linearSlide.setTargetPosition(4200);
             linearSlide.setPower(1);
         }
+         */
     }
     private static boolean turn(double degrees, double goal){
         return !(goal - 1 < degrees) || !(degrees < goal + 1);

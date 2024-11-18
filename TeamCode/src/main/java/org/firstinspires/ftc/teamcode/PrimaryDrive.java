@@ -40,12 +40,10 @@ public class PrimaryDrive extends LinearOpMode {
         linearSlide=hardwareMap.dcMotor.get("motor5");
         spinnerPivot=hardwareMap.dcMotor.get("motor6");
         spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        spinnerPivot.setTargetPosition(0);
-        spinnerPivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        spinner=hardwareMap.crservo.get("servo2");
-        tilt=hardwareMap.servo.get("servoE5");
         spinnerPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         spinnerPivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        spinner=hardwareMap.crservo.get("servo2");
+        tilt=hardwareMap.servo.get("servoE5");
         // Reset Encoder
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlide.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -59,31 +57,25 @@ public class PrimaryDrive extends LinearOpMode {
         while(opModeIsActive()) {
             /// LINEAR SLIDE
             if(gamepad2.dpad_up){
+                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 linearSlide.setTargetPosition(4200);
                 linearSlide.setPower(1);
             }
             if(gamepad2.dpad_left||gamepad2.dpad_right){
+                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 linearSlide.setTargetPosition(2400);
                 linearSlide.setPower(1);
             }
             if(gamepad2.dpad_down){
+                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 linearSlide.setTargetPosition(0);
-                if(linearSlide.getCurrentPosition()>0){
+                if(linearSlide.getCurrentPosition()>10){
                     linearSlide.setPower(1);
                 } else{
                     linearSlide.setPower(0);
+                    linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 }
             }
-            /*
-            if (gamepad2.left_stick_y<-.4 && linearSlide.getCurrentPosition()>-4200) {
-                linearSlide.setPower(.5);
-            }
-            else if(gamepad2.left_stick_y>.4){
-                linearSlide.setPower(-.5);
-            } else {
-                linearSlide.setPower(0);
-            }
-            */
             telemetry.addData("Y-Stick", gamepad2.left_stick_y);
             telemetry.addData("Current Pos", linearSlide.getCurrentPosition());
             /// SPINNER PIVOT

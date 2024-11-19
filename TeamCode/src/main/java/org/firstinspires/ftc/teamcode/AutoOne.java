@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@Autonomous(name="Autonomous One")
+@Autonomous(name="Start @F2")
 public class AutoOne extends LinearOpMode {
     // Normal Drive Stuffs
     DcMotor leftFront;
@@ -29,7 +29,7 @@ public class AutoOne extends LinearOpMode {
     IMU imu;
     IMU.Parameters params;
     MecanumDrive drive;
-    easyIMU easy;
+    EasyIMU easy;
     @Override
     public void runOpMode() throws InterruptedException {
         // Other Stuff
@@ -64,11 +64,12 @@ public class AutoOne extends LinearOpMode {
         );
         imu.initialize(params);
         imu.resetYaw();
-        easy = new easyIMU(imu);
+        easy = new EasyIMU(imu);
         waitForStart();
         // Arm
         while(spinnerPivot.getCurrentPosition()>-420&&opModeIsActive()){
             spinnerPivot.setPower(-.6);
+            telemetry.addData("Current Maneuver", "Hammer Down");
             telemetry.addData("Pos", spinnerPivot.getCurrentPosition());
             telemetry.update();
         }
@@ -76,6 +77,7 @@ public class AutoOne extends LinearOpMode {
         // Movement
         while(leftFront.getCurrentPosition()>-250&&opModeIsActive()){
             drive.moveForward(.5);
+            telemetry.addData("Current Maneuver", "Going Forward");
             telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
             telemetry.update();
         }
@@ -85,6 +87,7 @@ public class AutoOne extends LinearOpMode {
         // Strafe
         while(leftFront.getCurrentPosition()<900&&opModeIsActive()){
             drive.moveRight(.5);
+            telemetry.addData("Current Maneuver", "Strafing");
             telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
             telemetry.update();
         }
@@ -97,42 +100,116 @@ public class AutoOne extends LinearOpMode {
         while(spinnerPivot.getCurrentPosition()<400&&opModeIsActive()){
             tilt.setPosition(1);
             spinnerPivot.setPower(.1);
+            telemetry.addData("Current Maneuver", "Hammer Up");
             telemetry.addData("Pos", spinnerPivot.getCurrentPosition());
             telemetry.update();
         }
         spinnerPivot.setPower(0);
         // Outtaking the Sample
         double beforeMove = System.currentTimeMillis();
-        double finishTime = 2000;
+        double finishTime = 1500;
         while(System.currentTimeMillis()-beforeMove<finishTime&&opModeIsActive()){
             spinner.setPower(.7);
+            telemetry.addData("Current Maneuver", "Transferring Sample");
+            telemetry.update();
         }
         spinner.setPower(0);
         // Setting down the Spinner
-        while(spinnerPivot.getCurrentPosition()>-420&&opModeIsActive()){
+        while(spinnerPivot.getCurrentPosition()>-50&&opModeIsActive()){
+            spinnerPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // Temporarily changing the zero behavior
             spinnerPivot.setPower(-.6);
+            telemetry.addData("Current Maneuver", "Put Down Spinner");
             telemetry.addData("Pos", spinnerPivot.getCurrentPosition());
             telemetry.update();
         }
         spinnerPivot.setPower(0);
         // Bringing up the Slide
-        while(move(linearSlide.getCurrentPosition(), 1000)&&opModeIsActive()){
-            linearSlide.setTargetPosition(1000);
+        while(move(linearSlide.getCurrentPosition(), 4000)&&opModeIsActive()){
+            spinnerPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // Changing it back to normal
+            linearSlide.setTargetPosition(4000);
             linearSlide.setPower(1);
+            telemetry.addData("Current Maneuver", "Linear Slide Up");
+            telemetry.update();
         }
         // Turning a bit
-        while(turn(easy.getYaw(), -10)&&opModeIsActive()){
-            drive.turnRightTank(.5);
+        imu.resetYaw();
+        while(turn(easy.getYaw(), -50)&&opModeIsActive()){
+            drive.turnRightTank(.2);
+            telemetry.addData("Current Maneuver", "Turn -50");
             telemetry.addData("Yaw", easy.getYaw());
             telemetry.update();
         }
+        drive.stop();
+        // Strafing a bit
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        while(leftFront.getCurrentPosition()<400&&opModeIsActive()){
+            drive.moveRight(.3);
+            telemetry.addData("Current Maneuver", "Strafing a Smidge");
+            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
+            telemetry.update();
+        }
+        drive.stop();
+        // Bringing down the Slide
+        while(move(linearSlide.getCurrentPosition(), 0)&&opModeIsActive()){
+            linearSlide.setTargetPosition(0);
+            linearSlide.setPower(1);
+            tilt.setPosition(.5);
+            telemetry.addData("Current Maneuver", "Linear Slide Down");
+            telemetry.update();
+        }
+        // Strafing Back
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        while(leftFront.getCurrentPosition()>-400&&opModeIsActive()){
+            drive.moveLeft(.3);
+            telemetry.addData("Current Maneuver", "Strafing a Smidge");
+            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
+            telemetry.update();
+        }
+        drive.stop();
+        // Turning Back
+        imu.resetYaw();
+        while(turn(easy.getYaw(), 50)&&opModeIsActive()){
+            drive.turnLeftTank(.5);
+            telemetry.addData("Current Maneuver", "Turn -50");
+            telemetry.addData("Yaw", easy.getYaw());
+            telemetry.update();
+        }
+        drive.stop();
+        // Strafe
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        while(leftFront.getCurrentPosition()>-4500&&opModeIsActive()){
+            drive.moveLeft(.5);
+            telemetry.addData("Current Maneuver", "Strafing");
+            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
+            telemetry.update();
+        }
+        drive.stop();
+        // Movement
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        while(leftFront.getCurrentPosition()<250&&opModeIsActive()){
+            drive.moveBackward(.5);
+            telemetry.addData("Current Maneuver", "Going Backward");
+            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
+            telemetry.update();
+        }
+        // Finished!
+        while(opModeIsActive()){
+            telemetry.addData("Current Maneuver", "Done!");
+            telemetry.update();
+        }
+        /*
         // Out-taking the sample
         beforeMove = System.currentTimeMillis();
         finishTime = 1000;
         while(System.currentTimeMillis()-beforeMove<finishTime&&opModeIsActive()){
-            tilt.setPosition(.5);
+            tilt.setPosition(.7);
         }
         tilt.setPosition(1);
+         */
         /*
         // Turn
         while(turn(easy.getYaw(), 90)&&opModeIsActive()){
@@ -161,26 +238,5 @@ public class AutoOne extends LinearOpMode {
     }
     private static boolean move(double encoderValue, double goal){
         return !(goal -1 < encoderValue) || !(encoderValue < goal+1);
-    }
-    private class easyIMU{
-        IMU imu;
-        public easyIMU(IMU i){
-            imu = i;
-        }
-        public double getYaw(){
-            YawPitchRollAngles orientation;
-            orientation = imu.getRobotYawPitchRollAngles();
-            return orientation.getYaw(AngleUnit.DEGREES);
-        }
-        public double getRoll(){
-            YawPitchRollAngles orientation;
-            orientation = imu.getRobotYawPitchRollAngles();
-            return orientation.getRoll(AngleUnit.DEGREES);
-        }
-        public double getPitch(){
-            YawPitchRollAngles orientation;
-            orientation = imu.getRobotYawPitchRollAngles();
-            return orientation.getPitch(AngleUnit.DEGREES);
-        }
     }
 }

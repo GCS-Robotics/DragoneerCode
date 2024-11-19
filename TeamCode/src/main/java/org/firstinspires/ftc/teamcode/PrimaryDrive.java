@@ -104,7 +104,7 @@ public class PrimaryDrive extends LinearOpMode {
             telemetry.addData("Basket Position: ", tilt.getPosition());
             /// DRIVING
             // QOL #1: Set the Speed
-            double speed = 1-gamepad1.right_trigger;
+            double speed = 1-(gamepad1.right_trigger/1.5);
             if(speed<=0.1){
                 speed=.1;
             }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.System.currentTimeMillis;
+
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -81,7 +83,7 @@ public class AutoOne extends LinearOpMode {
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Strafe
-        while(leftFront.getCurrentPosition()<1000&&opModeIsActive()){
+        while(leftFront.getCurrentPosition()<900&&opModeIsActive()){
             drive.moveRight(.5);
             telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
             telemetry.update();
@@ -89,6 +91,48 @@ public class AutoOne extends LinearOpMode {
         drive.stop();
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // Bringing Hammer Up
+        while(spinnerPivot.getCurrentPosition()<400&&opModeIsActive()){
+            tilt.setPosition(1);
+            spinnerPivot.setPower(.1);
+            telemetry.addData("Pos", spinnerPivot.getCurrentPosition());
+            telemetry.update();
+        }
+        spinnerPivot.setPower(0);
+        // Outtaking the Sample
+        double beforeMove = System.currentTimeMillis();
+        double finishTime = 2000;
+        while(System.currentTimeMillis()-beforeMove<finishTime&&opModeIsActive()){
+            spinner.setPower(.7);
+        }
+        spinner.setPower(0);
+        // Setting down the Spinner
+        while(spinnerPivot.getCurrentPosition()>-420&&opModeIsActive()){
+            spinnerPivot.setPower(-.6);
+            telemetry.addData("Pos", spinnerPivot.getCurrentPosition());
+            telemetry.update();
+        }
+        spinnerPivot.setPower(0);
+        // Bringing up the Slide
+        while(move(linearSlide.getCurrentPosition(), 1000)&&opModeIsActive()){
+            linearSlide.setTargetPosition(1000);
+            linearSlide.setPower(1);
+        }
+        // Turning a bit
+        while(turn(easy.getYaw(), -10)&&opModeIsActive()){
+            drive.turnRightTank(.5);
+            telemetry.addData("Yaw", easy.getYaw());
+            telemetry.update();
+        }
+        // Out-taking the sample
+        beforeMove = System.currentTimeMillis();
+        finishTime = 1000;
+        while(System.currentTimeMillis()-beforeMove<finishTime&&opModeIsActive()){
+            tilt.setPosition(.5);
+        }
+        tilt.setPosition(1);
         /*
         // Turn
         while(turn(easy.getYaw(), 90)&&opModeIsActive()){

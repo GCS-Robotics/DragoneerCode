@@ -105,7 +105,7 @@ public class AutoOne extends LinearOpMode {
             telemetry.update();
         }
         spinnerPivot.setPower(0);
-        // Outtaking the Sample
+        // Transferring the Sample
         double beforeMove = System.currentTimeMillis();
         double finishTime = 1500;
         while(System.currentTimeMillis()-beforeMove<finishTime&&opModeIsActive()){
@@ -115,7 +115,7 @@ public class AutoOne extends LinearOpMode {
         }
         spinner.setPower(0);
         // Setting down the Spinner
-        while(spinnerPivot.getCurrentPosition()>-50&&opModeIsActive()){
+        while(spinnerPivot.getCurrentPosition()>50&&opModeIsActive()){
             spinnerPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // Temporarily changing the zero behavior
             spinnerPivot.setPower(-.6);
             telemetry.addData("Current Maneuver", "Put Down Spinner");
@@ -140,18 +140,45 @@ public class AutoOne extends LinearOpMode {
             telemetry.update();
         }
         drive.stop();
-        // Strafing a bit
+        // Going back a bit
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        while(leftFront.getCurrentPosition()<400&&opModeIsActive()){
-            drive.moveRight(.3);
+        while(leftFront.getCurrentPosition()<140&&opModeIsActive()){
+            drive.moveBackward(.3);
             telemetry.addData("Current Maneuver", "Strafing a Smidge");
             telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
             telemetry.update();
         }
         drive.stop();
+        // Outtaking the Sample
+        beforeMove = System.currentTimeMillis();
+        finishTime = 2000;
+        while(System.currentTimeMillis()-beforeMove<finishTime&&opModeIsActive()){
+            tilt.setPosition(.6);
+            telemetry.addData("Current Maneuver", "Outtaking Sample");
+            telemetry.update();
+        }
+        // Going forward a bit
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        while(leftFront.getCurrentPosition()>-160&&opModeIsActive()){
+            tilt.setPosition(1);
+            drive.moveForward(.3);
+            telemetry.addData("Current Maneuver", "Strafing a Smidge");
+            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
+            telemetry.update();
+        }
+        drive.stop();
+        // Return the Tilt
+        beforeMove = System.currentTimeMillis();
+        finishTime = 500;
+        while(System.currentTimeMillis()-beforeMove<finishTime&&opModeIsActive()){
+            tilt.setPosition(.5);
+            telemetry.addData("Current Maneuver", "Returning Position");
+            telemetry.update();
+        }
         // Bringing down the Slide
-        while(move(linearSlide.getCurrentPosition(), 0)&&opModeIsActive()){
+        while(linearSlide.getCurrentPosition()>500&&opModeIsActive()){
             linearSlide.setTargetPosition(0);
             linearSlide.setPower(1);
             tilt.setPosition(.5);
@@ -170,9 +197,9 @@ public class AutoOne extends LinearOpMode {
         drive.stop();
         // Turning Back
         imu.resetYaw();
-        while(turn(easy.getYaw(), 50)&&opModeIsActive()){
+        while(turn(easy.getYaw(), 53.5)&&opModeIsActive()){
             drive.turnLeftTank(.5);
-            telemetry.addData("Current Maneuver", "Turn -50");
+            telemetry.addData("Current Maneuver", "Turn 52");
             telemetry.addData("Yaw", easy.getYaw());
             telemetry.update();
         }
@@ -180,36 +207,18 @@ public class AutoOne extends LinearOpMode {
         // Strafe
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        while(leftFront.getCurrentPosition()>-4500&&opModeIsActive()){
+        while(leftFront.getCurrentPosition()>-5300&&opModeIsActive()){
             drive.moveLeft(.5);
             telemetry.addData("Current Maneuver", "Strafing");
             telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
             telemetry.update();
         }
         drive.stop();
-        // Movement
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        while(leftFront.getCurrentPosition()<250&&opModeIsActive()){
-            drive.moveBackward(.5);
-            telemetry.addData("Current Maneuver", "Going Backward");
-            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
-            telemetry.update();
-        }
         // Finished!
         while(opModeIsActive()){
             telemetry.addData("Current Maneuver", "Done!");
             telemetry.update();
         }
-        /*
-        // Out-taking the sample
-        beforeMove = System.currentTimeMillis();
-        finishTime = 1000;
-        while(System.currentTimeMillis()-beforeMove<finishTime&&opModeIsActive()){
-            tilt.setPosition(.7);
-        }
-        tilt.setPosition(1);
-         */
         /*
         // Turn
         while(turn(easy.getYaw(), 90)&&opModeIsActive()){

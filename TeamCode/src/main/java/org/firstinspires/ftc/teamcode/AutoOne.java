@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-@Autonomous(name="Start @F2")
+@Autonomous(name="Start @A2")
 public class AutoOne extends LinearOpMode {
     // Normal Drive Stuffs
     DcMotor leftFront;

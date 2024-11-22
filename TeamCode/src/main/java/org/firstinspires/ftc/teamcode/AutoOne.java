@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Autonomous(name="Start @F2")
+@Autonomous(name="1 Away || Observation Zone")
 public class AutoOne extends LinearOpMode {
     // Normal Drive Stuffs
     DcMotor leftFront;
@@ -40,7 +40,6 @@ public class AutoOne extends LinearOpMode {
         spinnerPivot=hardwareMap.dcMotor.get("motor6");
         spinner=hardwareMap.crservo.get("servo2");
         tilt=hardwareMap.servo.get("servoE5");
-        spinnerPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Reset Encoder
@@ -66,7 +65,9 @@ public class AutoOne extends LinearOpMode {
 
         waitForStart();
         // Arm
-        while(auto.hammerDownUp(-420, .6)&&opModeIsActive()){
+        spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        while(auto.hammerDownUp(-380, .6)&&opModeIsActive()){
             telemetryAdd("Hammer Down", spinnerPivot.getCurrentPosition(), telemetry);
         }
         // Movement
@@ -77,8 +78,10 @@ public class AutoOne extends LinearOpMode {
         while(auto.strafe(900, .5)&&opModeIsActive()){
             telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
+        spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Bringing Hammer Up
-        while(auto.hammerDownUp(400, .2)&&opModeIsActive()){
+        while(auto.hammerDownUp(350, .2)&&opModeIsActive()){
             tilt.setPosition(1);
             telemetryAdd("Hammer Up", spinnerPivot.getCurrentPosition(), telemetry);
         }
@@ -89,27 +92,39 @@ public class AutoOne extends LinearOpMode {
         }
         spinner.setPower(0);
         // Setting down the Spinner
-        while(auto.hammerDownUp(50, .5)&&opModeIsActive()){
+        spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        while(auto.hammerDownUp(-300, .5)&&opModeIsActive()){
             telemetryAdd("Hammer Down", spinnerPivot.getCurrentPosition(), telemetry);
         }
         // Bringing up the Slide
         while(auto.moveSlide(4000)&&opModeIsActive()){
+            tilt.setPosition(1);
             telemetryAdd("Slide Up", linearSlide.getCurrentPosition(), telemetry);
         }
         // Turning a bit
         imu.resetYaw();
-        while(auto.turn(-50, .2)&&opModeIsActive()){
+        while(auto.turn(-47, .2)&&opModeIsActive()){
+            tilt.setPosition(1);
             telemetryAdd("Turning", easy.getYaw(), telemetry);
         }
-        // Strafing a bit
-        while(auto.strafe(140, .3)&&opModeIsActive()){
+        // Reversing a bit
+        while(auto.forwardBackward(170, .3)&&opModeIsActive()){
+            tilt.setPosition(1);
+            telemetryAdd("Going back", leftFront.getCurrentPosition(), telemetry);
+        }
+        // Strafe
+        while(auto.strafe(80, .5)&&opModeIsActive()){
             telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
         // Outtaking the Sample
         while(auto.timedGoal(2000)&&opModeIsActive()){
             tilt.setPosition(.6);
-            telemetry.addData("Current Maneuver", "Outtaking Sample");
-            telemetry.update();
+            telemetryAdd("Outtaking the Sample", 0, telemetry);
+        }
+        // Strafe
+        while(auto.strafe(-80, .5)&&opModeIsActive()){
+            telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
         // Going forward a bit
         while(auto.forwardBackward(-160, .3)&&opModeIsActive()){
@@ -132,20 +147,17 @@ public class AutoOne extends LinearOpMode {
         }
         // Turning Back
         imu.resetYaw();
-        while(auto.turn(53.5, .5)&&opModeIsActive()){
+        while(auto.turn(50, .5)&&opModeIsActive()){
             telemetryAdd("Turning back", easy.getYaw(), telemetry);
         }
         // Strafe
-        while(auto.strafe(-5300, .5)&&opModeIsActive()){
+        while(auto.strafe(-4300, .5)&&opModeIsActive()){
             telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
         // Finished!
         while(opModeIsActive()){
             telemetryAdd("Done!", 0, telemetry);
         }
-    }
-    private static boolean turn(double degrees, double goal){
-        return !(goal - 1 < degrees) || !(degrees < goal + 1);
     }
     private static void telemetryAdd(String maneuver, double encoder, Telemetry te){
         te.addData("Current Maneuver", maneuver);

@@ -9,7 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="Start @F4")
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+@Autonomous(name="2 Away || Observation Zone")
 public class AutoTwo extends LinearOpMode {
     // Normal Drive Stuffs
     DcMotor leftFront;
@@ -38,7 +40,6 @@ public class AutoTwo extends LinearOpMode {
         spinnerPivot=hardwareMap.dcMotor.get("motor6");
         spinner=hardwareMap.crservo.get("servo2");
         tilt=hardwareMap.servo.get("servoE5");
-        spinnerPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Reset Encoder
@@ -60,178 +61,107 @@ public class AutoTwo extends LinearOpMode {
         imu.initialize(params);
         imu.resetYaw();
         easy = new EasyIMU(imu);
+        BaseAuto auto = new BaseAuto(drive, linearSlide, spinnerPivot, spinner, tilt, easy, leftFront);
+
         waitForStart();
         // Arm
-        while(spinnerPivot.getCurrentPosition()>-420&&opModeIsActive()){
-            spinnerPivot.setPower(-.6);
-            telemetry.addData("Current Maneuver", "Hammer Down");
-            telemetry.addData("Pos", spinnerPivot.getCurrentPosition());
-            telemetry.update();
+        spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        while(auto.hammerDownUp(-380, .6)&&opModeIsActive()){
+            telemetryAdd("Hammer Down", spinnerPivot.getCurrentPosition(), telemetry);
         }
-        spinnerPivot.setPower(0);
         // Movement
-        while(leftFront.getCurrentPosition()>-250&&opModeIsActive()){
-            drive.moveForward(.5);
-            telemetry.addData("Current Maneuver", "Going Forward");
-            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
-            telemetry.update();
+        while(auto.forwardBackward(-250, .5)&&opModeIsActive()){
+            telemetryAdd("Going Forward", leftFront.getCurrentPosition(), telemetry);
         }
-        drive.stop();
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Strafe
-        while(leftFront.getCurrentPosition()<2700&&opModeIsActive()){
-            drive.moveRight(.5);
-            telemetry.addData("Current Maneuver", "Strafing");
-            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
-            telemetry.update();
+        while(auto.strafe(1900, .5)&&opModeIsActive()){
+            telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
-        drive.stop();
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Bringing Hammer Up
-        while(spinnerPivot.getCurrentPosition()<400&&opModeIsActive()){
+        while(auto.hammerDownUp(350, .2)&&opModeIsActive()){
             tilt.setPosition(1);
-            spinnerPivot.setPower(.1);
-            telemetry.addData("Current Maneuver", "Hammer Up");
-            telemetry.addData("Pos", spinnerPivot.getCurrentPosition());
-            telemetry.update();
+            telemetryAdd("Hammer Up", spinnerPivot.getCurrentPosition(), telemetry);
         }
-        spinnerPivot.setPower(0);
-        // Outtaking the Sample
-        double beforeMove = System.currentTimeMillis();
-        double finishTime = 1500;
-        while(System.currentTimeMillis()-beforeMove<finishTime&&opModeIsActive()){
-            spinner.setPower(.7);
-            telemetry.addData("Current Maneuver", "Transferring Sample");
-            telemetry.update();
+        // Transferring the Sample
+        while(auto.timedGoal(1500)&&opModeIsActive()){
+            spinner.setPower(.5);
+            telemetryAdd("Sample Transfer", 0, telemetry);
         }
         spinner.setPower(0);
         // Setting down the Spinner
-        while(spinnerPivot.getCurrentPosition()>-50&&opModeIsActive()){
-            spinnerPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // Temporarily changing the zero behavior
-            spinnerPivot.setPower(-.6);
-            telemetry.addData("Current Maneuver", "Put Down Spinner");
-            telemetry.addData("Pos", spinnerPivot.getCurrentPosition());
-            telemetry.update();
+        spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        while(auto.hammerDownUp(-300, .5)&&opModeIsActive()){
+            telemetryAdd("Hammer Down", spinnerPivot.getCurrentPosition(), telemetry);
         }
-        spinnerPivot.setPower(0);
         // Bringing up the Slide
-        while(move(linearSlide.getCurrentPosition(), 4000)&&opModeIsActive()){
-            spinnerPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // Changing it back to normal
-            linearSlide.setTargetPosition(4000);
-            linearSlide.setPower(1);
-            telemetry.addData("Current Maneuver", "Linear Slide Up");
-            telemetry.update();
+        while(auto.moveSlide(4000)&&opModeIsActive()){
+            tilt.setPosition(1);
+            telemetryAdd("Slide Up", linearSlide.getCurrentPosition(), telemetry);
         }
         // Turning a bit
         imu.resetYaw();
-        while(turn(easy.getYaw(), -50)&&opModeIsActive()){
-            drive.turnRightTank(.2);
-            telemetry.addData("Current Maneuver", "Turn -50");
-            telemetry.addData("Yaw", easy.getYaw());
-            telemetry.update();
+        while(auto.turn(-47, .2)&&opModeIsActive()){
+            tilt.setPosition(1);
+            telemetryAdd("Turning", easy.getYaw(), telemetry);
         }
-        drive.stop();
-        // Strafing a bit
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        while(leftFront.getCurrentPosition()<400&&opModeIsActive()){
-            drive.moveRight(.3);
-            telemetry.addData("Current Maneuver", "Strafing a Smidge");
-            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
-            telemetry.update();
+        // Reversing a bit
+        while(auto.forwardBackward(170, .3)&&opModeIsActive()){
+            tilt.setPosition(1);
+            telemetryAdd("Going back", leftFront.getCurrentPosition(), telemetry);
         }
-        drive.stop();
-        // Bringing down the Slide
-        while(move(linearSlide.getCurrentPosition(), 0)&&opModeIsActive()){
-            linearSlide.setTargetPosition(0);
-            linearSlide.setPower(1);
+        // Strafe
+        while(auto.strafe(80, .5)&&opModeIsActive()){
+            telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
+        }
+        // Outtaking the Sample
+        while(auto.timedGoal(2000)&&opModeIsActive()){
+            tilt.setPosition(.6);
+            telemetryAdd("Outtaking the Sample", 0, telemetry);
+        }
+        // Strafe
+        while(auto.strafe(-80, .5)&&opModeIsActive()){
+            telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
+        }
+        // Going forward a bit
+        while(auto.forwardBackward(-160, .3)&&opModeIsActive()){
+            tilt.setPosition(1);
+            telemetryAdd("Forward", leftFront.getCurrentPosition(), telemetry);
+        }
+        // Return the Tilt
+        while(auto.timedGoal(500)&&opModeIsActive()){
             tilt.setPosition(.5);
-            telemetry.addData("Current Maneuver", "Linear Slide Down");
-            telemetry.update();
+            telemetryAdd("Returning Tilt", tilt.getPosition(), telemetry);
+        }
+        // Bringing down the Slide
+        while(auto.moveSlide(0)&&opModeIsActive()){
+            tilt.setPosition(.5);
+            telemetryAdd("Linear Slide Down", linearSlide.getCurrentPosition(), telemetry);
         }
         // Strafing Back
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        while(leftFront.getCurrentPosition()>-400&&opModeIsActive()){
-            drive.moveLeft(.3);
-            telemetry.addData("Current Maneuver", "Strafing a Smidge");
-            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
-            telemetry.update();
+        while(auto.strafe(-400, .3)&&opModeIsActive()){
+            telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
-        drive.stop();
         // Turning Back
         imu.resetYaw();
-        while(turn(easy.getYaw(), 50)&&opModeIsActive()){
-            drive.turnLeftTank(.5);
-            telemetry.addData("Current Maneuver", "Turn -50");
-            telemetry.addData("Yaw", easy.getYaw());
-            telemetry.update();
+        while(auto.turn(50, .5)&&opModeIsActive()){
+            telemetryAdd("Turning back", easy.getYaw(), telemetry);
         }
-        drive.stop();
         // Strafe
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        while(leftFront.getCurrentPosition()>-4500&&opModeIsActive()){
-            drive.moveLeft(.5);
-            telemetry.addData("Current Maneuver", "Strafing");
-            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
-            telemetry.update();
-        }
-        drive.stop();
-        // Movement
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        while(leftFront.getCurrentPosition()<250&&opModeIsActive()){
-            drive.moveBackward(.5);
-            telemetry.addData("Current Maneuver", "Going Backward");
-            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
-            telemetry.update();
+        while(auto.strafe(-4300, .5)&&opModeIsActive()){
+            telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
         // Finished!
         while(opModeIsActive()){
-            telemetry.addData("Current Maneuver", "Done!");
-            telemetry.update();
+            telemetryAdd("Done!", 0, telemetry);
         }
-        /*
-        // Out-taking the sample
-        beforeMove = System.currentTimeMillis();
-        finishTime = 1000;
-        while(System.currentTimeMillis()-beforeMove<finishTime&&opModeIsActive()){
-            tilt.setPosition(.7);
-        }
-        tilt.setPosition(1);
-         */
-        /*
-        // Turn
-        while(turn(easy.getYaw(), 90)&&opModeIsActive()){
-            drive.turnLeftTank(.5);
-            telemetry.addData("Yaw", easy.getYaw());
-            telemetry.update();
-        }
-        drive.stop();
-        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // Movement
-        while(move(leftFront.getCurrentPosition(), -2000)&&opModeIsActive()){
-            drive.moveForward(.5);
-            telemetry.addData("Encoder Pos", leftFront.getCurrentPosition());
-            telemetry.update();
-        }
-        drive.stop();
-        while(move(linearSlide.getCurrentPosition(), 4200)&&opModeIsActive()){
-            linearSlide.setTargetPosition(4200);
-            linearSlide.setPower(1);
-        }
-         */
     }
-    private static boolean turn(double degrees, double goal){
-        return !(goal - 1 < degrees) || !(degrees < goal + 1);
-    }
-    private static boolean move(double encoderValue, double goal){
-        return !(goal -1 < encoderValue) || !(encoderValue < goal+1);
+    private static void telemetryAdd(String maneuver, double encoder, Telemetry te){
+        te.addData("Current Maneuver", maneuver);
+        te.addData("Encoder Pos", encoder);
+        te.update();
     }
 }

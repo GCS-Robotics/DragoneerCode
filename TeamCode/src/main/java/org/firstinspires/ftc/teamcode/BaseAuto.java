@@ -22,8 +22,6 @@ public class BaseAuto {
         leftFront=lf;
     }
     public boolean hammerDownUp(double goalPos, double power){
-        spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if(goalPos<0){
             if(spinnerPivot.getCurrentPosition()>goalPos){
                 spinnerPivot.setPower(-power);
@@ -87,8 +85,10 @@ public class BaseAuto {
     public boolean turn(double goalPos, double power){
         if(easy.getYaw()>goalPos+1){
             drive.turnRightTank(power);
+            return true;
         }if (easy.getYaw()<goalPos-1){
             drive.turnLeftTank(power);
+            return true;
         }
         drive.stop();
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -99,9 +99,9 @@ public class BaseAuto {
         linearSlide.setTargetPosition(goalPos);
         linearSlide.setPower(1);
         if(goalPos>=2000){
-            return linearSlide.getCurrentPosition()>(goalPos-100);
+            return linearSlide.getCurrentPosition()<(goalPos-100);
         }
-        return linearSlide.getCurrentPosition()<(goalPos+300);
+        return linearSlide.getCurrentPosition()>(goalPos+150);
     }
     private static boolean turnBool(double degrees, double goal){
         return !(goal - 1 < degrees) || !(degrees < goal + 1);

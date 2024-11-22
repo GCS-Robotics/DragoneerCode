@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Autonomous(name="2 Away || Observation Zone")
-public class AutoTwo extends LinearOpMode {
+@Autonomous(name="3 Away || Observation Zone")
+public class AutoThree extends LinearOpMode {
     // Normal Drive Stuffs
     DcMotor leftFront;
     DcMotor leftRear;
@@ -75,7 +75,7 @@ public class AutoTwo extends LinearOpMode {
             telemetryAdd("Going Forward", leftFront.getCurrentPosition(), telemetry);
         }
         // Strafe
-        while(auto.strafe(1900, .5)&&opModeIsActive()){
+        while(auto.strafe(2900, .5)&&opModeIsActive()){
             telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
         spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

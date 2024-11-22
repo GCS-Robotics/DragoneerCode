@@ -109,7 +109,7 @@ public class AutoOne extends LinearOpMode {
             telemetryAdd("Turning", easy.getYaw(), telemetry);
         }
         // Reversing a bit
-        while(auto.forwardBackward(170, .3)&&opModeIsActive()){
+        while(auto.forwardBackward(30, .3)&&opModeIsActive()){
             tilt.setPosition(1);
             telemetryAdd("Going back", leftFront.getCurrentPosition(), telemetry);
         }
@@ -147,7 +147,7 @@ public class AutoOne extends LinearOpMode {
         }
         // Turning Back
         imu.resetYaw();
-        while(auto.turn(50, .5)&&opModeIsActive()){
+        while(auto.turn(49, .5)&&opModeIsActive()){
             telemetryAdd("Turning back", easy.getYaw(), telemetry);
         }
         // Strafe

@@ -17,7 +17,7 @@ public class InspectionBox extends LinearOpMode {
         tilt.setPosition(.5);
         waitForStart();
         while(opModeIsActive()){
-            tilt.setPosition(.5);
+            tilt.setPosition(0);
         }
 
     }

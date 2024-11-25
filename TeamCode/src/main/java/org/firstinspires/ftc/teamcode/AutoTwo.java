@@ -75,7 +75,7 @@ public class AutoTwo extends LinearOpMode {
             telemetryAdd("Going Forward", leftFront.getCurrentPosition(), telemetry);
         }
         // Strafe
-        while(auto.strafe(1900, .5)&&opModeIsActive()){
+        while(auto.strafe(2000, .5)&&opModeIsActive()){
             telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
         spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -109,7 +109,7 @@ public class AutoTwo extends LinearOpMode {
             telemetryAdd("Turning", easy.getYaw(), telemetry);
         }
         // Reversing a bit
-        while(auto.forwardBackward(30, .3)&&opModeIsActive()){
+        while(auto.forwardBackward(80, .3)&&opModeIsActive()){
             tilt.setPosition(1);
             telemetryAdd("Going back", leftFront.getCurrentPosition(), telemetry);
         }
@@ -153,6 +153,11 @@ public class AutoTwo extends LinearOpMode {
         // Strafe
         while(auto.strafe(-4300, .5)&&opModeIsActive()){
             telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
+        }
+        // Going backward a bit
+        while(auto.forwardBackward(160, .3)&&opModeIsActive()){
+            tilt.setPosition(1);
+            telemetryAdd("Forward", leftFront.getCurrentPosition(), telemetry);
         }
         // Finished!
         while(opModeIsActive()){

@@ -76,6 +76,7 @@ public class AutoOne extends LinearOpMode {
         }
         // Strafe
         while(auto.strafe(900, .5)&&opModeIsActive()){
+            tilt.setPosition(1);
             telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
         spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -109,7 +110,7 @@ public class AutoOne extends LinearOpMode {
             telemetryAdd("Turning", easy.getYaw(), telemetry);
         }
         // Reversing a bit
-        while(auto.forwardBackward(30, .3)&&opModeIsActive()){
+        while(auto.forwardBackward(80, .3)&&opModeIsActive()){
             tilt.setPosition(1);
             telemetryAdd("Going back", leftFront.getCurrentPosition(), telemetry);
         }
@@ -119,7 +120,7 @@ public class AutoOne extends LinearOpMode {
         }
         // Outtaking the Sample
         while(auto.timedGoal(2000)&&opModeIsActive()){
-            tilt.setPosition(.6);
+            tilt.setPosition(.4);
             telemetryAdd("Outtaking the Sample", 0, telemetry);
         }
         // Strafe
@@ -133,12 +134,12 @@ public class AutoOne extends LinearOpMode {
         }
         // Return the Tilt
         while(auto.timedGoal(500)&&opModeIsActive()){
-            tilt.setPosition(.5);
+            tilt.setPosition(.2);
             telemetryAdd("Returning Tilt", tilt.getPosition(), telemetry);
         }
         // Bringing down the Slide
         while(auto.moveSlide(0)&&opModeIsActive()){
-            tilt.setPosition(.5);
+            tilt.setPosition(.2);
             telemetryAdd("Linear Slide Down", linearSlide.getCurrentPosition(), telemetry);
         }
         // Strafing Back
@@ -153,6 +154,11 @@ public class AutoOne extends LinearOpMode {
         // Strafe
         while(auto.strafe(-4300, .5)&&opModeIsActive()){
             telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
+        }
+        // Going backward a bit
+        while(auto.forwardBackward(160, .3)&&opModeIsActive()){
+            tilt.setPosition(1);
+            telemetryAdd("Forward", leftFront.getCurrentPosition(), telemetry);
         }
         // Finished!
         while(opModeIsActive()){

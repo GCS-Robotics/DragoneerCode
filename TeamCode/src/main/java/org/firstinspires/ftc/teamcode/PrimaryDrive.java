@@ -54,7 +54,6 @@ public class PrimaryDrive extends LinearOpMode {
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         waitForStart();
-        tilt.setPosition(1);
         // Making the Drive Class
         MecanumDrive drive = new MecanumDrive(leftFront, leftRear, rightFront, rightRear, .7, false, false, true, true);
         while(opModeIsActive()) {

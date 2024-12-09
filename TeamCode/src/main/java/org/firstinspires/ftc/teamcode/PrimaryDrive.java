@@ -21,7 +21,6 @@ public class PrimaryDrive extends LinearOpMode {
     DcMotor spinnerPivot;
     CRServo spinner;
     Servo tilt;
-    DcMotor spool;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,8 +44,6 @@ public class PrimaryDrive extends LinearOpMode {
         spinnerPivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         spinner=hardwareMap.crservo.get("servo2");
         tilt=hardwareMap.servo.get("servoE5");
-        spool=hardwareMap.dcMotor.get("motor7");
-        spool.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Reset Encoder
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlide.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -101,14 +98,6 @@ public class PrimaryDrive extends LinearOpMode {
                 tilt.setPosition(tilt.getPosition()-.01);
             } if(gamepad2.b) {
                 tilt.setPosition(tilt.getPosition()+.01);
-            }
-            /// HANG MECHANISM
-            if(gamepad2.x){
-                spool.setPower(1);
-            } else if (gamepad2.y) {
-                spool.setPower(-1);
-            } else{
-                spool.setPower(0);
             }
             // Telemetry Stuff
             telemetry.addData("Basket Position: ", tilt.getPosition());

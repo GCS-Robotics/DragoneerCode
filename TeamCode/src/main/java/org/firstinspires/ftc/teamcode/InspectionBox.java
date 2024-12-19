@@ -14,10 +14,10 @@ public class InspectionBox extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         tilt=hardwareMap.servo.get("servoE5");
-        tilt.setPosition(.5);
+        tilt.setPosition(.63);
         waitForStart();
         while(opModeIsActive()){
-            tilt.setPosition(0);
+            tilt.setPosition(.63);
         }
 
     }

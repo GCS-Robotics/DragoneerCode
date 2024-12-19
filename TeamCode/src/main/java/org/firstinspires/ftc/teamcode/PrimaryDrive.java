@@ -50,7 +50,10 @@ public class PrimaryDrive extends LinearOpMode {
         linearSlide.setTargetPosition(linearSlide.getCurrentPosition());
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         waitForStart();
+        tilt.setPosition(.63);
         // Making the Drive Class
         MecanumDrive drive = new MecanumDrive(leftFront, leftRear, rightFront, rightRear, .7, false, false, true, true);
         while(opModeIsActive()) {
@@ -80,10 +83,14 @@ public class PrimaryDrive extends LinearOpMode {
             /// SPINNER PIVOT
             if(gamepad2.right_stick_y>.4) {
                 spinnerPivot.setPower(-.6);
-            } else if(gamepad2.right_stick_y<-.4) {
+            } else if(gamepad2.right_stick_y<-.4&&spinnerPivot.getCurrentPosition()<350) {
                 spinnerPivot.setPower(.6);
             } else{
                 spinnerPivot.setPower(0);
+            }
+            if(gamepad2.x){
+                spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
             /// SPINNER
             if(gamepad2.right_bumper) {
@@ -99,11 +106,18 @@ public class PrimaryDrive extends LinearOpMode {
             } if(gamepad2.b) {
                 tilt.setPosition(tilt.getPosition()+.01);
             }
+            // Correcting the Tilt
+            if(tilt.getPosition()<.63){
+                tilt.setPosition(.63);
+            }
+            if(tilt.getPosition()>1){
+                tilt.setPosition(1);
+            }
             // Telemetry Stuff
             telemetry.addData("Basket Position: ", tilt.getPosition());
             /// DRIVING
             // QOL #1: Set the Speed
-            double speed = 1-(gamepad1.right_trigger/1.2);
+            double speed = 1-(gamepad1.right_trigger/1.4);
             if(speed<=0.1){
                 speed=.1;
             }

@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Autonomous(name="Three Sample Auto")
+@Autonomous(name="Two Sample Auto")
 public class MainAuto extends LinearOpMode {
     // Normal Drive Stuffs
     DcMotor leftFront;
@@ -70,7 +70,7 @@ public class MainAuto extends LinearOpMode {
         waitForStart();
         if(opModeIsActive()) tilt.setPosition(.63);
         // Movement
-        while (auto.forwardBackward(-150, .7) && opModeIsActive()) {
+        while (auto.forwardBackward(-200, .7) && opModeIsActive()) {
             telemetryAdd("Going Forward", leftFront.getCurrentPosition(), telemetry);
         }
         // Strafe
@@ -87,24 +87,27 @@ public class MainAuto extends LinearOpMode {
         sampleIntoBin(telemetry, auto, 1500, opModeIsActive());
         if(opModeIsActive()) imu.resetYaw();
         // Bringing up the Slide AND Turning
-        while (auto.moveSlide(4000) || auto.turn(-47, .4) && opModeIsActive()) {
+        while (auto.moveSlide(4200) || auto.turn(-47, .4) && opModeIsActive()) {
             tilt.setPosition(1);
             auto.turn(-47, .4);
             telemetryAdd("Slide Up AND Turning", easy.getYaw(), telemetry);
         }
         // Reversing a bit
-        while (auto.forwardBackward(60, .5) && opModeIsActive()) {
+        while (auto.forwardBackward(90, .5) && opModeIsActive()) {
             tilt.setPosition(1);
             telemetryAdd("Going back", leftFront.getCurrentPosition(), telemetry);
         }
         // Strafing a bit
-        while (auto.strafe(150, .8) && opModeIsActive()) {
+        while (auto.strafe(100, .8) && opModeIsActive()) {
             telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
         // Outtaking the Sample
         while (auto.timedGoal(1000) && opModeIsActive()) {
             tilt.setPosition(.60);
             telemetryAdd("Outtaking the Sample", 0, telemetry);
+        }
+        while (auto.strafe(-100, .2) && opModeIsActive()) {
+            telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
         while (auto.timedGoal(100) && opModeIsActive()) {
             tilt.setPosition(1);
@@ -120,12 +123,12 @@ public class MainAuto extends LinearOpMode {
         }
         if(opModeIsActive()) imu.resetYaw();
         // Turning Back
-        while (auto.turn(32, .6) && opModeIsActive()) {
+        while (auto.turn(27, .6) && opModeIsActive()) {
             telemetryAdd("Turning back", easy.getYaw(), telemetry);
         }
         /// SAMPLE TWO
         // Going Forward
-        while (auto.forwardBackward(-50, .3) && opModeIsActive()) {
+        while (auto.forwardBackward(-160, .8) && opModeIsActive()) {
             spinner.setPower(-.5);
             telemetryAdd("Going forward", leftFront.getCurrentPosition(), telemetry);
         }
@@ -148,18 +151,15 @@ public class MainAuto extends LinearOpMode {
         sampleIntoBin(telemetry, auto, 600, opModeIsActive());
         imu.resetYaw();
         // Bringing up the Slide AND Turning
-        while (auto.moveSlide(4000) || auto.turn(-43, .4) && opModeIsActive()) {
+        while (auto.moveSlide(4200) || auto.turn(-30, .4) && opModeIsActive()) {
             tilt.setPosition(1);
-            auto.turn(-43, .4);
+            auto.turn(-30, .4);
             telemetryAdd("Slide Up AND Turning", easy.getYaw(), telemetry);
         }
         // Reversing a bit
-        while (auto.forwardBackward(100, .4) && opModeIsActive()) {
+        while (auto.forwardBackward(70, .5) && opModeIsActive()) {
             tilt.setPosition(1);
             telemetryAdd("Going back", leftFront.getCurrentPosition(), telemetry);
-        }
-        while (auto.strafe(30, .4) && opModeIsActive()) {
-            telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
         // Outtaking the Sample
         while (auto.timedGoal(1000) && opModeIsActive()) {

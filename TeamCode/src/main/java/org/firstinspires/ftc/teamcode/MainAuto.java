@@ -98,7 +98,7 @@ public class MainAuto extends LinearOpMode {
             telemetryAdd("Going back", leftFront.getCurrentPosition(), telemetry);
         }
         // Strafing a bit
-        while (auto.strafe(100, .8) && opModeIsActive()) {
+        while (auto.strafe(50, .8) && opModeIsActive()) {
             telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
         // Outtaking the Sample
@@ -106,14 +106,9 @@ public class MainAuto extends LinearOpMode {
             tilt.setPosition(.60);
             telemetryAdd("Outtaking the Sample", 0, telemetry);
         }
-        while (auto.strafe(-100, .2) && opModeIsActive()) {
-            telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
-        }
-        while (auto.timedGoal(100) && opModeIsActive()) {
-            tilt.setPosition(1);
-        }
         // Going forward a bit
         while (auto.forwardBackward(-110, .6) && opModeIsActive()) {
+            tilt.setPosition(1);
             telemetryAdd("Forward", leftFront.getCurrentPosition(), telemetry);
         }
         // Bringing down the Slide
@@ -128,23 +123,19 @@ public class MainAuto extends LinearOpMode {
         }
         /// SAMPLE TWO
         // Going Forward
-        while (auto.forwardBackward(-160, .8) && opModeIsActive()) {
+        while (auto.forwardBackward(-85, .3) && opModeIsActive()) {
             spinner.setPower(-.5);
             telemetryAdd("Going forward", leftFront.getCurrentPosition(), telemetry);
         }
         // Eat AND Turn
         if(opModeIsActive()) imu.resetYaw();
-        while (auto.turn(25, .15) && opModeIsActive()) {
+        while (auto.turn(55, .15) && opModeIsActive()) {
             telemetryAdd("Eat and Turn", easy.getYaw(), telemetry);
         }
         // Turning back
         if(opModeIsActive()) imu.resetYaw();
-        while (auto.turn(-25, .4) && opModeIsActive()) {
+        while (auto.turn(-55, .4) && opModeIsActive()) {
             telemetryAdd("Turning Back", easy.getYaw(), telemetry);
-        }
-        // Going Back
-        while(auto.forwardBackward(50, .4)&&opModeIsActive()){
-            telemetryAdd("Going Back", leftFront.getCurrentPosition(), telemetry);
         }
         if(opModeIsActive()) spinner.setPower(0);
         // Sample Into the Bin
@@ -157,9 +148,13 @@ public class MainAuto extends LinearOpMode {
             telemetryAdd("Slide Up AND Turning", easy.getYaw(), telemetry);
         }
         // Reversing a bit
-        while (auto.forwardBackward(70, .5) && opModeIsActive()) {
+        while (auto.forwardBackward(120, .5) && opModeIsActive()) {
             tilt.setPosition(1);
             telemetryAdd("Going back", leftFront.getCurrentPosition(), telemetry);
+        }
+        // Strafing a bit
+        while (auto.strafe(60, .8) && opModeIsActive()) {
+            telemetryAdd("Strafing", leftFront.getCurrentPosition(), telemetry);
         }
         // Outtaking the Sample
         while (auto.timedGoal(1000) && opModeIsActive()) {

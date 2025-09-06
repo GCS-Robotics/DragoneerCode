@@ -6,35 +6,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class BaseAuto {
     MecanumDrive drive;
-    DcMotor linearSlide;
-    DcMotor spinnerPivot;
-    CRServo spinner;
-    Servo tilt;
     EasyIMU easy;
     DcMotor leftFront;
-    public BaseAuto(MecanumDrive d, DcMotor ls, DcMotor sp, CRServo s, Servo t, EasyIMU e, DcMotor lf){
+    public BaseAuto(MecanumDrive d, EasyIMU e, DcMotor lf){
         drive=d;
-        linearSlide=ls;
-        spinnerPivot=sp;
-        spinner=s;
-        tilt=t;
         easy=e;
         leftFront=lf;
-    }
-    public boolean hammerDownUp(double goalPos, double power){
-        if(goalPos<0){
-            if(spinnerPivot.getCurrentPosition()>goalPos){
-                spinnerPivot.setPower(-power);
-                return true;
-            }
-        } if(goalPos>0){
-            if(spinnerPivot.getCurrentPosition()<goalPos){
-                spinnerPivot.setPower(power);
-                return true;
-            }
-        }
-        spinnerPivot.setPower(0);
-        return false;
     }
     public boolean strafe(double goalPos, double power){
         if(goalPos<0){
@@ -94,16 +71,5 @@ public class BaseAuto {
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         return false;
-    }
-    public boolean moveSlide(int goalPos){
-        linearSlide.setTargetPosition(goalPos);
-        linearSlide.setPower(1);
-        if(goalPos>=2000){
-            return linearSlide.getCurrentPosition()<(goalPos-100);
-        }
-        return linearSlide.getCurrentPosition()>(goalPos+150);
-    }
-    private static boolean turnBool(double degrees, double goal){
-        return !(goal - 1 < degrees) || !(degrees < goal + 1);
     }
 }

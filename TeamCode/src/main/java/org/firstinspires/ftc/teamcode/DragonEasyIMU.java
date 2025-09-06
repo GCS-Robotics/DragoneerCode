@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-public class EasyIMU {
+public class DragonEasyIMU {
     IMU imu;
-    public EasyIMU(IMU i){
+    public DragonEasyIMU(IMU i){
         imu = i;
     }
     public double getYaw(){

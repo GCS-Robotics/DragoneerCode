@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
-public class BaseAuto {
-    MecanumDrive drive;
-    EasyIMU easy;
+public class DragonBaseAuto {
+    DragonMecanumDrive drive;
+    DragonEasyIMU easy;
     DcMotor leftFront;
-    public BaseAuto(MecanumDrive d, EasyIMU e, DcMotor lf){
+    public DragonBaseAuto(DragonMecanumDrive d, DragonEasyIMU e, DcMotor lf){
         drive=d;
         easy=e;
         leftFront=lf;

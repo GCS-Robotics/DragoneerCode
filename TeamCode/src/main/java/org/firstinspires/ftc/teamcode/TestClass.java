@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name = "test Class")
 public class TestClass extends LinearOpMode {
-
-    final float deadzone= 0.4f;
-
-    private float driveSpeed = 0.25f;
-
+    final float deadzone= 0.4f;  // The deadzone for the joysticks.
+    private float driveSpeed = 0.25f;  // The starting drivespeed.
+    int speedMode = 1;  // Mode for moving the motor at different speeds.
     DcMotor testMotor;
 
     @Override
@@ -21,26 +18,31 @@ public class TestClass extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
-            if(gamepad1.right_stick_y<-deadzone){
-                if(driveSpeed<0.99f){
-                    driveSpeed += 0.001f;
+            if(speedMode == 2) {
+                if(gamepad1.right_stick_y<-deadzone){
+                    if(driveSpeed<0.99f){
+                        driveSpeed += 0.001f;
+                    }
+                }
+                else if(gamepad1.right_stick_y>deadzone){
+                    if(driveSpeed>0.1f){
+                        driveSpeed -= 0.001f;
+                    }
                 }
             }
-            else if(gamepad1.right_stick_y>deadzone){
-                if(driveSpeed>0.1f){
-                    driveSpeed -= 0.001f;
-                }
+            else if(speedMode == 1) {
+                // Add the code later.
             }
 
-           if(gamepad1.left_stick_y<-deadzone){
-               testMotor.setPower(driveSpeed);
-           }
-           else if(gamepad1.left_stick_y>deadzone) {
-               testMotor.setPower(-driveSpeed);
-           }
-           else {
-               testMotor.setPower(0);
-           }
+            if(gamepad1.left_stick_y<-deadzone){
+                testMotor.setPower(driveSpeed);
+            }
+            else if(gamepad1.left_stick_y>deadzone) {
+                testMotor.setPower(-driveSpeed);
+            }
+            else {
+                testMotor.setPower(0);
+            }
         }
     }
 }

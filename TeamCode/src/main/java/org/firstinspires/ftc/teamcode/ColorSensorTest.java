@@ -28,10 +28,10 @@ public class ColorSensorTest extends LinearOpMode {
             red = color.red();
             green = color.green();
             blue = color.blue();
-            if((green > blue+(errorRange*2)) && (green > red+(errorRange*2))) {
+            if(green > blue*1.5 && green > red*1.5) {
                 telemetry.addData("Color", "Green");
             }
-            else if((blue-red == errorRange)) {
+            else if(blue > green*1.2 && red > green*1.2) {
                 telemetry.addData("Color", "purple");
             }
             telemetry.addData("Red", color.red());

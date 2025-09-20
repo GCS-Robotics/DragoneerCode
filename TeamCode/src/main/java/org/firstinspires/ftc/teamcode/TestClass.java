@@ -19,17 +19,10 @@ public class TestClass extends LinearOpMode {
 
         while(opModeIsActive()) {
             if(speedMode == 2) {
-                if(gamepad1.right_stick_y<-deadzone){
-                    if(driveSpeed<0.99f){
-                        driveSpeed += 0.001f;
+                if(gamepad1.right_stick_y<-deadzone || gamepad1.right_stick_y>deadzone){
+                        driveSpeed = gamepad1.right_stick_y;
                     }
                 }
-                else if(gamepad1.right_stick_y>deadzone){
-                    if(driveSpeed>0.1f){
-                        driveSpeed -= 0.001f;
-                    }
-                }
-            }
             else if(speedMode == 1) {
                 // Add the code later.
             }

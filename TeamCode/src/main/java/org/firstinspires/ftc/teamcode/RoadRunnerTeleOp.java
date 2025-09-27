@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name = "Potato Man 5002")
+@TeleOp(name = "RoadrunnerTeleop")
 public final class RoadRunnerTeleOp extends LinearOpMode {
     MecanumDrive runner = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
 

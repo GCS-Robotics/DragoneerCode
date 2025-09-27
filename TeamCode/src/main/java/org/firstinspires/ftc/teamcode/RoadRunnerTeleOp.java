@@ -4,8 +4,10 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@TeleOp(name = "Potato Man 5002")
 public final class RoadRunnerTeleOp extends LinearOpMode {
     MecanumDrive runner = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
 

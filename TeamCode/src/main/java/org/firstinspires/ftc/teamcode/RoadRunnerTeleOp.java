@@ -41,6 +41,8 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.Drawing;
+import org.firstinspires.ftc.teamcode.Localizer;
 import org.firstinspires.ftc.teamcode.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.MecanumLocalizerInputsMessage;
@@ -52,8 +54,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Config
-public final class MecanumDrive {
-    public static class Params {
+public final class RoadRunnerTeleOp {    public static class Params {
         // IMU orientation
         // TODO: fill in these values based on
         //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
@@ -91,7 +92,7 @@ public final class MecanumDrive {
         public double headingVelGain = 0.0; // shared with turn
     }
 
-    public static Params PARAMS = new Params();
+    public static org.firstinspires.ftc.teamcode.RoadRunnerTeleOp.Params PARAMS = new org.firstinspires.ftc.teamcode.RoadRunnerTeleOp.Params();
 
     public final MecanumKinematics kinematics = new MecanumKinematics(
             PARAMS.inPerTick * PARAMS.trackWidthTicks, PARAMS.inPerTick / PARAMS.lateralInPerTick);
@@ -130,10 +131,10 @@ public final class MecanumDrive {
         private Pose2d pose;
 
         public DriveLocalizer(Pose2d pose) {
-            leftFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftFront));
-            leftBack = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftBack));
-            rightBack = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightBack));
-            rightFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightFront));
+            leftFront = new OverflowEncoder(new RawEncoder(org.firstinspires.ftc.teamcode.RoadRunnerTeleOp.this.leftFront));
+            leftBack = new OverflowEncoder(new RawEncoder(org.firstinspires.ftc.teamcode.RoadRunnerTeleOp.this.leftBack));
+            rightBack = new OverflowEncoder(new RawEncoder(org.firstinspires.ftc.teamcode.RoadRunnerTeleOp.this.rightBack));
+            rightFront = new OverflowEncoder(new RawEncoder(org.firstinspires.ftc.teamcode.RoadRunnerTeleOp.this.rightFront));
 
             imu = lazyImu.get();
 
@@ -218,7 +219,7 @@ public final class MecanumDrive {
         }
     }
 
-    public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
+    public RoadRunnerTeleOp(HardwareMap hardwareMap, Pose2d pose) {
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
@@ -249,7 +250,7 @@ public final class MecanumDrive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        localizer = new DriveLocalizer(pose);
+        localizer = new org.firstinspires.ftc.teamcode.RoadRunnerTeleOp.DriveLocalizer(pose);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
     }
@@ -455,14 +456,14 @@ public final class MecanumDrive {
     public PoseVelocity2d updatePoseEstimate() {
         PoseVelocity2d vel = localizer.update();
         poseHistory.add(localizer.getPose());
-        
+
         while (poseHistory.size() > 100) {
             poseHistory.removeFirst();
         }
 
         estimatedPoseWriter.write(new PoseMessage(localizer.getPose()));
-        
-        
+
+
         return vel;
     }
 
@@ -485,8 +486,8 @@ public final class MecanumDrive {
 
     public TrajectoryActionBuilder actionBuilder(Pose2d beginPose) {
         return new TrajectoryActionBuilder(
-                TurnAction::new,
-                FollowTrajectoryAction::new,
+                org.firstinspires.ftc.teamcode.RoadRunnerTeleOp.TurnAction::new,
+                org.firstinspires.ftc.teamcode.RoadRunnerTeleOp.FollowTrajectoryAction::new,
                 new TrajectoryBuilderParams(
                         1e-6,
                         new ProfileParams(
@@ -499,3 +500,4 @@ public final class MecanumDrive {
         );
     }
 }
+

@@ -1,13 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 public final class RoadRunnerTeleOp extends LinearOpMode {
-    MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+    MecanumDrive runner = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+        Vector2d direction = new Vector2d(gamepad1.left_stick_x, gamepad1.left_stick_y);
+        runner.setDrivePowers(new PoseVelocity2d(direction, 0));
     }
 }

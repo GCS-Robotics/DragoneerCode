@@ -14,7 +14,12 @@ public class IntakeTesting extends LinearOpMode {
         IntakeMotor = hardwareMap.dcMotor.get("motor1");
         waitForStart();
         while (opModeIsActive()) {
-            IntakeMotor.setPower(1);
+            if(gamepad1.a){
+                IntakeMotor.setPower(0.1);
+            }
+            else {
+                IntakeMotor.setPower(0);
+            }
         }
     }
 }

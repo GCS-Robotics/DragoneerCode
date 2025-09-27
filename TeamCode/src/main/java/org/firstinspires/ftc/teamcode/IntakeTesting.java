@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class IntakeTesting extends LinearOpMode {
     DcMotor IntakeMotor;
+    double power = 0.5
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -15,7 +16,10 @@ public class IntakeTesting extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             if(gamepad1.a){
-                IntakeMotor.setPower(0.1);
+                IntakeMotor.setPower(power);
+            }
+            else if (gamepad1.b) {
+                IntakeMotor.setPower(-power);
             }
             else {
                 IntakeMotor.setPower(0);

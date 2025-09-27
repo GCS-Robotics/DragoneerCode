@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class DragonMecanumDrive {
     // All the motors
-    private final DcMotor frontLeft, frontRight, backLeft, backRight;
+    private final DcMotor leftFront, rightFront, leftBack, rightBack;
     // The factor by which all motor speeds should be multiplied
     private double driveSpeed;
     // Used in case motor spins opposite way as intended. Set as -1 or 1
@@ -31,10 +31,10 @@ public class DragonMecanumDrive {
      * @param brf Back-Right Motor's Factor
      */
     public DragonMecanumDrive(DcMotor fl, DcMotor fr, DcMotor bl, DcMotor br, double ds, boolean flf, boolean frf, boolean blf, boolean brf) {
-        frontLeft=fl;
-        frontRight=fr;
-        backLeft=bl;
-        backRight=br;
+        leftFront=fl;
+        rightFront=fr;
+        leftBack=bl;
+        rightBack=br;
         driveSpeed=ds;
         fLFactor=factor(flf);
         fRFactor=factor(frf);
@@ -48,10 +48,10 @@ public class DragonMecanumDrive {
      */
     public void moveForward(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p*fLFactor);
-        backLeft.setPower(p*bLFactor);
-        frontRight.setPower(p*fRFactor);
-        backRight.setPower(p*bRFactor);
+        leftFront.setPower(p*fLFactor);
+        leftBack.setPower(p*bLFactor);
+        rightFront.setPower(p*fRFactor);
+        rightBack.setPower(p*bRFactor);
     }
     /**
      * Drives the robot backward.
@@ -59,10 +59,10 @@ public class DragonMecanumDrive {
      */
     public void moveBackward(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p*fLFactor);
-        backLeft.setPower(-p*bLFactor);
-        frontRight.setPower(-p*fRFactor);
-        backRight.setPower(-p*bRFactor);
+        leftFront.setPower(-p*fLFactor);
+        leftBack.setPower(-p*bLFactor);
+        rightFront.setPower(-p*fRFactor);
+        rightBack.setPower(-p*bRFactor);
     }
     /**
      * Drives the robot left.
@@ -70,10 +70,10 @@ public class DragonMecanumDrive {
      */
     public void moveLeft(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p*fLFactor);
-        backLeft.setPower(-p*bLFactor);
-        frontRight.setPower(-p*fRFactor);
-        backRight.setPower(p*bRFactor);
+        leftFront.setPower(p*fLFactor);
+        leftBack.setPower(-p*bLFactor);
+        rightFront.setPower(-p*fRFactor);
+        rightBack.setPower(p*bRFactor);
     }
     /**
      * Drives the robot right.
@@ -81,10 +81,10 @@ public class DragonMecanumDrive {
      */
     public void moveRight(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p*fLFactor);
-        backLeft.setPower(p*bLFactor);
-        frontRight.setPower(p*fRFactor);
-        backRight.setPower(-p*bRFactor);
+        leftFront.setPower(-p*fLFactor);
+        leftBack.setPower(p*bLFactor);
+        rightFront.setPower(p*fRFactor);
+        rightBack.setPower(-p*bRFactor);
     }
     /**
      * Drives the robot diagonally, to the Front-Right.
@@ -92,10 +92,10 @@ public class DragonMecanumDrive {
      */
     public void diagonalRightFront(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p*fLFactor);
-        backLeft.setPower(0);
-        frontRight.setPower(0);
-        backRight.setPower(p*bRFactor);
+        leftFront.setPower(p*fLFactor);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(p*bRFactor);
     }
     /**
      * Drives the robot diagonally, to the Front-Left.
@@ -103,10 +103,10 @@ public class DragonMecanumDrive {
      */
     public void diagonalLeftFront(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(0);
-        backLeft.setPower(p*bLFactor);
-        frontRight.setPower(p*fRFactor);
-        backRight.setPower(0);
+        leftFront.setPower(0);
+        leftBack.setPower(p*bLFactor);
+        rightFront.setPower(p*fRFactor);
+        rightBack.setPower(0);
     }
     /**
      * Drives the robot diagonally, to the Back-Right.
@@ -114,10 +114,10 @@ public class DragonMecanumDrive {
      */
     public void diagonalRightBack(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(0);
-        backLeft.setPower(-p*bLFactor);
-        frontRight.setPower(-p*fRFactor);
-        backRight.setPower(0);
+        leftFront.setPower(0);
+        leftBack.setPower(-p*bLFactor);
+        rightFront.setPower(-p*fRFactor);
+        rightBack.setPower(0);
     }
     /**
      * Drives the robot diagonally, to the Back-Left.
@@ -125,10 +125,10 @@ public class DragonMecanumDrive {
      */
     public void diagonalLeftBack(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p*fLFactor);
-        backLeft.setPower(0);
-        frontRight.setPower(0);
-        backRight.setPower(-p*bRFactor);
+        leftFront.setPower(-p*fLFactor);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(-p*bRFactor);
     }
     /**
      * Turns the robot to the right, pivoting on the middle (clockwise)
@@ -136,10 +136,10 @@ public class DragonMecanumDrive {
      */
     public void turnRightTank(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p*fLFactor);
-        backLeft.setPower(-p*bLFactor);
-        frontRight.setPower(p*fRFactor);
-        backRight.setPower(-p*bRFactor);
+        leftFront.setPower(p*fLFactor);
+        leftBack.setPower(-p*bLFactor);
+        rightFront.setPower(p*fRFactor);
+        rightBack.setPower(-p*bRFactor);
     }
     /**
      * Turns the robot to the left, pivoting on the middle (counter-clockwise)
@@ -147,10 +147,10 @@ public class DragonMecanumDrive {
      */
     public void turnLeftTank(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p*fLFactor);
-        backLeft.setPower(p*bLFactor);
-        frontRight.setPower(-p*fRFactor);
-        backRight.setPower(p*bRFactor);
+        leftFront.setPower(-p*fLFactor);
+        leftBack.setPower(p*bLFactor);
+        rightFront.setPower(-p*fRFactor);
+        rightBack.setPower(p*bRFactor);
     }
     /**
      * Turns the robot to the right, pivoting on the rear-axis (clockwise)
@@ -158,10 +158,10 @@ public class DragonMecanumDrive {
      */
     public void turnRightRear(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p*fLFactor);
-        backLeft.setPower(0);
-        frontRight.setPower(-p*fRFactor);
-        backRight.setPower(0);
+        leftFront.setPower(p*fLFactor);
+        leftBack.setPower(0);
+        rightFront.setPower(-p*fRFactor);
+        rightBack.setPower(0);
     }
     /**
      * Turns the robot to the left, pivoting on the rear-axis (counter-clockwise)
@@ -169,10 +169,10 @@ public class DragonMecanumDrive {
      */
     public void turnLeftRear(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p*fLFactor);
-        backLeft.setPower(0);
-        frontRight.setPower(p*fRFactor);
-        backRight.setPower(0);
+        leftFront.setPower(-p*fLFactor);
+        leftBack.setPower(0);
+        rightFront.setPower(p*fRFactor);
+        rightBack.setPower(0);
     }
     /**
      * Turns the robot to the right, pivoting on the front-axis (clockwise)
@@ -180,10 +180,10 @@ public class DragonMecanumDrive {
      */
     public void turnRightFront(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(0);
-        backLeft.setPower(p*bLFactor);
-        frontRight.setPower(0);
-        backRight.setPower(-p*bRFactor);
+        leftFront.setPower(0);
+        leftBack.setPower(p*bLFactor);
+        rightFront.setPower(0);
+        rightBack.setPower(-p*bRFactor);
     }
     /**
      * Turns the robot to the left, pivoting on the Front-axis (counter-clockwise)
@@ -191,10 +191,10 @@ public class DragonMecanumDrive {
      */
     public void turnLeftFront(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(0);
-        backLeft.setPower(-p*bLFactor);
-        frontRight.setPower(0);
-        backRight.setPower(p*bRFactor);
+        leftFront.setPower(0);
+        leftBack.setPower(-p*bLFactor);
+        rightFront.setPower(0);
+        rightBack.setPower(p*bRFactor);
     }
     /**
      * Turns the robot to the right and moves forward.
@@ -202,10 +202,10 @@ public class DragonMecanumDrive {
      */
     public void cornerRightFront(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p*fLFactor);
-        backLeft.setPower(p*bLFactor);
-        frontRight.setPower(0);
-        backRight.setPower(0);
+        leftFront.setPower(p*fLFactor);
+        leftBack.setPower(p*bLFactor);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
     }
     /**
      * Turns the robot to the left and moves forward.
@@ -213,10 +213,10 @@ public class DragonMecanumDrive {
      */
     public void cornerLeftFront(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(0);
-        backLeft.setPower(0);
-        frontRight.setPower(p*fRFactor);
-        backRight.setPower(p*bRFactor);
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(p*fRFactor);
+        rightBack.setPower(p*bRFactor);
     }
     /**
      * Turns the robot to the right and moves back.
@@ -224,10 +224,10 @@ public class DragonMecanumDrive {
      */
     public void cornerRightBack(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(0);
-        backLeft.setPower(0);
-        frontRight.setPower(-p*fRFactor);
-        backRight.setPower(-p*bRFactor);
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(-p*fRFactor);
+        rightBack.setPower(-p*bRFactor);
     }
     /**
      * Turns the robot to the left and moves forward.
@@ -235,20 +235,20 @@ public class DragonMecanumDrive {
      */
     public void cornerLeftBack(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p*fLFactor);
-        backLeft.setPower(-p*bLFactor);
-        frontRight.setPower(0);
-        backRight.setPower(0);
+        leftFront.setPower(-p*fLFactor);
+        leftBack.setPower(-p*bLFactor);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
     }
 
     /**
      * Sets the power of all motors to 0.
      */
     public void stop() {
-        frontLeft.setPower(0);
-        backLeft.setPower(0);
-        frontRight.setPower(0);
-        backRight.setPower(0);
+        leftFront.setPower(0);
+        leftBack.setPower(0);
+        rightFront.setPower(0);
+        rightBack.setPower(0);
     }
     /**
     * Sets the Driving Speed to whatever double you input.

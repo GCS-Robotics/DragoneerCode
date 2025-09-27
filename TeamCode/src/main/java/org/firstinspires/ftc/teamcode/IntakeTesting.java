@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class IntakeTesting extends LinearOpMode {
     DcMotor IntakeMotor;
-    double power = 0.5
+    double power = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {

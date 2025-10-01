@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class FlywheelTest extends LinearOpMode {
     DcMotor motorLeft, motorRight;
+    float driveSpeed = 0.5f;
     @Override
     public void runOpMode() throws InterruptedException {
         motorLeft = hardwareMap.dcMotor.get("motor1");
@@ -15,12 +16,12 @@ public class FlywheelTest extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
             if(gamepad1.a) {
-                motorLeft.setPower(1);
-                motorRight.setPower(-1);
+                motorLeft.setPower(driveSpeed);
+                motorRight.setPower(-driveSpeed);
             }
             else if (gamepad1.b) {
-                motorLeft.setPower(-1);
-                motorRight.setPower(1);
+                motorLeft.setPower(-driveSpeed);
+                motorRight.setPower(driveSpeed);
             }
             else {
                 motorLeft.setPower(0);

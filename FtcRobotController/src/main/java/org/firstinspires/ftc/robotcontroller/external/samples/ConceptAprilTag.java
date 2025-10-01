@@ -38,6 +38,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.teamcode.AprilTagUntils;
 
 import java.util.List;
 
@@ -66,7 +67,6 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 @TeleOp(name = "Concept: AprilTag", group = "Concept")
-@Disabled
 public class ConceptAprilTag extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -96,7 +96,7 @@ public class ConceptAprilTag extends LinearOpMode {
             while (opModeIsActive()) {
 
                 telemetryAprilTag();
-
+                telemetry.addData("Is good April Tag?", AprilTagUntils.aprilTagValid(3, 0, 9));
                 // Push telemetry to the Driver Station.
                 telemetry.update();
 

@@ -17,7 +17,7 @@ public class PathFollowing extends LinearOpMode {
         runner = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         waitForStart();
         while(opModeIsActive()){
-            Vector2d direction = new Vector2d(10,0);
+            Vector2d direction = new Vector2d(10,5);
             runner.setDrivePowers(new PoseVelocity2d(direction, 0));
             wait(50);
         }

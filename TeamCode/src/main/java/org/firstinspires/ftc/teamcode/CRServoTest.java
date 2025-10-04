@@ -20,7 +20,7 @@ public class CRServoTest extends LinearOpMode {
                 servo1.setPower(1);
             } else servo1.setPower(0);
 
-            if (gamepad1.b) {
+            if (gamepad1.x) {
                 servo2.setPower(-1);
             } else servo2.setPower(0);
         }

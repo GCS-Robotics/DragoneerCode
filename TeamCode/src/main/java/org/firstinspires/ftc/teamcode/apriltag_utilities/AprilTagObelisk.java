@@ -6,13 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
-public class AprilTagObelisk extends LinearOpMode {
-
+public class AprilTagObelisk {
+    /*
     MecanumDrive runner;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        runner = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0))
+        runner = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0)){
 
             for (AprilTagDetection tag : tags) {
                 tag.metadata.getClass();
@@ -29,7 +29,9 @@ public class AprilTagObelisk extends LinearOpMode {
             return 0; //If correct april tag was figured out
 
     }
-        }
+
+     */
+}
 
 
 

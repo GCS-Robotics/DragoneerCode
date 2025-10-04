@@ -1,26 +1,32 @@
 package org.firstinspires.ftc.teamcode;
 
+import androidx.annotation.NonNull;
+
+// RR-specific imports
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
+
+// Non-RR imports
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.acmerobotics.roadrunner.PoseVelocity2d;
-import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 
 @Autonomous(name="Path Following")
 public class PathFollowing extends LinearOpMode {
-
     MecanumDrive runner;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        runner = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
-        waitForStart();
-        while(opModeIsActive()){
-            Vector2d direction = new Vector2d(10,5);
-            runner.setDrivePowers(new PoseVelocity2d(direction, 0));
-            wait(50);
-        }
+        
     }
 }
 

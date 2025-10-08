@@ -20,16 +20,21 @@ public class ContineServos extends LinearOpMode {
         servo1 = hardwareMap.crservo.get("Servo 1");
         servo2 = hardwareMap.crservo.get("Servo 2");
 
-        if (gamepad1.dpadUpWasPressed()) {
-            servo1.setPower(10);
+        waitForStart();
 
-        } else servo1.setPower(0);
+        while (true)  {
 
-        if (gamepad1.dpadDownWasPressed()) {
-            servo2.setPower(10);
+            if (gamepad1.dpadUpWasPressed()) {
+                servo1.setPower(10);
 
-        } else servo2.setPower(0);
+            } else servo1.setPower(0);
 
+            if (gamepad1.dpadDownWasPressed()) {
+                servo2.setPower(10);
+
+            } else servo2.setPower(0);
+
+        }
     }
-
+}
 

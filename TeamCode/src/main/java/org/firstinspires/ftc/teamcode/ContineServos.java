@@ -5,9 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 @TeleOp(name = "ContineServos")
-
-
-
 public class ContineServos extends LinearOpMode {
 
     CRServo servo1;
@@ -22,17 +19,21 @@ public class ContineServos extends LinearOpMode {
 
         waitForStart();
 
-        while (true)  {
+        while (opModeIsActive())  {
 
-            if (gamepad1.dpadUpWasPressed()) {
-                servo1.setPower(10);
+            if (gamepad1.left_bumper) {
+                servo1.setPower(1);
 
-            } else servo1.setPower(0);
+            } else {
+                servo1.setPower(0);
+            }
 
-            if (gamepad1.dpadDownWasPressed()) {
-                servo2.setPower(10);
+            if (gamepad1.right_bumper) {
+                servo2.setPower(1);
 
-            } else servo2.setPower(0);
+
+            }
+
 
         }
     }

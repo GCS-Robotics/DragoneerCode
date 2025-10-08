@@ -16,13 +16,16 @@ public class CRServoTest extends LinearOpMode {
         servo2 = hardwareMap.crservo.get("Servo 2");
         waitForStart();
         while (opModeIsActive()) {
-            if (gamepad1.a) {
+            if (gamepad1.dpad_left) {
                 servo1.setPower(1);
-            } else servo1.setPower(0);
-
-            if (gamepad1.x) {
                 servo2.setPower(-1);
-            } else servo2.setPower(0);
+            } else if (gamepad1.dpad_right) {
+                servo1.setPower(-1);
+                servo2.setPower(1);
+            } else {
+                servo1.setPower(0);
+                servo2.setPower(0);
+            }
         }
     }
 }

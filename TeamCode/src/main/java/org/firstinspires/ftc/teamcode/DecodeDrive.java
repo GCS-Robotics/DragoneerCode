@@ -20,6 +20,8 @@ public class DecodeDrive extends LinearOpMode {
     DcMotor launcherLeft;
     // Intake motor
     DcMotor intake;
+    //Drum motor
+    DcMotor drum;
     DcMotor[] driveMotors = {leftFront, rightFront, leftRear, rightRear};
     MecanumDrive drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, 1, false, false, false, false);
     @Override
@@ -87,6 +89,14 @@ public class DecodeDrive extends LinearOpMode {
             }
             else{
                 intake.setPower(0);
+            }
+
+            // Drum
+            if (gamepad2.x){
+                drum.setPower(0.7);
+            }
+            else{
+                drum.setPower(0);
             }
         }
     }

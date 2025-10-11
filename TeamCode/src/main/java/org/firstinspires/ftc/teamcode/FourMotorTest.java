@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class FourMotorTest extends LinearOpMode {
 
     DcMotor[] motors = new DcMotor[4];
+    double speed = 1;
     @Override
     public void runOpMode() throws InterruptedException {
         for(int i=0; i<motors.length; i++){
@@ -44,9 +45,24 @@ public class FourMotorTest extends LinearOpMode {
             if(gamepad1.a){
                 speeds[3] = -1;
             }
+            // Changing speed
+            if(gamepad1.leftBumperWasReleased()){
+                speed -= 0.05;
+            }
+            if(gamepad1.rightBumperWasReleased()){
+                speed += 0.05;
+            }
+            if(speed > 1){
+                speed = 1;
+            }
+            if(speed <= 0){
+                speed = 0.1;
+            }
+            telemetry.addData("Speed", speed);
+            telemetry.update();
             // Applying speeds to motors
             for(int i=0; i < motors.length; i++){
-                motors[i].setPower(speeds[i]);
+                motors[i].setPower(speed*speeds[i]);
             }
         }
     }

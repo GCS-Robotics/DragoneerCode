@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 @TeleOp(name = "ContineServos")
-public class ContineServos extends LinearOpMode {
+public class ContinuousServos extends LinearOpMode {
 
     CRServo servo1;
 

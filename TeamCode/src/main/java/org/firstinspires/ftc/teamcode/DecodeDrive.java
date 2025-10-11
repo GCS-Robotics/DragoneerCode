@@ -10,11 +10,16 @@ public class DecodeDrive extends LinearOpMode {
     // Define any variables here!
     // Also make variables for hardware, but don't set it yet.
     double speed = 1.0;
-
+    // Drive motors
     DcMotor leftFront;
     DcMotor rightFront;
     DcMotor leftRear;
     DcMotor rightRear;
+    // Launcher motors
+    DcMotor launcherRight;
+    DcMotor launcherLeft;
+    // Intake motor
+    DcMotor intake;
     DcMotor[] driveMotors = {leftFront, rightFront, leftRear, rightRear};
     MecanumDrive drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, 1, false, false, false, false);
     @Override
@@ -25,6 +30,8 @@ public class DecodeDrive extends LinearOpMode {
         rightFront=hardwareMap.dcMotor.get("rightFront");
         leftRear=hardwareMap.dcMotor.get("leftRear");
         rightRear=hardwareMap.dcMotor.get("rightRear");
+        launcherRight=hardwareMap.dcMotor.get("launcherRight");
+        launcherLeft=hardwareMap.dcMotor.get("launcherLeft");
         for(DcMotor motor : driveMotors){
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -62,6 +69,24 @@ public class DecodeDrive extends LinearOpMode {
             }
             else {
                 drive.stop();
+            }
+
+            // Launcher
+            if (gamepad2.a){
+                launcherRight.setPower(1);
+                launcherLeft.setPower(1);
+            }
+            else{
+                launcherRight.setPower(0);
+                launcherLeft.setPower(0);
+            }
+
+            // Intake
+            if (gamepad2.b){
+                intake.setPower(0.5);
+            }
+            else{
+                intake.setPower(0);
             }
         }
     }

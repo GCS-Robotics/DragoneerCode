@@ -16,11 +16,11 @@ public class PrimaryDrive extends LinearOpMode {
     DcMotor leftRear; //port 1 Gobilda 5202/3/4
     DcMotor rightFront; //port 2 Gobilda 5202/3/4
     DcMotor rightRear; //port 3 Gobilda 5202/3/4
-    DcMotor linearSlide; //expansionHub port 0 Gobilda 5202/3/4
+    //DcMotor linearSlide; //expansionHub port 0 Gobilda 5202/3/4
     // Allowed to go from 0 to -4500
-    DcMotor spinnerPivot;
-    CRServo spinner;
-    Servo tilt;
+    //DcMotor spinnerPivot;
+    //CRServo spinner;
+    //Servo tilt;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -37,7 +37,7 @@ public class PrimaryDrive extends LinearOpMode {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // More Motor Inits
-        linearSlide=hardwareMap.dcMotor.get("motor5");
+        /*linearSlide=hardwareMap.dcMotor.get("motor5");
         spinnerPivot=hardwareMap.dcMotor.get("motor6");
         spinnerPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         spinnerPivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -54,10 +54,10 @@ public class PrimaryDrive extends LinearOpMode {
         spinnerPivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         waitForStart();
         tilt.setPosition(.63);
-        // Making the Drive Class
+        */// Making the Drive Class
         MecanumDrive drive = new MecanumDrive(leftFront, leftRear, rightFront, rightRear, .7, false, false, true, true);
         while(opModeIsActive()) {
-            /// LINEAR SLIDE
+           /* /// LINEAR SLIDE
             if(gamepad2.dpad_up){
                 linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 linearSlide.setTargetPosition(4200);
@@ -76,12 +76,12 @@ public class PrimaryDrive extends LinearOpMode {
                 } else{
                     linearSlide.setPower(0);
                     linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                }
+                }*/
             }
             telemetry.addData("Y-Stick", gamepad2.left_stick_y);
-            telemetry.addData("Current Pos", linearSlide.getCurrentPosition());
+            //telemetry.addData("Current Pos", linearSlide.getCurrentPosition());
             /// SPINNER PIVOT
-            if(gamepad2.right_stick_y>.4) {
+           /* if(gamepad2.right_stick_y>.4) {
                 spinnerPivot.setPower(-.6);
             } else if(gamepad2.right_stick_y<-.4&&spinnerPivot.getCurrentPosition()<350) {
                 spinnerPivot.setPower(.6);
@@ -114,7 +114,7 @@ public class PrimaryDrive extends LinearOpMode {
                 tilt.setPosition(1);
             }
             // Telemetry Stuff
-            telemetry.addData("Basket Position: ", tilt.getPosition());
+            telemetry.addData("Basket Position: ", tilt.getPosition());*/
             /// DRIVING
             // QOL #1: Set the Speed
             double speed = 1-(gamepad1.right_trigger/1.4);
@@ -173,4 +173,3 @@ public class PrimaryDrive extends LinearOpMode {
             telemetry.update();
         }
     }
-}

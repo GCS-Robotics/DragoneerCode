@@ -12,9 +12,7 @@ public class DecodeDrive extends LinearOpMode {
     // Define any variables here!
     // Also make variables for hardware, but don't set it yet.
 
-    double currentPositionRotation = (0);
-    final double fullRotation = (360);
-    double target = 0;
+
     double speed = 1.0;
     // Drive motors
     DcMotor leftFront;
@@ -28,9 +26,9 @@ public class DecodeDrive extends LinearOpMode {
     DcMotor intake;
     //Drum motor
 
-    DcMotor drum;
+
     DcMotor[] driveMotors = {leftFront, rightFront, leftRear, rightRear};
-    DcMotor[] DrumMotors = {drum};
+
     MecanumDrive drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, 1, false, false, false, false);
 
     @Override
@@ -44,7 +42,6 @@ public class DecodeDrive extends LinearOpMode {
         launcherRight = hardwareMap.dcMotor.get("launcherRight");
         launcherLeft = hardwareMap.dcMotor.get("launcherLeft");
         intake = hardwareMap.dcMotor.get("intake");
-        drum = hardwareMap.dcMotor.get("drum");
         for (DcMotor motor : driveMotors) {
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -52,13 +49,6 @@ public class DecodeDrive extends LinearOpMode {
             motor.setPower(0);
         }
 
-        drum.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drum.setTargetPosition(0);
-        drum.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        drum.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        waitForStart();
-        drum.setPower(0.7);
 
         while (opModeIsActive()) {
             // Do driving action here!
@@ -107,9 +97,7 @@ public class DecodeDrive extends LinearOpMode {
             intake.setPower(0);
         }
 
-        // Drum (Robert's Idea)
-        if(gamepad2.xWasReleased()){
-            drum.setTargetPosition((int)(fullRotation/3) + drum.getCurrentPosition());
+
         }
     }
 }

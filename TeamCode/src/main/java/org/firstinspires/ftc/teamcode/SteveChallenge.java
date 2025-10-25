@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class SteveChallenge extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        //MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         waitForStart();
         int count = 0;
         while(opModeIsActive()) {
@@ -20,10 +20,10 @@ public class SteveChallenge extends LinearOpMode {
             count++;
             sleep(1000);
         }
-//        if (isStopRequested()) return;
-//        Actions.runBlocking(
-//                drive.actionBuilder(new Pose2d(0, 0, 0))
-//                        .lineToX(64)
-//                        .build());
+        if (isStopRequested()) return;
+        Actions.runBlocking(
+                drive.actionBuilder(new Pose2d(0, 0, 0))
+                        .lineToX(64)
+                        .build());
     }
 }

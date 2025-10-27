@@ -3,7 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import static java.lang.Math.abs;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class DecodeDrive extends LinearOpMode {
     // Variables for Stuff
@@ -19,6 +25,16 @@ public class DecodeDrive extends LinearOpMode {
     DcMotor launcherLeft;
     // Intake Motor
     DcMotor intake;
+    // Drum
+    CRServo drumServo;
+    DistanceSensor distance;
+    ColorSensor color;
+    boolean running = false;
+    int rotations = 0;
+    int targetRotations = 0;
+    int targetBall = -1;
+    double[] PURPLE = {255, 0, 255};
+    double[] GREEN = {0, 255, 0};
     // Extra Tools
     DcMotor[] allMotors = {leftFront, rightFront, leftRear, rightRear, launcherRight, launcherLeft};
     MecanumDrive drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, 1, false, false, false, false);
@@ -32,6 +48,9 @@ public class DecodeDrive extends LinearOpMode {
         rightRear = hardwareMap.dcMotor.get("rightRear");
         launcherRight = hardwareMap.dcMotor.get("launcherRight");
         launcherLeft = hardwareMap.dcMotor.get("launcherLeft");
+        drumServo = hardwareMap.crservo.get("drumServo");
+        distance = hardwareMap.get(DistanceSensor.class, "distance");
+        color = hardwareMap.get(ColorSensor.class, "color");
         // Setting Motor Stuff
         for (DcMotor motor : allMotors) {
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -73,7 +92,7 @@ public class DecodeDrive extends LinearOpMode {
             }
             /// Gamepad 2
             // Launcher
-            if (gamepad2.a) {
+            if (gamepad2.right_trigger > 0.1) {
                 launcherRight.setPower(1);
                 launcherLeft.setPower(1);
             } else {
@@ -81,10 +100,43 @@ public class DecodeDrive extends LinearOpMode {
                 launcherLeft.setPower(0);
             }
             // Intake
-            if (gamepad2.b) {
+            if (gamepad2.left_trigger > 0.1) {
                 intake.setPower(0.5);
             } else {
                 intake.setPower(0);
+            }
+            // Drum Controls
+            if (gamepad2.aWasPressed()){ // Do 1/3 rotation
+                targetRotations = 1;
+                targetBall = -1;
+            }
+            if (gamepad2.xWasReleased()){ // Send up a purple
+                targetRotations = 4;
+                targetBall = 0;
+            }
+            if (gamepad2.bWasReleased()) { // Send up a green
+                targetRotations = 4;
+                targetBall = 1;
+            }
+            // Drum Backend
+            if(rotations < targetRotations){
+                drumServo.setPower(0.2);
+            } else {
+                drumServo.setPower(0);
+                targetRotations = 0;
+                rotations = 0;
+                // TODO: Add something to tell the driver what ball is primed, or tell them if no ball is primed.
+                // TODO: That message should stay until they click another ball request button or launch the current ball.
+            }
+            // TODO: Call if we sense the distance to be very low AND this isn't a repeat detection (check for high distance beforehand?)
+            if(false){
+                rotations += 1;
+                distance.getDistance(DistanceUnit.INCH);
+            }
+            // TODO: Call if we sense something purple AND we're looking for something purple
+            // TODO: Call this also if we sense something green AND we're looking for something green
+            if(false){
+                targetRotations = -1;
             }
         }
     }

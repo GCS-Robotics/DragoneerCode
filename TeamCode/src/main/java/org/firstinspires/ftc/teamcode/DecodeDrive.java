@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -15,6 +14,10 @@ public class DecodeDrive extends LinearOpMode {
     // Variables for Stuff
     double SPEED = 1.0;
     double DEADZONE = 0.4;
+
+    int red;
+    int green;
+    int blue;
     // Drive Motors
     DcMotor leftFront;
     DcMotor rightFront;
@@ -30,14 +33,44 @@ public class DecodeDrive extends LinearOpMode {
     DistanceSensor distance;
     ColorSensor color;
     boolean running = false;
+    boolean facingPropellor = false;
     int rotations = 0;
     int targetRotations = 0;
     int targetBall = -1;
     double[] PURPLE = {255, 0, 255};
     double[] GREEN = {0, 255, 0};
+
+    ColorSensor greenColor;
+
+    ColorSensor purpleColor;
     // Extra Tools
     DcMotor[] allMotors = {leftFront, rightFront, leftRear, rightRear, launcherRight, launcherLeft};
     MecanumDrive drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, 1, false, false, false, false);
+
+    public ColorSensor color(double[] PURPLE, double[] GREEN) {
+        red = color.red();
+        green = color.green();
+        blue = color.blue();
+        if (green > blue*1.5 && green > red*1.5) {
+            ColorSensor color = greenColor;
+
+        } else if (blue > green*1.5 && red > green*1.5) {
+            ColorSensor color = purpleColor;
+        }
+        return color;
+    }
+
+    public boolean spinDistance(double dist) {
+        if(dist < 0.1 && !facingPropellor){
+            facingPropellor = true;
+            return true;
+        }
+        if(dist > 0.1 && facingPropellor){
+            facingPropellor = false;
+        }
+        return false;
+    }
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -127,6 +160,11 @@ public class DecodeDrive extends LinearOpMode {
                 rotations = 0;
                 // TODO: Add something to tell the driver what ball is primed, or tell them if no ball is primed.
                 // TODO: That message should stay until they click another ball request button or launch the current ball.
+
+
+
+
+
             }
             // TODO: Call if we sense the distance to be very low AND this isn't a repeat detection (check for high distance beforehand?)
             if(false){

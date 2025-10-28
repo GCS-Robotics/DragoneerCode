@@ -42,33 +42,59 @@ public class SoloPainDrive extends LinearOpMode {
         }
         waitForStart();
         while(opModeIsActive()){
-            /// Gamepad 1
-            // Variable Speed Control
-            SPEED = (1 - (gamepad1.right_trigger / 1.4));
-            if (SPEED <= 0.1) {
-                SPEED = 0.1;
+            /// DRIVING
+            // QOL #1: Set the Speed
+            double speed = 1-(gamepad1.right_trigger/1.4);
+            if(speed<=0.1){
+                speed=.1;
             }
-            // Left-Stick Movement
-            if (abs(gamepad1.left_stick_y) + abs(gamepad1.left_stick_x) > DEADZONE) {
-                if (gamepad1.left_stick_y > 0) {
-                    drive.moveForward(SPEED);
-
-                } else if (gamepad1.left_stick_y < 0) {
-                    drive.moveBackward(SPEED);
-                } else if (gamepad1.left_stick_x > 0) {
-                    drive.moveRight(SPEED);
-                } else if (gamepad1.left_stick_x < 0) {
-                    drive.moveLeft(SPEED);
-                }
+            // QOL #2: Reverse Controls
+            if(gamepad1.left_trigger>.3){
+                speed=speed*(-1);
             }
-            // Right-Stick Movement
-            else if (abs(gamepad1.right_stick_x) + abs(gamepad1.right_stick_x) > DEADZONE) {
-                if (gamepad1.right_stick_x > 0) {
-                    drive.turnRightTank(SPEED);
-                } else if (gamepad1.right_stick_x < 0) {
-                    drive.turnLeftTank(SPEED);
+            drive.setDriveSpeed(speed);
+            telemetry.addData("Speed", speed);
+            if (Math.abs(gamepad1.right_stick_x) >.4) { // If the right stick is being moved sufficiently
+                if(speed<0){
+                    speed=Math.abs(speed);
+                    drive.setDriveSpeed(speed);
                 }
-            } else {
+                // Tank Turn
+                if(gamepad1.right_stick_x>.4) {
+                    drive.turnRightTank(1*gamepad1.right_stick_x);
+                }
+                if(gamepad1.right_stick_x<-.4) {
+                    drive.turnLeftTank(1*-gamepad1.right_stick_x);
+                }
+            } else if(Math.abs(gamepad1.left_stick_x)>.4 || Math.abs(gamepad1.left_stick_y)>.4) { // If the left stick is being moved sufficiently
+                // Forward/Back
+                if (gamepad1.left_stick_y < -.4 && Math.abs(gamepad1.left_stick_x) < .4) {
+                    drive.moveForward(1*-gamepad1.left_stick_y);
+                }
+                if (gamepad1.left_stick_y > .4 && Math.abs(gamepad1.left_stick_x) < .4) {
+                    drive.moveBackward(1*gamepad1.left_stick_y);
+                }
+                // Left/Right
+                if (gamepad1.left_stick_x < -.4 && Math.abs(gamepad1.left_stick_y) < .4) {
+                    drive.moveRight(1*-gamepad1.left_stick_x);
+                }
+                if (gamepad1.left_stick_x > .4 && Math.abs(gamepad1.left_stick_y) < .4) {
+                    drive.moveLeft(1*gamepad1.left_stick_x);
+                }
+                // Diagonals
+                if (gamepad1.left_stick_y < -.4 && gamepad1.left_stick_x > .4) {
+                    drive.diagonalRightFront(1);
+                }
+                if (gamepad1.left_stick_y < -.4 && gamepad1.left_stick_x < -.4) {
+                    drive.diagonalLeftFront(1);
+                }
+                if (gamepad1.left_stick_y > .4 && gamepad1.left_stick_x > .4) {
+                    drive.diagonalRightBack(1);
+                }
+                if (gamepad1.left_stick_y > .4 && gamepad1.left_stick_x < -.4) {
+                    drive.diagonalLeftBack(1);
+                }
+            } else { // If the sticks aren't being touched
                 drive.stop();
             }
             /// WOULD NORMALLY BE Gamepad 2

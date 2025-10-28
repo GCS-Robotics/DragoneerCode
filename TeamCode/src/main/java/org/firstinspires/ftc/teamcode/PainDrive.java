@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "PAIN")
 public class PainDrive extends LinearOpMode {
     double SPEED = 1.0;
+    double launchSpeed = 1.0;
     double DEADZONE = 0.2;
     DcMotor leftFront;
     DcMotor rightFront;
@@ -78,12 +79,21 @@ public class PainDrive extends LinearOpMode {
             }
             // Outtake
             if (gamepad2.right_trigger > 0.1) {
-                launcherRight.setPower(1);
-                launcherLeft.setPower(1);
+                launcherRight.setPower(launchSpeed);
+                launcherLeft.setPower(launchSpeed);
             } else {
                 launcherRight.setPower(0);
                 launcherLeft.setPower(0);
             }
+            if (gamepad2.rightBumperWasReleased()){
+                launchSpeed -= 0.05;
+                if(launchSpeed<0) launchSpeed=0;
+            }
+            if (gamepad2.leftBumperWasPressed()) {
+                launchSpeed += 0.05;
+                if(launchSpeed>1) launchSpeed=1;
+            }
+            telemetry.addData("Launch Speed", launchSpeed);
             // Drum Controls
             if (gamepad2.a){
                 drumServo.setPower(0.2);

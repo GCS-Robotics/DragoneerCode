@@ -136,10 +136,10 @@ public class MecanumDrive {
      */
     public void turnRightTank(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p*fLFactor);
+        frontLeft.setPower(-p*fLFactor);
         backLeft.setPower(-p*bLFactor);
         frontRight.setPower(p*fRFactor);
-        backRight.setPower(-p*bRFactor);
+        backRight.setPower(p*bRFactor);
     }
     /**
      * Turns the robot to the left, pivoting on the middle (counter-clockwise)
@@ -147,10 +147,10 @@ public class MecanumDrive {
      */
     public void turnLeftTank(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p*fLFactor);
+        frontLeft.setPower(p*fLFactor);
         backLeft.setPower(p*bLFactor);
         frontRight.setPower(-p*fRFactor);
-        backRight.setPower(p*bRFactor);
+        backRight.setPower(-p*bRFactor);
     }
     /**
      * Turns the robot to the right, pivoting on the rear-axis (clockwise)

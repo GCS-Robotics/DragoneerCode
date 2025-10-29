@@ -11,14 +11,19 @@ public class SteveChallenge extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
-        Servo servo = hardwareMap.servo.get("servo");
+
+
 
         waitForStart();
+        if (isStopRequested()) return;
+
 
         Actions.runBlocking(
                 drive.actionBuilder(new Pose2d(0, 0, 0))
-                        .lineToX(64)
+                        .turn(360)
+                        .lineToX(10)
                         .lineToX(0)
+                        .turn(90)
                         .build()
         );
     }

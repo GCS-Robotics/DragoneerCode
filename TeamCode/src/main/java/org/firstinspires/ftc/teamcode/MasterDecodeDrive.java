@@ -43,6 +43,7 @@ public class MasterDecodeDrive {
         launcherLeft = hardwareMap.dcMotor.get("launcherLeft");
         drumServo = hardwareMap.crservo.get("drumServo");
         kicker = hardwareMap.servo.get("kicker");
+        kicker.setPosition(1);
         drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, 1, true, false, true, false);
         DcMotor[] motors = {leftFront, rightFront, leftRear, rightRear, launcherLeft, launcherRight};
         for(DcMotor motor : motors){

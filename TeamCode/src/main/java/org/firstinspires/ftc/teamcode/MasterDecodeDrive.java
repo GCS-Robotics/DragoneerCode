@@ -48,6 +48,7 @@ public class MasterDecodeDrive {
         for(DcMotor motor : motors){
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
+        kicker.setPosition(1);
     }
     /**
      * Constructs a master decode drive.
@@ -237,7 +238,7 @@ public class MasterDecodeDrive {
      * Make the kicker kick (position 1)
      */
     public void deployKicker(){
-        setKickerPosition(1);
+        setKickerPosition(.6);
     }
     /**
      * Sets the kicker to a specific position
@@ -251,6 +252,6 @@ public class MasterDecodeDrive {
      * Make the kicker recall (position 0)
      */
     public void returnKicker(){
-        setKickerPosition(0);
+        setKickerPosition(1);
     }
 }

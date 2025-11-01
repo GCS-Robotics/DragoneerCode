@@ -2,14 +2,19 @@ package org.firstinspires.ftc.teamcode;
 
 import static java.lang.Math.abs;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 @TeleOp(name = "SERVO TEST")
 public class ServoTest extends LinearOpMode {
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+    Telemetry dashboardTelemetry = dashboard.getTelemetry();
     Servo kicker;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -31,8 +36,10 @@ public class ServoTest extends LinearOpMode {
                 kicker.setDirection(Servo.Direction.REVERSE);
             }
             telemetry.addData("Servo Position", kicker.getPosition());
+            dashboardTelemetry.addData("Servo Position", kicker.getPosition());
             telemetry.addData("Servo Direction", kicker.getDirection());
             telemetry.update();
+            dashboardTelemetry.update();
         }
     }
 }

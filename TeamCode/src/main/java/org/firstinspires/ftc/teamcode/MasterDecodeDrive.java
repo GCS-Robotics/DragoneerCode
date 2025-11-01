@@ -237,7 +237,7 @@ public class MasterDecodeDrive {
      * Make the kicker kick (position 1)
      */
     public void deployKicker(){
-        setKickerPosition(1);
+        setKickerPosition(0.6);
     }
     /**
      * Sets the kicker to a specific position
@@ -251,6 +251,6 @@ public class MasterDecodeDrive {
      * Make the kicker recall (position 0)
      */
     public void returnKicker(){
-        setKickerPosition(0);
+        setKickerPosition(1);
     }
 }

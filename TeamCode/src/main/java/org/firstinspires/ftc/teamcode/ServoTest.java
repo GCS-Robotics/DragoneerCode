@@ -18,13 +18,20 @@ public class ServoTest extends LinearOpMode {
         kicker.setPosition(0);
         while(opModeIsActive()){
             // Kicker Controls
-            if (gamepad2.dpadLeftWasReleased()){
+            if (gamepad2.dpadDownWasReleased()){
                 kicker.setPosition(kicker.getPosition()-0.05);
             }
-            if(gamepad2.dpadRightWasReleased()){
+            if(gamepad2.dpadUpWasReleased()){
                 kicker.setPosition(kicker.getPosition()+0.05);
             }
+            if(gamepad2.dpadLeftWasReleased()){
+                kicker.setDirection(Servo.Direction.FORWARD);
+            }
+            if(gamepad2.dpadRightWasReleased()){
+                kicker.setDirection(Servo.Direction.REVERSE);
+            }
             telemetry.addData("Servo Position", kicker.getPosition());
+            telemetry.addData("Servo Direction", kicker.getDirection());
             telemetry.update();
         }
     }

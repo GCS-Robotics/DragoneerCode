@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "No Roadrunner (2P)", group = "Drive")
+@TeleOp(name = "TeleOp Drive (2P)")
 public class DuoDecodeDrive extends LinearOpMode {
     MasterDecodeDrive masterDrive;
     @Override

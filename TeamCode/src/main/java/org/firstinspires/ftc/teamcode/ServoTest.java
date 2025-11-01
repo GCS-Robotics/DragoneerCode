@@ -38,6 +38,7 @@ public class ServoTest extends LinearOpMode {
             telemetry.addData("Servo Position", kicker.getPosition());
             dashboardTelemetry.addData("Servo Position", kicker.getPosition());
             telemetry.addData("Servo Direction", kicker.getDirection());
+            dashboardTelemetry.addData("Servo Direction", kicker.getDirection());
             telemetry.update();
             dashboardTelemetry.update();
         }

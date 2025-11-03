@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -9,11 +8,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class MasterDecodeDrive {
-    double SPEED = 1.0;
+    double SPEED;
     double intakeSpeed = 1.0;
     double launchSpeed = 1.0;
     double drumSpeed = 0.8;
-    double DEADZONE = 0.2;
+    double DEADZONE;
+    final int ROTATION_TICK = 537;
     DcMotor leftFront;
     DcMotor rightFront;
     DcMotor leftRear;
@@ -21,7 +21,7 @@ public class MasterDecodeDrive {
     DcMotor intake;
     DcMotor launcherRight;
     DcMotor launcherLeft;
-    CRServo drumServo;
+    DcMotor drumRotor;
     Servo kicker;
     MecanumDrive drive;
     Telemetry telemetry;
@@ -33,22 +33,7 @@ public class MasterDecodeDrive {
      * @param tel For any functions that want to post to telemetry (must call telemetry.update() separately)
      */
     public MasterDecodeDrive(HardwareMap hardwareMap, Telemetry tel){
-        telemetry = tel;
-        leftFront = hardwareMap.dcMotor.get("leftFront");
-        rightFront = hardwareMap.dcMotor.get("rightFront");
-        leftRear = hardwareMap.dcMotor.get("leftRear");
-        rightRear = hardwareMap.dcMotor.get("rightRear");
-        intake = hardwareMap.dcMotor.get("intake");
-        launcherRight = hardwareMap.dcMotor.get("launcherRight");
-        launcherLeft = hardwareMap.dcMotor.get("launcherLeft");
-        drumServo = hardwareMap.crservo.get("drumServo");
-        kicker = hardwareMap.servo.get("kicker");
-        kicker.setPosition(1);
-        drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, 1, true, false, true, false);
-        DcMotor[] motors = {leftFront, rightFront, leftRear, rightRear, launcherLeft, launcherRight};
-        for(DcMotor motor : motors){
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
+        this(hardwareMap, tel, 1.0, 1.0, 1.0, 0.8, 0.2);
     }
     /**
      * Constructs a master decode drive.
@@ -61,7 +46,25 @@ public class MasterDecodeDrive {
      * @param dz Deadzone for driving inputs
      */
     public MasterDecodeDrive(HardwareMap hardwareMap, Telemetry tel, double s, double intakeS, double launchS, double drumS, double dz){
-        this(hardwareMap, tel);
+        telemetry = tel;
+        leftFront = hardwareMap.dcMotor.get("leftFront");
+        rightFront = hardwareMap.dcMotor.get("rightFront");
+        leftRear = hardwareMap.dcMotor.get("leftRear");
+        rightRear = hardwareMap.dcMotor.get("rightRear");
+        intake = hardwareMap.dcMotor.get("intake");
+        launcherRight = hardwareMap.dcMotor.get("launcherRight");
+        launcherLeft = hardwareMap.dcMotor.get("launcherLeft");
+        drumRotor = hardwareMap.dcMotor.get("drumRotor");
+        kicker = hardwareMap.servo.get("kicker");
+        kicker.setPosition(1);
+        drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, 1, true, false, true, false);
+        DcMotor[] motors = {leftFront, rightFront, leftRear, rightRear, launcherLeft, launcherRight, drumRotor};
+        for(DcMotor motor : motors){
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+        drumRotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drumRotor.setTargetPosition(0);
+        drumRotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         SPEED = s;
         intakeSpeed = intakeS;
         launchSpeed = launchS;
@@ -224,21 +227,19 @@ public class MasterDecodeDrive {
      */
     public void runDrum(boolean runForward, boolean runBackward){
         if (runForward){
-            drumServo.setPower(drumSpeed);
+            drumRotor.setTargetPosition(drumRotor.getTargetPosition()+ROTATION_TICK/3);
         }
         else if(runBackward){
-            drumServo.setPower(-drumSpeed);
-        } else {
-            drumServo.setPower(0);
+            drumRotor.setTargetPosition(drumRotor.getTargetPosition()-ROTATION_TICK/3);
         }
-        telemetry.addData("Drum Speed", drumSpeed);
+        telemetry.addData("Drum Target", drumRotor.getTargetPosition());
     }
 
     /**
      * Make the kicker kick (position 1)
      */
     public void deployKicker(){
-        setKickerPosition(0.6);
+        setKickerPosition(0.65);
     }
     /**
      * Sets the kicker to a specific position

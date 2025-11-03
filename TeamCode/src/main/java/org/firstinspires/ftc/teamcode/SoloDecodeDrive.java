@@ -19,7 +19,7 @@ public class SoloDecodeDrive extends LinearOpMode {
             masterDrive.runDrive(gamepad1);
             masterDrive.runIntake(gamepad1.left_bumper, false);
             masterDrive.runOuttake(gamepad1.right_bumper, false);
-            masterDrive.runDrum(gamepad1.a, gamepad1.b);
+            masterDrive.runDrum(gamepad1.aWasReleased(), gamepad1.bWasReleased());
             if(gamepad1.dpadRightWasReleased())masterDrive.deployKicker();
             if(gamepad1.dpadLeftWasReleased()) masterDrive.returnKicker();
             if(gamepad1.dpadUpWasReleased() && masterDrive.getLaunchSpeed() < 1){

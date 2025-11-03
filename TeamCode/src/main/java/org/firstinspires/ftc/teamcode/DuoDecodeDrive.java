@@ -19,7 +19,7 @@ public class DuoDecodeDrive extends LinearOpMode {
             masterDrive.runDrive(gamepad1);
             masterDrive.runIntake(gamepad2.left_trigger > masterDrive.getDeadzone(), false);
             masterDrive.runOuttake(gamepad2.right_trigger  > masterDrive.getDeadzone(), false);
-            masterDrive.runDrum(gamepad2.a, gamepad2.b);
+            masterDrive.runDrum(gamepad2.aWasReleased(), gamepad2.bWasReleased());
             if(gamepad2.dpadRightWasReleased())masterDrive.deployKicker();
             if(gamepad2.dpadLeftWasReleased()) masterDrive.returnKicker();
             if(gamepad2.dpadUpWasReleased() && masterDrive.getLaunchSpeed() < 1){

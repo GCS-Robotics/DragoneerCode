@@ -57,7 +57,7 @@ public class MasterDecodeDrive {
         drumRotor = hardwareMap.dcMotor.get("drumRotor");
         kicker = hardwareMap.servo.get("kicker");
         kicker.setPosition(1);
-        drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, 1, true, false, true, false);
+        drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, s, true, false, true, false);
         DcMotor[] motors = {leftFront, rightFront, leftRear, rightRear, launcherLeft, launcherRight, drumRotor};
         for(DcMotor motor : motors){
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -65,6 +65,7 @@ public class MasterDecodeDrive {
         drumRotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drumRotor.setTargetPosition(0);
         drumRotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        drumRotor.setPower(drumSpeed);
         SPEED = s;
         intakeSpeed = intakeS;
         launchSpeed = launchS;

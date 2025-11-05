@@ -25,6 +25,7 @@ public class SteveChallenge extends LinearOpMode {
                         .turn(PI * 2)
                         .lineToX(10)
                         .lineToX(0)
+                        .lineToY(2)
                         .turn(PI / 2)
                         .build()
         );

@@ -23,7 +23,7 @@ public class SteveChallenge extends LinearOpMode {
 
         Actions.runBlocking(
                 drive.actionBuilder(new Pose2d(0, 0, 0))
-                        .turn(PI * 2, new TurnConstraints(1, 1, 1))
+                        .turn(PI * 2, new TurnConstraints(0.1, 0, 0.05))
                        // .lineToX(10)
                        // .lineToX(0)
                       //  .turn(PI / 2)

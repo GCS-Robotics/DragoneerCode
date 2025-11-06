@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.automodes;
 import static java.lang.Math.PI;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TurnConstraints;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -23,11 +24,11 @@ public class SteveChallenge extends LinearOpMode {
 
         Actions.runBlocking(
                 drive.actionBuilder(new Pose2d(0, 0, 0))
-                        .turnTo(PI / 2)
-                        .lineToX(10)
-                        .lineToX(0)
-                        .turnTo(PI)
+                        .turn(PI / 2)    // .lineToX(10)
+                        // .lineToX(0)
+                        //  .turn(PI / 2)
                         .build()
         );
     }
 }
+

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Math.abs;
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -31,7 +33,7 @@ public class RevampDecodeDrive {
     Telemetry telemetry;
 
     ColorSensor BallColor;
-
+    boolean launching = false;
 
     /**
      * Constructs a master decode drive.
@@ -168,9 +170,9 @@ public class RevampDecodeDrive {
             speed = speed * (-1);
         }
         drive.setDriveSpeed(speed);
-        if (Math.abs(gamepad1.right_stick_x) > .4) { // If the right stick is being moved sufficiently
+        if (abs(gamepad1.right_stick_x) > .4) { // If the right stick is being moved sufficiently
             if (speed < 0) {
-                speed = Math.abs(speed);
+                speed = abs(speed);
                 drive.setDriveSpeed(speed);
             }
             // Tank Turn
@@ -180,19 +182,19 @@ public class RevampDecodeDrive {
             if (gamepad1.right_stick_x < -.4) {
                 drive.turnLeftTank(1 * -gamepad1.right_stick_x);
             }
-        } else if (Math.abs(gamepad1.left_stick_x) > .4 || Math.abs(gamepad1.left_stick_y) > .4) { // If the left stick is being moved sufficiently
+        } else if (abs(gamepad1.left_stick_x) > .4 || abs(gamepad1.left_stick_y) > .4) { // If the left stick is being moved sufficiently
             // Forward/Back
-            if (gamepad1.left_stick_y < -.4 && Math.abs(gamepad1.left_stick_x) < .4) {
+            if (gamepad1.left_stick_y < -.4 && abs(gamepad1.left_stick_x) < .4) {
                 drive.moveForward(1 * -gamepad1.left_stick_y);
             }
-            if (gamepad1.left_stick_y > .4 && Math.abs(gamepad1.left_stick_x) < .4) {
+            if (gamepad1.left_stick_y > .4 && abs(gamepad1.left_stick_x) < .4) {
                 drive.moveBackward(1 * gamepad1.left_stick_y);
             }
             // Left/Right
-            if (gamepad1.left_stick_x < -.4 && Math.abs(gamepad1.left_stick_y) < .4) {
+            if (gamepad1.left_stick_x < -.4 && abs(gamepad1.left_stick_y) < .4) {
                 drive.moveRight(1 * -gamepad1.left_stick_x);
             }
-            if (gamepad1.left_stick_x > .4 && Math.abs(gamepad1.left_stick_y) < .4) {
+            if (gamepad1.left_stick_x > .4 && abs(gamepad1.left_stick_y) < .4) {
                 drive.moveLeft(1 * gamepad1.left_stick_x);
             }
             // Diagonals
@@ -220,6 +222,7 @@ public class RevampDecodeDrive {
      */
     public void runIntake(boolean run, boolean r){
         if(run) {
+            kicker.setPosition(1);
             intake.setPower(intakeSpeed * reverse(r));
             int drumPos = drumRotor.getTargetPosition();
             if (drumPos % (ROTATION_TICK / 3) <= ROTATION_TICK / 7) {
@@ -248,19 +251,70 @@ public class RevampDecodeDrive {
      * @param fireGreen Set to true once to fire a green, then stop the spinners after it's launched
      */
     public void runOuttake(boolean prime, boolean cancel, boolean firePurple, boolean fireGreen){
-        if (prime) {
+        if(prime) {
+            if(abs(drumRotor.getTargetPosition()%ROTATION_TICK) > ROTATION_TICK/16){
+                drumRotor.setTargetPosition(drumRotor.getTargetPosition()+ ROTATION_TICK-drumRotor.getTargetPosition()%ROTATION_TICK);
+            }
             launcherLeft.setPower(launchSpeed);
             launcherRight.setPower(launchSpeed);
-        }else {
-            launcherLeft.setPower(0);
-            launcherRight.setPower(0);
         }
         if (cancel) {
             launcherLeft.setPower(0);
             launcherRight.setPower(0);
         }
         if (firePurple) {
-            drumRotor.setTargetPosition(0);
+            int purpleLocation = -1;
+            for(int i=0; i<balls.length; i++){
+                if(balls[i] == 1){
+                    purpleLocation = i;
+                }
+            }
+            if(purpleLocation != -1){
+                launching = true;
+                if(purpleLocation == 0){
+                    drumRotor.setTargetPosition(drumRotor.getTargetPosition()+ROTATION_TICK/3);
+                    int temp = balls[0];
+                    balls[0] = balls[2];
+                    balls[2] = balls[1];
+                    balls[1] = temp;
+                }
+                if(purpleLocation == 2){
+                    drumRotor.setTargetPosition(drumRotor.getTargetPosition()+2*ROTATION_TICK/3);
+                    int temp = balls[2];
+                    balls[2] = balls[0];
+                    balls[0] = balls[1];
+                    balls[1] = temp;
+                }
+            }
+        }
+        if (fireGreen) {
+            int greenLocation = -1;
+            for(int i=0; i<balls.length; i++){
+                if(balls[i] == 0){
+                    greenLocation = i;
+                }
+            }
+            if(greenLocation != -1){
+                launching = true;
+                if(greenLocation == 0){
+                    drumRotor.setTargetPosition(drumRotor.getTargetPosition()+ROTATION_TICK/3);
+                    int temp = balls[0];
+                    balls[0] = balls[2];
+                    balls[2] = balls[1];
+                    balls[1] = temp;
+                }
+                if(greenLocation == 2){
+                    drumRotor.setTargetPosition(drumRotor.getTargetPosition()+2*ROTATION_TICK/3);
+                    int temp = balls[2];
+                    balls[2] = balls[0];
+                    balls[0] = balls[1];
+                    balls[1] = temp;
+                }
+            }
+        }
+        if(launching && abs(drumRotor.getTargetPosition()-drumRotor.getCurrentPosition())<ROTATION_TICK/16){
+            kicker.setPosition(0.65);
+            balls[1] = -1;
         }
     }
     /**

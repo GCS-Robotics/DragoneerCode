@@ -57,7 +57,7 @@ public class MasterDecodeDrive {
         drumRotor = hardwareMap.dcMotor.get("drumRotor");
         kicker = hardwareMap.servo.get("kicker");
         kicker.setPosition(1);
-        drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, s, true, false, true, false);
+        drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, s, true, false, false, false);
         DcMotor[] motors = {leftFront, rightFront, leftRear, rightRear, launcherLeft, launcherRight, drumRotor};
         for(DcMotor motor : motors){
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

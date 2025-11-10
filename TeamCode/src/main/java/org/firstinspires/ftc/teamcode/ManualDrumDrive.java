@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class MasterDecodeDrive {
+public class ManualDrumDrive {
     double SPEED;
     double intakeSpeed = 1.0;
     double launchSpeed = 1.0;
@@ -32,7 +32,7 @@ public class MasterDecodeDrive {
      * @param hardwareMap Finds all of the hardware components from the Hardware Map
      * @param tel For any functions that want to post to telemetry (must call telemetry.update() separately)
      */
-    public MasterDecodeDrive(HardwareMap hardwareMap, Telemetry tel){
+    public ManualDrumDrive(HardwareMap hardwareMap, Telemetry tel){
         this(hardwareMap, tel, 1.0, 1.0, 1.0, 0.8, 0.2);
     }
     /**
@@ -45,7 +45,7 @@ public class MasterDecodeDrive {
      * @param drumS Drum Speed
      * @param dz Deadzone for driving inputs
      */
-    public MasterDecodeDrive(HardwareMap hardwareMap, Telemetry tel, double s, double intakeS, double launchS, double drumS, double dz){
+    public ManualDrumDrive(HardwareMap hardwareMap, Telemetry tel, double s, double intakeS, double launchS, double drumS, double dz){
         telemetry = tel;
         leftFront = hardwareMap.dcMotor.get("leftFront");
         rightFront = hardwareMap.dcMotor.get("rightFront");

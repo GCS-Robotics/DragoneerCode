@@ -4,16 +4,13 @@ import static java.lang.Math.abs;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "TeleOp Drive (2P)")
-public class DuoDecodeDrive extends LinearOpMode {
-    MasterDecodeDrive masterDrive;
+@TeleOp(name = "Manual Drive (2P)", group = "Manual Drum")
+public class ManualDuoDrive extends LinearOpMode {
+    ManualDrumDrive masterDrive;
     @Override
     public void runOpMode() throws InterruptedException {
-        masterDrive = new MasterDecodeDrive(hardwareMap, telemetry);
+        masterDrive = new ManualDrumDrive(hardwareMap, telemetry);
         waitForStart();
         while(opModeIsActive()){
             masterDrive.runDrive(gamepad1);

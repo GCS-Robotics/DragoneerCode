@@ -4,15 +4,13 @@ import static java.lang.Math.abs;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class RevampDecodeDrive {
+public class MainDecodeDrive {
     double SPEED;
     double intakeSpeed = 1.0;
     double launchSpeed = 1.0;
@@ -41,7 +39,7 @@ public class RevampDecodeDrive {
      * @param hardwareMap Finds all of the hardware components from the Hardware Map
      * @param tel         For any functions that want to post to telemetry (must call telemetry.update() separately)
      */
-    public RevampDecodeDrive(HardwareMap hardwareMap, Telemetry tel) {
+    public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel) {
         this(hardwareMap, tel, 1.0, 1.0, 1.0, 0.8, 0.2);
     }
 
@@ -56,7 +54,7 @@ public class RevampDecodeDrive {
      * @param drumS       Drum Speed
      * @param dz          Deadzone for driving inputs
      */
-    public RevampDecodeDrive(HardwareMap hardwareMap, Telemetry tel, double s, double intakeS, double launchS, double drumS, double dz) {
+    public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel, double s, double intakeS, double launchS, double drumS, double dz) {
         telemetry = tel;
         leftFront = hardwareMap.dcMotor.get("leftFront");
         rightFront = hardwareMap.dcMotor.get("rightFront");
@@ -318,7 +316,7 @@ public class RevampDecodeDrive {
         }
     }
     /**
-     * Posts all ball positions to telemetry
+     * Posts all ball positions to telemetry2
      */
     public void ballTelemetry(){
         for(int i=0; i<balls.length; i++){
@@ -333,8 +331,10 @@ public class RevampDecodeDrive {
             }
         }
     }
+
     /**
-     * Finds the color, and reports it to telemetry
+     * Determines the color from the color sensor, returns it as an array of doubles
+     * @return Contains the different color values. [0] is red, [1] is green, [2] is blue
      */
     private double[] getColor() {
         double red = BallColor.red();
@@ -344,11 +344,11 @@ public class RevampDecodeDrive {
     }
 
     /**
-     *
+     * Using the color sensor, determines whether the detected color is green, purple, or neither.
      * @return 0 if green, 1 if purple, -1 if neither
      */
     private int isGreenOrPurple(){
-        double colors[] = getColor();
+        double[] colors = getColor();
         if(colors[1] > colors[2] * 1.5 && colors[1] > colors[0] * 1.5){
             return 0;
         }

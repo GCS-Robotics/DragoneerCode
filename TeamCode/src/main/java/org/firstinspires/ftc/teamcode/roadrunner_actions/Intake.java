@@ -8,13 +8,13 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class Intake {
+public class intake {
     private DcMotor motor;
     private ColorSensor colorSensor;
     private DcMotor drum;
     private final int ROTATION_TICK;
     public int[] balls = new int[3];
-    public Intake(HardwareMap hardwareMap, int rotationTicks) {
+    public intake(HardwareMap hardwareMap, int rotationTicks) {
         motor = hardwareMap.dcMotor.get("intake");
         ROTATION_TICK = rotationTicks;
     }
@@ -76,4 +76,7 @@ public class Intake {
     public int[] getBalls(){
         return balls;
     }
+}
+public Action Run() {
+    return new intake.Run();
 }

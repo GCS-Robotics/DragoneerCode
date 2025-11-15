@@ -25,8 +25,8 @@ public class RoadRunnerAutoBeta extends LinearOpMode {
                         .build());
         Actions.runBlocking(
                 drive.actionBuilder(new Pose2d(12, -24, -90))
-                        .Run()
                         .lineToY(-34)
+
                         .build());
     }
 }

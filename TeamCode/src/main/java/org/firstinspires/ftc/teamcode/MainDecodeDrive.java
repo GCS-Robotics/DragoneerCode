@@ -4,6 +4,7 @@ import static java.lang.Math.abs;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,9 +15,9 @@ public class MainDecodeDrive {
     double SPEED;
     double intakeSpeed = 1.0;
     double launchSpeed = 1.0;
-    double drumSpeed = 0.8;
+    double drumSpeed = 1.0;
     double DEADZONE;
-    final int ROTATION_TICK = 537;
+    final int ROTATION_TICK = 288;
     int[] balls = new int[3]; // Ball at balls[1] is the ball that should be primed to fire
     DcMotor leftFront;
     DcMotor rightFront;
@@ -62,12 +63,17 @@ public class MainDecodeDrive {
         rightRear = hardwareMap.dcMotor.get("rightRear");
         intake = hardwareMap.dcMotor.get("intake");
         launcherRight = hardwareMap.dcMotor.get("launcherRight");
+        launcherRight.setDirection(DcMotorSimple.Direction.REVERSE);
         launcherLeft = hardwareMap.dcMotor.get("launcherLeft");
         drumRotor = hardwareMap.dcMotor.get("drumRotor");
         kicker = hardwareMap.servo.get("kicker");
-        BallColor = hardwareMap.colorSensor.get("BallColor");
-        kicker.setPosition(1);
-        drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, s, true, false, false, false);
+        BallColor = hardwareMap.colorSensor.get("colorSensor");
+        kicker.setDirection(Servo.Direction.REVERSE);
+        kicker.setPosition(.65);
+        balls[0] = -1;
+        balls[1] = -1;
+        balls[2] = -1;
+        drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, s, false, true, false, false);
         DcMotor[] motors = {leftFront, rightFront, leftRear, rightRear, launcherLeft, launcherRight, drumRotor};
         for (DcMotor motor : motors) {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -226,14 +232,15 @@ public class MainDecodeDrive {
             if (drumPos % (ROTATION_TICK / 3) <= ROTATION_TICK / 7) {
                 drumRotor.setTargetPosition((int) (drumPos / (ROTATION_TICK / 3)) * (ROTATION_TICK / 3) + ROTATION_TICK / 6);
             }
-            if(isGreenOrPurple()!=-1
+            int ball = isGreenOrPurple();
+            if(ball!=-1
                     && drumRotor.getCurrentPosition() >= drumRotor.getTargetPosition()-ROTATION_TICK/16) {
                 drumRotor.setTargetPosition(drumPos+ROTATION_TICK/3);
                 // Shift over everything in ball storage
+                balls[0] = balls[2];
                 balls[2] = balls[1];
-                balls[1] = balls[0];
                 // Adds our new ball
-                balls[0] = isGreenOrPurple();
+                balls[1] = ball;
             }
         } else {
             intake.setPower(0);
@@ -249,9 +256,14 @@ public class MainDecodeDrive {
      * @param fireGreen Set to true once to fire a green, then stop the spinners after it's launched
      */
     public void runOuttake(boolean prime, boolean cancel, boolean firePurple, boolean fireGreen){
+        telemetry.addData("Ball 0", balls[0]);
+        telemetry.addData("Ball 1", balls[1]);
+        telemetry.addData("Ball 2", balls[2]);
+        telemetry.addData("Detected Color", isGreenOrPurple());
         if(prime) {
-            if(abs(drumRotor.getTargetPosition()%ROTATION_TICK) > ROTATION_TICK/16){
-                drumRotor.setTargetPosition(drumRotor.getTargetPosition()+ ROTATION_TICK-drumRotor.getTargetPosition()%ROTATION_TICK);
+            int drumPos = drumRotor.getTargetPosition();
+            if((drumPos % (ROTATION_TICK / 3)) <= ROTATION_TICK/5){
+                drumRotor.setTargetPosition(drumPos + ROTATION_TICK / 6);
             }
             launcherLeft.setPower(launchSpeed);
             launcherRight.setPower(launchSpeed);
@@ -269,20 +281,7 @@ public class MainDecodeDrive {
             }
             if(purpleLocation != -1){
                 launching = true;
-                if(purpleLocation == 0){
-                    drumRotor.setTargetPosition(drumRotor.getTargetPosition()+ROTATION_TICK/3);
-                    int temp = balls[0];
-                    balls[0] = balls[2];
-                    balls[2] = balls[1];
-                    balls[1] = temp;
-                }
-                if(purpleLocation == 2){
-                    drumRotor.setTargetPosition(drumRotor.getTargetPosition()+2*ROTATION_TICK/3);
-                    int temp = balls[2];
-                    balls[2] = balls[0];
-                    balls[0] = balls[1];
-                    balls[1] = temp;
-                }
+                setDrumLaunch(purpleLocation);
             }
         }
         if (fireGreen) {
@@ -294,25 +293,28 @@ public class MainDecodeDrive {
             }
             if(greenLocation != -1){
                 launching = true;
-                if(greenLocation == 0){
-                    drumRotor.setTargetPosition(drumRotor.getTargetPosition()+ROTATION_TICK/3);
-                    int temp = balls[0];
-                    balls[0] = balls[2];
-                    balls[2] = balls[1];
-                    balls[1] = temp;
-                }
-                if(greenLocation == 2){
-                    drumRotor.setTargetPosition(drumRotor.getTargetPosition()+2*ROTATION_TICK/3);
-                    int temp = balls[2];
-                    balls[2] = balls[0];
-                    balls[0] = balls[1];
-                    balls[1] = temp;
-                }
+                setDrumLaunch(greenLocation);
             }
         }
         if(launching && abs(drumRotor.getTargetPosition()-drumRotor.getCurrentPosition())<ROTATION_TICK/16){
-            kicker.setPosition(0.65);
+            kicker.setPosition(0.3);
             balls[1] = -1;
+        }
+    }
+    private void setDrumLaunch(int ballLocation){
+        if(ballLocation == 0){
+            drumRotor.setTargetPosition(drumRotor.getTargetPosition()+ROTATION_TICK/3);
+            int temp = balls[0];
+            balls[0] = balls[2];
+            balls[2] = balls[1];
+            balls[1] = temp;
+        }
+        else if(ballLocation == 2){
+            drumRotor.setTargetPosition(drumRotor.getTargetPosition()+(ROTATION_TICK*2/3));
+            int temp = balls[2];
+            balls[2] = balls[0];
+            balls[0] = balls[1];
+            balls[1] = temp;
         }
     }
     /**
@@ -349,7 +351,7 @@ public class MainDecodeDrive {
      */
     private int isGreenOrPurple(){
         double[] colors = getColor();
-        if(colors[1] > colors[2] * 1.5 && colors[1] > colors[0] * 1.5){
+        if(colors[1] > colors[2] * 1.5 && colors[1] > colors[0] * 2.0){
             return 0;
         }
         if (colors[2] > colors[1] * 1.2 && colors[0] > colors[1] * 1.2){

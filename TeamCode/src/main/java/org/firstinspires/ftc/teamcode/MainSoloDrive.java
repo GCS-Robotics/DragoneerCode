@@ -26,6 +26,7 @@ public class MainSoloDrive extends LinearOpMode {
             if(gamepad1.dpadDownWasReleased() && masterDrive.getLaunchSpeed() > 0){
                 masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()-0.1);
             }
+            telemetry.update();
         }
     }
 }

@@ -42,9 +42,6 @@ public class RobotMechanisms {
             return true;
         }
     }
-    public Action spinUp(){
-        return new SpinUp();
-    }
     public class RunIntake implements Action {
         private boolean initialized = false;
 
@@ -71,9 +68,6 @@ public class RobotMechanisms {
             return true;
         }
     }
-    public Action runIntake(){
-        return new RunIntake();
-    }
     public class StopIntake implements Action {
         private boolean initialized = false;
 
@@ -86,21 +80,44 @@ public class RobotMechanisms {
             return true;
         }
     }
+    public class StopOuttake implements Action{
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if(!initialized){
+                launcherLeft.setPower(0);
+                launcherRight.setPower(0);
+                initialized=true;
+            }
+            return true;
+        }
+    }
+    public Action spinUp(){
+        return new SpinUp();
+    }
+    public Action runIntake(){
+        return new RunIntake();
+    }
     public Action stopIntake(){
         return new StopIntake();
     }
+    public Action stopOuttake(){
+        return new StopOuttake();
+    }
+
     private double[] getColor() {
         double red = colorSensor.red();
         double green = colorSensor.green();
         double blue = colorSensor.blue();
         return new double[]{red, green, blue};
     }
-    private int isGreenOrPurple(){
+    private int isGreenOrPurple() {
         double[] colors = getColor();
-        if(colors[1] > colors[2] * 1.5 && colors[1] > colors[0] * 2.0){
+        if (colors[1] > colors[2] * 1.5 && colors[1] > colors[0] * 2.0) {
             return 0;
         }
-        if (colors[2] > colors[1] * 1.2 && colors[0] > colors[1] * 1.2){
+        if (colors[2] > colors[1] * 1.2 && colors[0] > colors[1] * 1.2) {
             return 1;
         }
         return -1;

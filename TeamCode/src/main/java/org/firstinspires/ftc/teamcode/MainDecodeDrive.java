@@ -265,8 +265,8 @@ public class MainDecodeDrive {
             if((drumPos % (ROTATION_TICK / 3)) <= ROTATION_TICK/5){
                 drumRotor.setTargetPosition(drumPos + ROTATION_TICK / 6);
             }
-            launcherLeft.setPower(launchSpeed);
-            launcherRight.setPower(launchSpeed);
+            launcherLeft.setPower(1);
+            launcherRight.setPower(1);
         }
         if (cancel) {
             launcherLeft.setPower(0);

@@ -33,6 +33,7 @@ public class MainDecodeDrive {
 
     ColorSensor BallColor;
     boolean launching = false;
+    boolean primed = false;
 
     /**
      * Constructs a master decode drive.
@@ -41,7 +42,7 @@ public class MainDecodeDrive {
      * @param tel         For any functions that want to post to telemetry (must call telemetry.update() separately)
      */
     public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel) {
-        this(hardwareMap, tel, 1.0, 1.0, 1.0, 0.8, 0.2);
+        this(hardwareMap, tel, 1.0, 1.0, 1.0, 0.2, 0.2);
     }
 
     /**
@@ -73,7 +74,10 @@ public class MainDecodeDrive {
         balls[0] = -1;
         balls[1] = -1;
         balls[2] = -1;
-        drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, s, false, true, false, false);
+        drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, s, false, false, false, false);
+        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         DcMotor[] motors = {leftFront, rightFront, leftRear, rightRear, launcherLeft, launcherRight, drumRotor};
         for (DcMotor motor : motors) {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -225,8 +229,8 @@ public class MainDecodeDrive {
      * @param r Reverse Direction
      */
     public void runIntake(boolean run, boolean r){
-        if(run) {
-            kicker.setPosition(1);
+        if(run && !(launching || primed)) {
+            kicker.setPosition(0.65);
             intake.setPower(intakeSpeed * reverse(r));
             int drumPos = drumRotor.getTargetPosition();
             if (drumPos % (ROTATION_TICK / 3) <= ROTATION_TICK / 7) {
@@ -245,7 +249,6 @@ public class MainDecodeDrive {
         } else {
             intake.setPower(0);
         }
-        telemetry.addData("Intake Speed", intakeSpeed);
     }
 
     /**
@@ -256,19 +259,19 @@ public class MainDecodeDrive {
      * @param fireGreen Set to true once to fire a green, then stop the spinners after it's launched
      */
     public void runOuttake(boolean prime, boolean cancel, boolean firePurple, boolean fireGreen){
-        telemetry.addData("Ball 0", balls[0]);
-        telemetry.addData("Ball 1", balls[1]);
-        telemetry.addData("Ball 2", balls[2]);
-        telemetry.addData("Detected Color", isGreenOrPurple());
-        if(prime) {
+        ballTelemetry();
+        telemetry.addData("Red", getColor()[0]);
+        telemetry.addData("Green", getColor()[1]);
+        telemetry.addData("Blue", getColor()[2]);
+        if(prime && !primed) {
+            primed = true;
             int drumPos = drumRotor.getTargetPosition();
-            if((drumPos % (ROTATION_TICK / 3)) <= ROTATION_TICK/5){
-                drumRotor.setTargetPosition(drumPos + ROTATION_TICK / 6);
-            }
+            drumRotor.setTargetPosition(drumPos + ROTATION_TICK / 6);
             launcherLeft.setPower(launchSpeed);
             launcherRight.setPower(launchSpeed);
         }
         if (cancel) {
+            primed = false;
             launcherLeft.setPower(0);
             launcherRight.setPower(0);
         }
@@ -299,9 +302,11 @@ public class MainDecodeDrive {
         if(launching && abs(drumRotor.getTargetPosition()-drumRotor.getCurrentPosition())<ROTATION_TICK/16){
             kicker.setPosition(0.3);
             balls[1] = -1;
+            launching = false;
         }
     }
     private void setDrumLaunch(int ballLocation){
+        kicker.setPosition(0.65);
         if(ballLocation == 0){
             drumRotor.setTargetPosition(drumRotor.getTargetPosition()+ROTATION_TICK/3);
             int temp = balls[0];
@@ -322,14 +327,18 @@ public class MainDecodeDrive {
      */
     public void ballTelemetry(){
         for(int i=0; i<balls.length; i++){
+            String ballDesc = "Stored Ball - ";
+            if(i == 1){
+                ballDesc = "Launch Ball - ";
+            }
             if(balls[i] == 0){
-                telemetry.addData("Ball "+i, "Green");
+                telemetry.addData(ballDesc, "Green");
             }
             else if(balls[i] == 1){
-                telemetry.addData("Ball "+i+" (Launch Position)", "Purple");
+                telemetry.addData(ballDesc, "Purple");
             }
             else{
-                telemetry.addData("Ball "+i, "N/A");
+                telemetry.addData(ballDesc, "N/A");
             }
         }
     }
@@ -354,7 +363,7 @@ public class MainDecodeDrive {
         if(colors[1] > colors[2] * 1.5 && colors[1] > colors[0] * 2.0){
             return 0;
         }
-        if (colors[2] > colors[1] * 1.2 && colors[0] > colors[1] * 1.2){
+        if (colors[2] > colors[1] * 1.5 && colors[2] > colors[0]*1.5){
             return 1;
         }
         return -1;

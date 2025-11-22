@@ -12,7 +12,7 @@ public class MainSoloDrive extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
             masterDrive.runDrive(gamepad1);
-            masterDrive.runIntake(gamepad1.left_trigger > masterDrive.getDeadzone(), false);
+            masterDrive.runIntake(gamepad1.back, false);
             masterDrive.runOuttake(
                     gamepad1.aWasReleased(), // Prime the Launch
                     gamepad1.bWasReleased(), // Cancel the Launch

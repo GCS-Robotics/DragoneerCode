@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class MecanumDrive {
     // All the motors
@@ -18,18 +20,20 @@ public class MecanumDrive {
      * Constructs an object in charge of all driving, for chassis that use Mecanum-Wheel Driving.
      * Needs the Motors, a drive-speed multiplier, and the "Factor."
      * If the motors spin the wrong way, set the corresponding factor to False. Otherwise, set it to True.
-     * @param fl Front-Left Motor
-     * @param fr Front-Right Motor
-     * @param bl Back-Left Motor
-     * @param br Back-Right Motor
+     * @param hardwareMap Finds the motors from the hardware map.
      * @param ds Drive-speed Multiplier. Multiplies all driving by this number.
      */
-    public MecanumDrive(DcMotor fl, DcMotor fr, DcMotor bl, DcMotor br, double ds) {
-        frontLeft=fl;
-        frontRight=fr;
-        backLeft=bl;
-        backRight=br;
-        driveSpeed=ds;
+    public MecanumDrive(HardwareMap hardwareMap, double ds) {
+        frontLeft = hardwareMap.dcMotor.get("leftFront");
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight = hardwareMap.dcMotor.get("rightFront");
+        backLeft = hardwareMap.dcMotor.get("leftRear");
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight = hardwareMap.dcMotor.get("rightRear");
+        DcMotor[] motors = {frontLeft, frontRight, backLeft, backRight};
+        for (DcMotor motor : motors) {
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
     }
 
     /**
@@ -60,8 +64,8 @@ public class MecanumDrive {
      */
     public void moveLeft(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p);
-        backLeft.setPower(p);
+        frontLeft.setPower(p);
+        backLeft.setPower(-p);
         frontRight.setPower(-p);
         backRight.setPower(p);
     }

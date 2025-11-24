@@ -19,10 +19,6 @@ public class MainDecodeDrive {
     double DEADZONE;
     final int ROTATION_TICK = 288;
     int[] balls = new int[3]; // Ball at balls[1] is the ball that should be primed to fire
-    DcMotor leftFront;
-    DcMotor rightFront;
-    DcMotor leftRear;
-    DcMotor rightRear;
     DcMotor intake;
     DcMotor launcherRight;
     DcMotor launcherLeft;
@@ -58,10 +54,6 @@ public class MainDecodeDrive {
      */
     public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel, double s, double intakeS, double launchS, double drumS, double dz) {
         telemetry = tel;
-        leftFront = hardwareMap.dcMotor.get("leftFront");
-        rightFront = hardwareMap.dcMotor.get("rightFront");
-        leftRear = hardwareMap.dcMotor.get("leftRear");
-        rightRear = hardwareMap.dcMotor.get("rightRear");
         intake = hardwareMap.dcMotor.get("intake");
         launcherRight = hardwareMap.dcMotor.get("launcherRight");
         launcherRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -74,10 +66,8 @@ public class MainDecodeDrive {
         balls[0] = -1;
         balls[1] = -1;
         balls[2] = -1;
-        drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, s);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        DcMotor[] motors = {leftFront, rightFront, leftRear, rightRear, launcherLeft, launcherRight, drumRotor};
+        drive = new MecanumDrive(hardwareMap, s);
+        DcMotor[] motors = {launcherLeft, launcherRight, drumRotor};
         for (DcMotor motor : motors) {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }

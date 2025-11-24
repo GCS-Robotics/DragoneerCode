@@ -7,8 +7,6 @@ public class MecanumDrive {
     private final DcMotor frontLeft, frontRight, backLeft, backRight;
     // The factor by which all motor speeds should be multiplied
     private double driveSpeed;
-    // Used in case motor spins opposite way as intended. Set as -1 or 1
-    private final int fLFactor, fRFactor, bLFactor, bRFactor;
 
     // Used to convert the factor booleans to numbers, which are more useful
     private int factor(boolean f) {
@@ -25,21 +23,13 @@ public class MecanumDrive {
      * @param bl Back-Left Motor
      * @param br Back-Right Motor
      * @param ds Drive-speed Multiplier. Multiplies all driving by this number.
-     * @param flf Front-Left Motor's Factor
-     * @param frf Front-Right Motor's Factor
-     * @param blf Back-Left Motor's Factor
-     * @param brf Back-Right Motor's Factor
      */
-    public MecanumDrive(DcMotor fl, DcMotor fr, DcMotor bl, DcMotor br, double ds, boolean flf, boolean frf, boolean blf, boolean brf) {
+    public MecanumDrive(DcMotor fl, DcMotor fr, DcMotor bl, DcMotor br, double ds) {
         frontLeft=fl;
         frontRight=fr;
         backLeft=bl;
         backRight=br;
         driveSpeed=ds;
-        fLFactor=factor(flf);
-        fRFactor=factor(frf);
-        bLFactor=factor(blf);
-        bRFactor=factor(brf);
     }
 
     /**
@@ -48,10 +38,10 @@ public class MecanumDrive {
      */
     public void moveForward(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p*fLFactor);
-        backLeft.setPower(p*bLFactor);
-        frontRight.setPower(p*fRFactor);
-        backRight.setPower(p*bRFactor);
+        frontLeft.setPower(p);
+        backLeft.setPower(p);
+        frontRight.setPower(p);
+        backRight.setPower(p);
     }
     /**
      * Drives the robot backward.
@@ -59,10 +49,10 @@ public class MecanumDrive {
      */
     public void moveBackward(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p*fLFactor);
-        backLeft.setPower(-p*bLFactor);
-        frontRight.setPower(-p*fRFactor);
-        backRight.setPower(-p*bRFactor);
+        frontLeft.setPower(-p);
+        backLeft.setPower(-p);
+        frontRight.setPower(-p);
+        backRight.setPower(-p);
     }
     /**
      * Drives the robot left.
@@ -70,10 +60,10 @@ public class MecanumDrive {
      */
     public void moveLeft(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p*fLFactor);
-        backLeft.setPower(-p*bLFactor);
-        frontRight.setPower(-p*fRFactor);
-        backRight.setPower(p*bRFactor);
+        frontLeft.setPower(-p);
+        backLeft.setPower(p);
+        frontRight.setPower(-p);
+        backRight.setPower(p);
     }
     /**
      * Drives the robot right.
@@ -81,10 +71,10 @@ public class MecanumDrive {
      */
     public void moveRight(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p*fLFactor);
-        backLeft.setPower(p*bLFactor);
-        frontRight.setPower(p*fRFactor);
-        backRight.setPower(-p*bRFactor);
+        frontLeft.setPower(p);
+        backLeft.setPower(-p);
+        frontRight.setPower(-p);
+        backRight.setPower(p);
     }
     /**
      * Drives the robot diagonally, to the Front-Right.
@@ -92,10 +82,10 @@ public class MecanumDrive {
      */
     public void diagonalRightFront(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p*fLFactor);
+        frontLeft.setPower(p);
         backLeft.setPower(0);
         frontRight.setPower(0);
-        backRight.setPower(p*bRFactor);
+        backRight.setPower(p);
     }
     /**
      * Drives the robot diagonally, to the Front-Left.
@@ -104,8 +94,8 @@ public class MecanumDrive {
     public void diagonalLeftFront(double multiplier) {
         double p=multiplier*driveSpeed;
         frontLeft.setPower(0);
-        backLeft.setPower(p*bLFactor);
-        frontRight.setPower(p*fRFactor);
+        backLeft.setPower(p);
+        frontRight.setPower(p);
         backRight.setPower(0);
     }
     /**
@@ -115,8 +105,8 @@ public class MecanumDrive {
     public void diagonalRightBack(double multiplier) {
         double p=multiplier*driveSpeed;
         frontLeft.setPower(0);
-        backLeft.setPower(-p*bLFactor);
-        frontRight.setPower(-p*fRFactor);
+        backLeft.setPower(-p);
+        frontRight.setPower(-p);
         backRight.setPower(0);
     }
     /**
@@ -125,10 +115,10 @@ public class MecanumDrive {
      */
     public void diagonalLeftBack(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p*fLFactor);
+        frontLeft.setPower(-p);
         backLeft.setPower(0);
         frontRight.setPower(0);
-        backRight.setPower(-p*bRFactor);
+        backRight.setPower(-p);
     }
     /**
      * Turns the robot to the right, pivoting on the middle (clockwise)
@@ -136,10 +126,10 @@ public class MecanumDrive {
      */
     public void turnRightTank(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p*fLFactor);
-        backLeft.setPower(-p*bLFactor);
-        frontRight.setPower(p*fRFactor);
-        backRight.setPower(p*bRFactor);
+        frontLeft.setPower(p);
+        backLeft.setPower(p);
+        frontRight.setPower(-p);
+        backRight.setPower(-p);
     }
     /**
      * Turns the robot to the left, pivoting on the middle (counter-clockwise)
@@ -147,10 +137,10 @@ public class MecanumDrive {
      */
     public void turnLeftTank(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p*fLFactor);
-        backLeft.setPower(p*bLFactor);
-        frontRight.setPower(-p*fRFactor);
-        backRight.setPower(-p*bRFactor);
+        frontLeft.setPower(-p);
+        backLeft.setPower(-p);
+        frontRight.setPower(p);
+        backRight.setPower(p);
     }
     /**
      * Turns the robot to the right, pivoting on the rear-axis (clockwise)
@@ -158,9 +148,9 @@ public class MecanumDrive {
      */
     public void turnRightRear(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p*fLFactor);
+        frontLeft.setPower(p);
         backLeft.setPower(0);
-        frontRight.setPower(-p*fRFactor);
+        frontRight.setPower(-p);
         backRight.setPower(0);
     }
     /**
@@ -169,9 +159,9 @@ public class MecanumDrive {
      */
     public void turnLeftRear(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p*fLFactor);
+        frontLeft.setPower(-p);
         backLeft.setPower(0);
-        frontRight.setPower(p*fRFactor);
+        frontRight.setPower(p);
         backRight.setPower(0);
     }
     /**
@@ -181,9 +171,9 @@ public class MecanumDrive {
     public void turnRightFront(double multiplier) {
         double p=multiplier*driveSpeed;
         frontLeft.setPower(0);
-        backLeft.setPower(p*bLFactor);
+        backLeft.setPower(p);
         frontRight.setPower(0);
-        backRight.setPower(-p*bRFactor);
+        backRight.setPower(-p);
     }
     /**
      * Turns the robot to the left, pivoting on the Front-axis (counter-clockwise)
@@ -192,9 +182,9 @@ public class MecanumDrive {
     public void turnLeftFront(double multiplier) {
         double p=multiplier*driveSpeed;
         frontLeft.setPower(0);
-        backLeft.setPower(-p*bLFactor);
+        backLeft.setPower(-p);
         frontRight.setPower(0);
-        backRight.setPower(p*bRFactor);
+        backRight.setPower(p);
     }
     /**
      * Turns the robot to the right and moves forward.
@@ -202,8 +192,8 @@ public class MecanumDrive {
      */
     public void cornerRightFront(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p*fLFactor);
-        backLeft.setPower(p*bLFactor);
+        frontLeft.setPower(p);
+        backLeft.setPower(p);
         frontRight.setPower(0);
         backRight.setPower(0);
     }
@@ -215,8 +205,8 @@ public class MecanumDrive {
         double p=multiplier*driveSpeed;
         frontLeft.setPower(0);
         backLeft.setPower(0);
-        frontRight.setPower(p*fRFactor);
-        backRight.setPower(p*bRFactor);
+        frontRight.setPower(p);
+        backRight.setPower(p);
     }
     /**
      * Turns the robot to the right and moves back.
@@ -226,8 +216,8 @@ public class MecanumDrive {
         double p=multiplier*driveSpeed;
         frontLeft.setPower(0);
         backLeft.setPower(0);
-        frontRight.setPower(-p*fRFactor);
-        backRight.setPower(-p*bRFactor);
+        frontRight.setPower(-p);
+        backRight.setPower(-p);
     }
     /**
      * Turns the robot to the left and moves forward.
@@ -235,8 +225,8 @@ public class MecanumDrive {
      */
     public void cornerLeftBack(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p*fLFactor);
-        backLeft.setPower(-p*bLFactor);
+        frontLeft.setPower(-p);
+        backLeft.setPower(-p);
         frontRight.setPower(0);
         backRight.setPower(0);
     }

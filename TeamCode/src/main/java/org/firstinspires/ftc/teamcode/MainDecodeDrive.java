@@ -74,9 +74,8 @@ public class MainDecodeDrive {
         balls[0] = -1;
         balls[1] = -1;
         balls[2] = -1;
-        drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, s, false, false, false, false);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        drive = new MecanumDrive(leftFront, rightFront, leftRear, rightRear, s);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         DcMotor[] motors = {leftFront, rightFront, leftRear, rightRear, launcherLeft, launcherRight, drumRotor};
         for (DcMotor motor : motors) {

@@ -16,47 +16,48 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(
-                myBot.getDrive().actionBuilder(new Pose2d(32, 11, 54))
+                myBot.getDrive().actionBuilder(new Pose2d(0, 0, 0))
 
                         // FIRST CYCLE
-                        .turnTo(Math.toRadians(-90))
-                        .strafeTo(new Vector2d(12, -24))
-                        .strafeTo(new Vector2d(12, -34.5))
-                        .strafeTo(new Vector2d(12, -39.5))
-                        .strafeTo(new Vector2d(12, -44.5))
-                        .strafeTo(new Vector2d(12, -24))
-                        .strafeTo(new Vector2d(24, -24))
-                        .turnTo(Math.toRadians(135))
-
-                        // SECOND CYCLE
-                        .turnTo(Math.toRadians(-90))
+                        .turnTo(Math.toRadians(90))
                         .strafeTo(new Vector2d(-12, -24))
                         .strafeTo(new Vector2d(-12, -34.5))
                         .strafeTo(new Vector2d(-12, -39.5))
                         .strafeTo(new Vector2d(-12, -44.5))
                         .strafeTo(new Vector2d(-12, -24))
-                        .strafeTo(new Vector2d(24, -24))
-                        .turnTo(Math.toRadians(135))
+                        .strafeTo(new Vector2d(-24, -24))
+                        .turnTo(Math.toRadians(225))
 
-                        // THIRD CYCLE
-                        .turnTo(Math.toRadians(-90))
-                        .strafeTo(new Vector2d(-36, -24))
-                        .strafeTo(new Vector2d(-36, -34.5))
-                        .strafeTo(new Vector2d(-36, -39.5))
-                        .strafeTo(new Vector2d(-36, -44.5))
-                        .strafeTo(new Vector2d(-36, -24))
-                        .strafeTo(new Vector2d(24, -24))
-                        .turnTo(Math.toRadians(135))
+// SECOND CYCLE
+                        .turnTo(Math.toRadians(90))
+                        .strafeTo(new Vector2d(12, -24))
+                        .strafeTo(new Vector2d(12, -34.5))
+                        .strafeTo(new Vector2d(12, -39.5))
+                        .strafeTo(new Vector2d(12, -44.5))
+                        .strafeTo(new Vector2d(12, -24))
+                        .strafeTo(new Vector2d(-24, -24))
+                        .turnTo(Math.toRadians(225))
 
-                        // GO HOME
-                        .strafeTo(new Vector2d(24, 36))
-                        .strafeTo(new Vector2d(-36, 36))
-                        .turnTo(Math.toRadians(0))
+// THIRD CYCLE
+                        .turnTo(Math.toRadians(90))
+                        .strafeTo(new Vector2d(36, -24))
+                        .strafeTo(new Vector2d(36, -34.5))
+                        .strafeTo(new Vector2d(36, -39.5))
+                        .strafeTo(new Vector2d(36, -44.5))
+                        .strafeTo(new Vector2d(36, -24))
+                        .strafeTo(new Vector2d(-24, -24))
+                        .turnTo(Math.toRadians(225))
+
+// GO HOME
+                        .strafeTo(new Vector2d(-24, 36))
+                        .strafeTo(new Vector2d(38, 34))
+                        .turnTo(Math.toRadians(180))
+
 
                         .build()
         );
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
+        meepMeep.setBackground(MeepMeep.Background.FIELD_DECODE_JUICE_BLACK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)

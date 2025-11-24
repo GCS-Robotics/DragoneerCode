@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.automodes;
 
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -22,79 +23,41 @@ public class RoadRunnerAutoBeta extends LinearOpMode {
 
         Actions.runBlocking(
                 drive.actionBuilder(new Pose2d(0,0,0))
-                        .turnTo(-90)
-                        .lineToX(12)
-                        .lineToY(-24)
-                        .build());
-        Actions.runBlocking(bobot.runIntake());
-        Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(12, -24, -90))
-                        .lineToY(-34.5)
-                        .lineToY(-39.5)
-                        .lineToY(-44.5)
-                        .build());
-        Actions.runBlocking(bobot.stopIntake());
-        Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(12, -44.5, -90))
-                        .lineToY(-24)
-                        .lineToX(24)
-                        .turnTo(45)
-                        .build());
-        /// TODO: Actions.runBlocking(bobot.runOuttake());
-        // Launch Balls
+                        .turnTo(Math.toRadians(-90))
+                        .strafeTo(new Vector2d(12, -24))
+                        .strafeTo(new Vector2d(12, -34.5))
+                        .strafeTo(new Vector2d(12, -39.5))
+                        .strafeTo(new Vector2d(12, -44.5))
+                        .strafeTo(new Vector2d(12, -24))
+                        .strafeTo(new Vector2d(24, -24))
+                        .turnTo(Math.toRadians(135))
 
+                        // SECOND CYCLE
+                        .turnTo(Math.toRadians(-90))
+                        .strafeTo(new Vector2d(-12, -24))
+                        .strafeTo(new Vector2d(-12, -34.5))
+                        .strafeTo(new Vector2d(-12, -39.5))
+                        .strafeTo(new Vector2d(-12, -44.5))
+                        .strafeTo(new Vector2d(-12, -24))
+                        .strafeTo(new Vector2d(24, -24))
+                        .turnTo(Math.toRadians(135))
 
+                        // THIRD CYCLE
+                        .turnTo(Math.toRadians(-90))
+                        .strafeTo(new Vector2d(-36, -24))
+                        .strafeTo(new Vector2d(-36, -34.5))
+                        .strafeTo(new Vector2d(-36, -39.5))
+                        .strafeTo(new Vector2d(-36, -44.5))
+                        .strafeTo(new Vector2d(-36, -24))
+                        .strafeTo(new Vector2d(24, -24))
+                        .turnTo(Math.toRadians(135))
 
-        Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(24, -24, 45))
-                        .turnTo(-90)
-                        .lineToX(-12)
-                        .lineToY(-24)
-                        .build());
-        Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(-12, -24, -90))
-                        .lineToY(-34.5)
-                        .lineToY(-39.5)
-                        .lineToY(-44.5)
-                        .build());
-        Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(-12, -44.5, -90))
-                        .lineToY(-24)
-                        .lineToX(24)
-                        .turnTo(45)
-                        .build());
-        // Launch Balls
+                        // GO HOME
+                        .strafeTo(new Vector2d(24, 36))
+                        .strafeTo(new Vector2d(-36, 36))
+                        .turnTo(Math.toRadians(0))
 
-
-
-
-        Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(24, -24, 45))
-                        .turnTo(-90)
-                        .lineToX(-36)
-                        .lineToY(-24)
-                        .build());
-        Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(-36, -24, -90))
-                        .lineToY(-34.5)
-                        .lineToY(-39.5)
-                        .lineToY(-44.5)
-                        .build());
-        Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(-36, -44.5, -90))
-                        .lineToY(-24)
-                        .lineToX(24)
-                        .turnTo(45)
-                        .build());
-        // Launch Balls
-
-        //Go to home
-        Actions.runBlocking(
-                drive.actionBuilder(new Pose2d(24, -24, 45))
-                        .lineToY(36)
-                        .lineToX(-36)
-                        .turnTo(0)
-                        .build());
-
+                        .build()
+        );
     }
 }

@@ -12,6 +12,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WebcamUtilities {
@@ -34,14 +35,15 @@ public class WebcamUtilities {
     public void endVisionPortal(){
         visionPortal.close();
     }
-    public int getAprilTag() {
+    public ArrayList<Integer> getAprilTag() {
+        ArrayList<Integer> detections = new ArrayList<>();
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         for(AprilTagDetection detection : currentDetections){
             if(detection.metadata != null){
-                return detection.id;
+                detections.add(detection.id);
             }
         }
-        return -1; // If no tags are detected
+        return detections; // If no tags are detected
     }
     public void telemetryAprilTag() {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();

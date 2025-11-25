@@ -75,10 +75,10 @@ public class MecanumDrive {
      */
     public void moveRight(double multiplier) {
         double p=multiplier*driveSpeed;
-        frontLeft.setPower(p);
-        backLeft.setPower(-p);
-        frontRight.setPower(-p);
-        backRight.setPower(p);
+        frontLeft.setPower(-p);
+        backLeft.setPower(p);
+        frontRight.setPower(p);
+        backRight.setPower(-p);
     }
     /**
      * Drives the robot diagonally, to the Front-Right.

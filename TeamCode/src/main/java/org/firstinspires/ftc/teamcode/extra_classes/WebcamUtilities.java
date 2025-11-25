@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.automodes;
-
-import android.annotation.SuppressLint;
+package org.firstinspires.ftc.teamcode.extra_classes;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 

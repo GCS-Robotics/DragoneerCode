@@ -1,8 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Math.abs;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class MecanumDrive {
     // All the motors
@@ -35,7 +40,62 @@ public class MecanumDrive {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
     }
-
+    public void runDrive(Gamepad gamepad, double speedTrigger, boolean reverseSwitch, Telemetry telemetry){
+        // QOL #1: Set the Speed
+        double speed = 1 - (speedTrigger / 1.4);
+        if (speed <= 0.1) {
+            speed = .1;
+        }
+        // QOL #2: Reverse Controls
+        if (reverseSwitch) {
+            speed = speed * (-1);
+        }
+        setDriveSpeed(speed);
+        if (abs(gamepad.right_stick_x) > .4) { // If the right stick is being moved sufficiently
+            if (speed < 0) {
+                speed = abs(speed);
+                setDriveSpeed(speed);
+            }
+            // Tank Turn
+            if (gamepad.right_stick_x > .4) {
+                turnRightTank(1 * gamepad.right_stick_x);
+            }
+            if (gamepad.right_stick_x < -.4) {
+                turnLeftTank(1 * -gamepad.right_stick_x);
+            }
+        } else if (abs(gamepad.left_stick_x) > .4 || abs(gamepad.left_stick_y) > .4) { // If the left stick is being moved sufficiently
+            // Forward/Back
+            if (gamepad.left_stick_y < -.4 && abs(gamepad.left_stick_x) < .4) {
+                moveForward(1 * -gamepad.left_stick_y);
+            }
+            if (gamepad.left_stick_y > .4 && abs(gamepad.left_stick_x) < .4) {
+                moveBackward(1 * gamepad.left_stick_y);
+            }
+            // Left/Right
+            if (gamepad.left_stick_x < -.4 && abs(gamepad.left_stick_y) < .4) {
+                moveRight(1 * -gamepad.left_stick_x);
+            }
+            if (gamepad.left_stick_x > .4 && abs(gamepad.left_stick_y) < .4) {
+                moveLeft(1 * gamepad.left_stick_x);
+            }
+            // Diagonals
+            if (gamepad.left_stick_y < -.4 && gamepad.left_stick_x > .4) {
+                diagonalRightFront(1);
+            }
+            if (gamepad.left_stick_y < -.4 && gamepad.left_stick_x < -.4) {
+                diagonalLeftFront(1);
+            }
+            if (gamepad.left_stick_y > .4 && gamepad.left_stick_x > .4) {
+                diagonalRightBack(1);
+            }
+            if (gamepad.left_stick_y > .4 && gamepad.left_stick_x < -.4) {
+                diagonalLeftBack(1);
+            }
+        } else { // If the sticks aren't being touched
+            stop();
+        }
+        telemetry.addData("Drive Speed", speed);
+    }
     /**
      * Drives the robot forward.
      * @param multiplier Multiplier for how faster the drive should happen.

@@ -1,7 +1,9 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.MainDecodeDrive;
 
 @TeleOp(name = "Main Drive (1P)", group = "Main Drive")
 public class MainSoloDrive extends LinearOpMode {

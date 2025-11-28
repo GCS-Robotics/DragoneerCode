@@ -154,63 +154,10 @@ public class MainDecodeDrive {
     /**
      * Runs all of the drive commands using the left and right sticks of a gamepad.
      *
-     * @param gamepad1 Which gamepad's left and right sticks?
+     * @param gamepad Which gamepad's left and right sticks?
      */
-    public void runDrive(Gamepad gamepad1) {
-        // QOL #1: Set the Speed
-        double speed = 1 - (gamepad1.right_trigger / 1.4);
-        if (speed <= 0.1) {
-            speed = .1;
-        }
-        // QOL #2: Reverse Controls
-        if (gamepad1.left_trigger > .3) {
-            speed = speed * (-1);
-        }
-        drive.setDriveSpeed(speed);
-        if (abs(gamepad1.right_stick_x) > .4) { // If the right stick is being moved sufficiently
-            if (speed < 0) {
-                speed = abs(speed);
-                drive.setDriveSpeed(speed);
-            }
-            // Tank Turn
-            if (gamepad1.right_stick_x > .4) {
-                drive.turnRightTank(1 * gamepad1.right_stick_x);
-            }
-            if (gamepad1.right_stick_x < -.4) {
-                drive.turnLeftTank(1 * -gamepad1.right_stick_x);
-            }
-        } else if (abs(gamepad1.left_stick_x) > .4 || abs(gamepad1.left_stick_y) > .4) { // If the left stick is being moved sufficiently
-            // Forward/Back
-            if (gamepad1.left_stick_y < -.4 && abs(gamepad1.left_stick_x) < .4) {
-                drive.moveForward(1 * -gamepad1.left_stick_y);
-            }
-            if (gamepad1.left_stick_y > .4 && abs(gamepad1.left_stick_x) < .4) {
-                drive.moveBackward(1 * gamepad1.left_stick_y);
-            }
-            // Left/Right
-            if (gamepad1.left_stick_x < -.4 && abs(gamepad1.left_stick_y) < .4) {
-                drive.moveRight(1 * -gamepad1.left_stick_x);
-            }
-            if (gamepad1.left_stick_x > .4 && abs(gamepad1.left_stick_y) < .4) {
-                drive.moveLeft(1 * gamepad1.left_stick_x);
-            }
-            // Diagonals
-            if (gamepad1.left_stick_y < -.4 && gamepad1.left_stick_x > .4) {
-                drive.diagonalRightFront(1);
-            }
-            if (gamepad1.left_stick_y < -.4 && gamepad1.left_stick_x < -.4) {
-                drive.diagonalLeftFront(1);
-            }
-            if (gamepad1.left_stick_y > .4 && gamepad1.left_stick_x > .4) {
-                drive.diagonalRightBack(1);
-            }
-            if (gamepad1.left_stick_y > .4 && gamepad1.left_stick_x < -.4) {
-                drive.diagonalLeftBack(1);
-            }
-        } else { // If the sticks aren't being touched
-            drive.stop();
-        }
-        telemetry.addData("Drive Speed", speed);
+    public void runDrive(Gamepad gamepad) {
+        drive.runDrive(gamepad, gamepad.right_trigger, gamepad.left_trigger > DEADZONE, telemetry);
     }
     /**
      * Runs the intake if the boolean is true.

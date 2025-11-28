@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.automodes;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
 public class TesterClass extends LinearOpMode {
     @Override

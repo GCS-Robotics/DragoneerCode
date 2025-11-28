@@ -9,8 +9,8 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.extra_classes.RobotMechanisms;
+import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
+import org.firstinspires.ftc.teamcode.resources.RobotMechanisms;
 
 @Autonomous(name="RoadRunnerTest")
 public class RoadRunnerAutoBeta extends LinearOpMode {

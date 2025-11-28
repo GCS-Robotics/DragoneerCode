@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class MainDecodeDrive {
     double SPEED;
+    double currentSpeed;
     double intakeSpeed = 1.0;
     double launchSpeed = 1.0;
     double drumSpeed = 1.0;
@@ -154,10 +155,14 @@ public class MainDecodeDrive {
     /**
      * Runs all of the drive commands using the left and right sticks of a gamepad.
      *
-     * @param gamepad Which gamepad's left and right sticks?
+     * @param gamepad Gamepad that provides the left and right sticks.
      */
     public void runDrive(Gamepad gamepad) {
-        drive.runDrive(gamepad, gamepad.right_trigger, gamepad.left_trigger > DEADZONE, telemetry);
+        currentSpeed = SPEED - (gamepad.right_trigger / 1.4);
+        if (currentSpeed <= 0.1) {
+            currentSpeed = .1;
+        }
+        drive.runDrive(gamepad, currentSpeed, gamepad.left_trigger > DEADZONE);
     }
     /**
      * Runs the intake if the boolean is true.
@@ -195,10 +200,6 @@ public class MainDecodeDrive {
      * @param fireGreen Set to true once to fire a green, then stop the spinners after it's launched
      */
     public void runOuttake(boolean prime, boolean cancel, boolean firePurple, boolean fireGreen){
-        ballTelemetry();
-        telemetry.addData("Red", getColor()[0]);
-        telemetry.addData("Green", getColor()[1]);
-        telemetry.addData("Blue", getColor()[2]);
         if(prime && !primed) {
             primed = true;
             int drumPos = drumRotor.getTargetPosition();
@@ -259,9 +260,13 @@ public class MainDecodeDrive {
         }
     }
     /**
-     * Posts all ball positions to telemetry2
+     * Posts all necessary information to telemetry
      */
-    public void ballTelemetry(){
+    public void postTelemetry(){
+        telemetry.addData("Drive Speed", currentSpeed);
+        telemetry.addLine();
+        telemetry.addData("Launch Speed", launchSpeed);
+        telemetry.addLine();
         for(int i=0; i<balls.length; i++){
             String ballDesc = "Stored Ball - ";
             if(i == 1){

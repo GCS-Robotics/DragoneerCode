@@ -13,6 +13,7 @@ public class MainDuoDrive extends LinearOpMode {
         masterDrive = new MainDecodeDrive(hardwareMap, telemetry);
         waitForStart();
         while(opModeIsActive()){
+            masterDrive.postTelemetry();
             masterDrive.runDrive(gamepad1);
             masterDrive.runIntake(gamepad2.left_trigger > masterDrive.getDeadzone(), false);
             masterDrive.runOuttake(

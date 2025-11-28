@@ -40,12 +40,7 @@ public class MecanumDrive {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
     }
-    public void runDrive(Gamepad gamepad, double speedTrigger, boolean reverseSwitch, Telemetry telemetry){
-        // QOL #1: Set the Speed
-        double speed = 1 - (speedTrigger / 1.4);
-        if (speed <= 0.1) {
-            speed = .1;
-        }
+    public void runDrive(Gamepad gamepad, double speed, boolean reverseSwitch){
         // QOL #2: Reverse Controls
         if (reverseSwitch) {
             speed = speed * (-1);
@@ -94,7 +89,6 @@ public class MecanumDrive {
         } else { // If the sticks aren't being touched
             stop();
         }
-        telemetry.addData("Drive Speed", speed);
     }
     /**
      * Drives the robot forward.

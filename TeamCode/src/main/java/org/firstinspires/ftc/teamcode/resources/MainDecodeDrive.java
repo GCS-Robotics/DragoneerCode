@@ -25,7 +25,7 @@ public class MainDecodeDrive {
     DcMotor launcherLeft;
     DcMotor drumRotor;
     Servo kicker;
-    MecanumDrive drive;
+    RegularMecanumDrive drive;
     Telemetry telemetry;
 
     ColorSensor BallColor;
@@ -67,7 +67,7 @@ public class MainDecodeDrive {
         balls[0] = -1;
         balls[1] = -1;
         balls[2] = -1;
-        drive = new MecanumDrive(hardwareMap, s);
+        drive = new RegularMecanumDrive(hardwareMap, s);
         DcMotor[] motors = {launcherLeft, launcherRight, drumRotor};
         for (DcMotor motor : motors) {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

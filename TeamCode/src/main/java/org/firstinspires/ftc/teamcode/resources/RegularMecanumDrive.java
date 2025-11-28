@@ -7,9 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-public class MecanumDrive {
+public class RegularMecanumDrive {
     // All the motors
     private final DcMotor frontLeft, frontRight, backLeft, backRight;
     // The factor by which all motor speeds should be multiplied
@@ -28,7 +26,7 @@ public class MecanumDrive {
      * @param hardwareMap Finds the motors from the hardware map.
      * @param ds Drive-speed Multiplier. Multiplies all driving by this number.
      */
-    public MecanumDrive(HardwareMap hardwareMap, double ds) {
+    public RegularMecanumDrive(HardwareMap hardwareMap, double ds) {
         frontLeft = hardwareMap.dcMotor.get("leftFront");
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRight = hardwareMap.dcMotor.get("rightFront");

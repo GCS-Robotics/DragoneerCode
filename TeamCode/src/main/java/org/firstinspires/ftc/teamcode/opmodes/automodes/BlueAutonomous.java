@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.automodes;
+package org.firstinspires.ftc.teamcode.opmodes.automodes;
 
 
 

@@ -1,29 +1,35 @@
-package org.firstinspires.ftc.teamcode.automodes;
+package org.firstinspires.ftc.teamcode.opmodes.automodes;
+
+import static java.lang.Math.PI;
 
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TurnConstraints;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
-@Autonomous(name = "Forward Test", group = "Test")
-public class ForwardTest extends LinearOpMode {
-
+@Autonomous(name = "Steve's Challenge", group = "Test")
+public class SteveChallenge extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        // Initialize drive class with hardwareMap and starting pose
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
 
-        // Wait for start
+
+
         waitForStart();
         if (isStopRequested()) return;
 
-        // Move forward 30 inches
+
         Actions.runBlocking(
                 drive.actionBuilder(new Pose2d(0, 0, 0))
-                        .lineToX(30)  // move forward in X direction
+                        .turn(PI / 2)
+                        .lineToX(10)
+                        .lineToX(0)
+                        .turn(PI / 2)
                         .build()
         );
     }
 }
+

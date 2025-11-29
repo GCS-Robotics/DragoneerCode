@@ -33,6 +33,7 @@ public class RegularMecanumDrive {
         backLeft = hardwareMap.dcMotor.get("leftRear");
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight = hardwareMap.dcMotor.get("rightRear");
+        driveSpeed = ds;
         DcMotor[] motors = {frontLeft, frontRight, backLeft, backRight};
         for (DcMotor motor : motors) {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -41,7 +42,7 @@ public class RegularMecanumDrive {
     public void runDrive(Gamepad gamepad, double speed, boolean reverseSwitch){
         // QOL #2: Reverse Controls
         if (reverseSwitch) {
-            speed = speed * (-1);
+            speed = speed * (-driveSpeed);
         }
         setDriveSpeed(speed);
         if (abs(gamepad.right_stick_x) > .4) { // If the right stick is being moved sufficiently
@@ -51,38 +52,38 @@ public class RegularMecanumDrive {
             }
             // Tank Turn
             if (gamepad.right_stick_x > .4) {
-                turnRightTank(1 * gamepad.right_stick_x);
+                turnRightTank(driveSpeed * gamepad.right_stick_x);
             }
             if (gamepad.right_stick_x < -.4) {
-                turnLeftTank(1 * -gamepad.right_stick_x);
+                turnLeftTank(driveSpeed * -gamepad.right_stick_x);
             }
         } else if (abs(gamepad.left_stick_x) > .4 || abs(gamepad.left_stick_y) > .4) { // If the left stick is being moved sufficiently
             // Forward/Back
             if (gamepad.left_stick_y < -.4 && abs(gamepad.left_stick_x) < .4) {
-                moveForward(1 * -gamepad.left_stick_y);
+                moveForward(driveSpeed * -gamepad.left_stick_y);
             }
             if (gamepad.left_stick_y > .4 && abs(gamepad.left_stick_x) < .4) {
-                moveBackward(1 * gamepad.left_stick_y);
+                moveBackward(driveSpeed * gamepad.left_stick_y);
             }
             // Left/Right
             if (gamepad.left_stick_x < -.4 && abs(gamepad.left_stick_y) < .4) {
-                moveRight(1 * -gamepad.left_stick_x);
+                moveRight(driveSpeed * -gamepad.left_stick_x);
             }
             if (gamepad.left_stick_x > .4 && abs(gamepad.left_stick_y) < .4) {
-                moveLeft(1 * gamepad.left_stick_x);
+                moveLeft(driveSpeed * gamepad.left_stick_x);
             }
             // Diagonals
             if (gamepad.left_stick_y < -.4 && gamepad.left_stick_x > .4) {
-                diagonalRightFront(1);
+                diagonalRightFront(driveSpeed);
             }
             if (gamepad.left_stick_y < -.4 && gamepad.left_stick_x < -.4) {
-                diagonalLeftFront(1);
+                diagonalLeftFront(driveSpeed);
             }
             if (gamepad.left_stick_y > .4 && gamepad.left_stick_x > .4) {
-                diagonalRightBack(1);
+                diagonalRightBack(driveSpeed);
             }
             if (gamepad.left_stick_y > .4 && gamepad.left_stick_x < -.4) {
-                diagonalLeftBack(1);
+                diagonalLeftBack(driveSpeed);
             }
         } else { // If the sticks aren't being touched
             stop();
@@ -93,65 +94,59 @@ public class RegularMecanumDrive {
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void moveForward(double multiplier) {
-        double p=multiplier*driveSpeed;
-        frontLeft.setPower(p);
-        backLeft.setPower(p);
-        frontRight.setPower(p);
-        backRight.setPower(p);
+        frontLeft.setPower(driveSpeed);
+        backLeft.setPower(multiplier);
+        frontRight.setPower(multiplier);
+        backRight.setPower(multiplier);
     }
     /**
      * Drives the robot backward.
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void moveBackward(double multiplier) {
-        double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p);
-        backLeft.setPower(-p);
-        frontRight.setPower(-p);
-        backRight.setPower(-p);
+        frontLeft.setPower(-multiplier);
+        backLeft.setPower(-multiplier);
+        frontRight.setPower(-multiplier);
+        backRight.setPower(-multiplier);
     }
     /**
      * Drives the robot left.
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void moveLeft(double multiplier) {
-        double p=multiplier*driveSpeed;
-        frontLeft.setPower(p);
-        backLeft.setPower(-p);
-        frontRight.setPower(-p);
-        backRight.setPower(p);
+        frontLeft.setPower(multiplier);
+        backLeft.setPower(-multiplier);
+        frontRight.setPower(-multiplier);
+        backRight.setPower(multiplier);
     }
     /**
      * Drives the robot right.
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void moveRight(double multiplier) {
-        double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p);
-        backLeft.setPower(p);
-        frontRight.setPower(p);
-        backRight.setPower(-p);
+        frontLeft.setPower(-multiplier);
+        backLeft.setPower(multiplier);
+        frontRight.setPower(multiplier);
+        backRight.setPower(-multiplier);
     }
     /**
      * Drives the robot diagonally, to the Front-Right.
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void diagonalRightFront(double multiplier) {
-        double p=multiplier*driveSpeed;
-        frontLeft.setPower(p);
+        frontLeft.setPower(multiplier);
         backLeft.setPower(0);
         frontRight.setPower(0);
-        backRight.setPower(p);
+        backRight.setPower(multiplier);
     }
     /**
      * Drives the robot diagonally, to the Front-Left.
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void diagonalLeftFront(double multiplier) {
-        double p=multiplier*driveSpeed;
         frontLeft.setPower(0);
-        backLeft.setPower(p);
-        frontRight.setPower(p);
+        backLeft.setPower(multiplier);
+        frontRight.setPower(multiplier);
         backRight.setPower(0);
     }
     /**
@@ -159,10 +154,9 @@ public class RegularMecanumDrive {
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void diagonalRightBack(double multiplier) {
-        double p=multiplier*driveSpeed;
         frontLeft.setPower(0);
-        backLeft.setPower(-p);
-        frontRight.setPower(-p);
+        backLeft.setPower(-multiplier);
+        frontRight.setPower(-multiplier);
         backRight.setPower(0);
     }
     /**
@@ -170,43 +164,39 @@ public class RegularMecanumDrive {
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void diagonalLeftBack(double multiplier) {
-        double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p);
+        frontLeft.setPower(-multiplier);
         backLeft.setPower(0);
         frontRight.setPower(0);
-        backRight.setPower(-p);
+        backRight.setPower(-multiplier);
     }
     /**
      * Turns the robot to the right, pivoting on the middle (clockwise)
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void turnRightTank(double multiplier) {
-        double p=multiplier*driveSpeed;
-        frontLeft.setPower(p);
-        backLeft.setPower(p);
-        frontRight.setPower(-p);
-        backRight.setPower(-p);
+        frontLeft.setPower(multiplier);
+        backLeft.setPower(multiplier);
+        frontRight.setPower(-multiplier);
+        backRight.setPower(-multiplier);
     }
     /**
      * Turns the robot to the left, pivoting on the middle (counter-clockwise)
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void turnLeftTank(double multiplier) {
-        double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p);
-        backLeft.setPower(-p);
-        frontRight.setPower(p);
-        backRight.setPower(p);
+        frontLeft.setPower(-multiplier);
+        backLeft.setPower(-multiplier);
+        frontRight.setPower(multiplier);
+        backRight.setPower(multiplier);
     }
     /**
      * Turns the robot to the right, pivoting on the rear-axis (clockwise)
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void turnRightRear(double multiplier) {
-        double p=multiplier*driveSpeed;
-        frontLeft.setPower(p);
+        frontLeft.setPower(multiplier);
         backLeft.setPower(0);
-        frontRight.setPower(-p);
+        frontRight.setPower(-multiplier);
         backRight.setPower(0);
     }
     /**
@@ -214,10 +204,9 @@ public class RegularMecanumDrive {
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void turnLeftRear(double multiplier) {
-        double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p);
+        frontLeft.setPower(-multiplier);
         backLeft.setPower(0);
-        frontRight.setPower(p);
+        frontRight.setPower(multiplier);
         backRight.setPower(0);
     }
     /**
@@ -225,31 +214,28 @@ public class RegularMecanumDrive {
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void turnRightFront(double multiplier) {
-        double p=multiplier*driveSpeed;
         frontLeft.setPower(0);
-        backLeft.setPower(p);
+        backLeft.setPower(multiplier);
         frontRight.setPower(0);
-        backRight.setPower(-p);
+        backRight.setPower(-multiplier);
     }
     /**
      * Turns the robot to the left, pivoting on the Front-axis (counter-clockwise)
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void turnLeftFront(double multiplier) {
-        double p=multiplier*driveSpeed;
         frontLeft.setPower(0);
-        backLeft.setPower(-p);
+        backLeft.setPower(-multiplier);
         frontRight.setPower(0);
-        backRight.setPower(p);
+        backRight.setPower(multiplier);
     }
     /**
      * Turns the robot to the right and moves forward.
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void cornerRightFront(double multiplier) {
-        double p=multiplier*driveSpeed;
-        frontLeft.setPower(p);
-        backLeft.setPower(p);
+        frontLeft.setPower(multiplier);
+        backLeft.setPower(multiplier);
         frontRight.setPower(0);
         backRight.setPower(0);
     }
@@ -258,31 +244,28 @@ public class RegularMecanumDrive {
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void cornerLeftFront(double multiplier) {
-        double p=multiplier*driveSpeed;
         frontLeft.setPower(0);
         backLeft.setPower(0);
-        frontRight.setPower(p);
-        backRight.setPower(p);
+        frontRight.setPower(multiplier);
+        backRight.setPower(multiplier);
     }
     /**
      * Turns the robot to the right and moves back.
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void cornerRightBack(double multiplier) {
-        double p=multiplier*driveSpeed;
         frontLeft.setPower(0);
         backLeft.setPower(0);
-        frontRight.setPower(-p);
-        backRight.setPower(-p);
+        frontRight.setPower(-multiplier);
+        backRight.setPower(-multiplier);
     }
     /**
      * Turns the robot to the left and moves forward.
      * @param multiplier Multiplier for how faster the drive should happen.
      */
     public void cornerLeftBack(double multiplier) {
-        double p=multiplier*driveSpeed;
-        frontLeft.setPower(-p);
-        backLeft.setPower(-p);
+        frontLeft.setPower(-multiplier);
+        backLeft.setPower(-multiplier);
         frontRight.setPower(0);
         backRight.setPower(0);
     }

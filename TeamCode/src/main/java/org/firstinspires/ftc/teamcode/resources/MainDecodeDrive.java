@@ -12,23 +12,31 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class MainDecodeDrive {
-    double SPEED;
+    // Constants
+    final double DRIVE_SPEED;
+    final double DEADZONE;
+    final double KICKER_BACK = 0.65;
+    final double KICKER_KICKED = 0.3;
+    final int ROTATION_TICK = 288;
+    // Mutable Variables
     double currentSpeed;
     double intakeSpeed = 1.0;
     double launchSpeed = 1.0;
     double drumSpeed = 1.0;
-    double DEADZONE;
-    final int ROTATION_TICK = 288;
     int[] balls = new int[3]; // Ball at balls[1] is the ball that should be primed to fire
+    // Hardware
     DcMotor intake;
     DcMotor launcherRight;
     DcMotor launcherLeft;
     DcMotor drumRotor;
+    ColorSensor BallColor;
     Servo kicker;
     RegularMecanumDrive drive;
+    // Telemetry
     Telemetry telemetry;
+    Telemetry dashboardTelemetry;
 
-    ColorSensor BallColor;
+
     boolean launching = false;
     boolean primed = false;
 
@@ -38,8 +46,8 @@ public class MainDecodeDrive {
      * @param hardwareMap Finds all of the hardware components from the Hardware Map
      * @param tel         For any functions that want to post to telemetry (must call telemetry.update() separately)
      */
-    public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel) {
-        this(hardwareMap, tel, 1.0, 1.0, 1.0, 0.2, 0.2);
+    public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel, Telemetry dashTel) {
+        this(hardwareMap, tel, dashTel, 1.0, 1.0, 1.0, 0.2, 0.2);
     }
 
     /**
@@ -53,8 +61,9 @@ public class MainDecodeDrive {
      * @param drumS       Drum Speed
      * @param dz          Deadzone for driving inputs
      */
-    public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel, double s, double intakeS, double launchS, double drumS, double dz) {
+    public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel, Telemetry dashTel, double s, double intakeS, double launchS, double drumS, double dz) {
         telemetry = tel;
+        dashboardTelemetry = dashTel;
         intake = hardwareMap.dcMotor.get("intake");
         launcherRight = hardwareMap.dcMotor.get("launcherRight");
         launcherRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -63,7 +72,7 @@ public class MainDecodeDrive {
         kicker = hardwareMap.servo.get("kicker");
         BallColor = hardwareMap.colorSensor.get("colorSensor");
         kicker.setDirection(Servo.Direction.REVERSE);
-        kicker.setPosition(.65);
+        kicker.setPosition(KICKER_BACK);
         balls[0] = -1;
         balls[1] = -1;
         balls[2] = -1;
@@ -76,7 +85,7 @@ public class MainDecodeDrive {
         drumRotor.setTargetPosition(0);
         drumRotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         drumRotor.setPower(drumSpeed);
-        SPEED = s;
+        DRIVE_SPEED = s;
         intakeSpeed = intakeS;
         launchSpeed = launchS;
         drumSpeed = drumS;
@@ -158,7 +167,7 @@ public class MainDecodeDrive {
      * @param gamepad Gamepad that provides the left and right sticks.
      */
     public void runDrive(Gamepad gamepad) {
-        currentSpeed = SPEED - (gamepad.right_trigger / 1.4);
+        currentSpeed = DRIVE_SPEED - (gamepad.right_trigger / 1.4);
         if (currentSpeed <= 0.1) {
             currentSpeed = .1;
         }
@@ -171,7 +180,7 @@ public class MainDecodeDrive {
      */
     public void runIntake(boolean run, boolean r){
         if(run && !(launching || primed)) {
-            kicker.setPosition(0.65);
+            kicker.setPosition(KICKER_BACK);
             intake.setPower(intakeSpeed * reverse(r));
             int drumPos = drumRotor.getTargetPosition();
             if (drumPos % (ROTATION_TICK / 3) <= ROTATION_TICK / 7) {
@@ -203,7 +212,9 @@ public class MainDecodeDrive {
         if(prime && !primed) {
             primed = true;
             int drumPos = drumRotor.getTargetPosition();
-            drumRotor.setTargetPosition(drumPos + ROTATION_TICK / 6);
+            if (drumPos % (ROTATION_TICK / 3) > ROTATION_TICK / 7){
+                drumRotor.setTargetPosition(drumPos + ROTATION_TICK / 6);
+            }
             launcherLeft.setPower(launchSpeed);
             launcherRight.setPower(launchSpeed);
         }
@@ -237,13 +248,18 @@ public class MainDecodeDrive {
             }
         }
         if(launching && abs(drumRotor.getTargetPosition()-drumRotor.getCurrentPosition())<ROTATION_TICK/16){
-            kicker.setPosition(0.3);
+            kicker.setPosition(KICKER_KICKED);
             balls[1] = -1;
             launching = false;
         }
     }
+
+    /**
+     * Prepares the ball in the designated position for launch
+     * @param ballLocation Which ball in the balls[] array should be launched.
+     */
     private void setDrumLaunch(int ballLocation){
-        kicker.setPosition(0.65);
+        kicker.setPosition(KICKER_BACK);
         if(ballLocation == 0){
             drumRotor.setTargetPosition(drumRotor.getTargetPosition()+ROTATION_TICK/3);
             int temp = balls[0];
@@ -263,24 +279,26 @@ public class MainDecodeDrive {
      * Posts all necessary information to telemetry
      */
     public void postTelemetry(){
-        telemetry.addData("Drive Speed", currentSpeed);
-        telemetry.addLine();
-        telemetry.addData("Launch Speed", launchSpeed);
-        telemetry.addLine();
-        for(int i=0; i<balls.length; i++){
-            String ballDesc = "Stored Ball - ";
-            if(i == 1){
-                ballDesc = "Launch Ball - ";
+        Telemetry[] telemetries = {telemetry, dashboardTelemetry};
+        for(Telemetry telemetry : telemetries) {
+            telemetry.addData("Drive Speed", currentSpeed);
+            telemetry.addLine();
+            telemetry.addData("Launch Speed", launchSpeed);
+            telemetry.addLine();
+            for (int i = 0; i < balls.length; i++) {
+                String ballDesc = "Stored Ball - ";
+                if (i == 1) {
+                    ballDesc = "Launch Ball - ";
+                }
+                if (balls[i] == 0) {
+                    telemetry.addData(ballDesc, "Green");
+                } else if (balls[i] == 1) {
+                    telemetry.addData(ballDesc, "Purple");
+                } else {
+                    telemetry.addData(ballDesc, "N/A");
+                }
             }
-            if(balls[i] == 0){
-                telemetry.addData(ballDesc, "Green");
-            }
-            else if(balls[i] == 1){
-                telemetry.addData(ballDesc, "Purple");
-            }
-            else{
-                telemetry.addData(ballDesc, "N/A");
-            }
+            telemetry.update();
         }
     }
 

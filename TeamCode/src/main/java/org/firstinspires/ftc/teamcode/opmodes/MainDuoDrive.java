@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.resources.MainDecodeDrive;
 
 @TeleOp(name = "Main Drive (2P)", group = "Main Drive")
@@ -10,7 +12,7 @@ public class MainDuoDrive extends LinearOpMode {
     MainDecodeDrive masterDrive;
     @Override
     public void runOpMode() throws InterruptedException {
-        masterDrive = new MainDecodeDrive(hardwareMap, telemetry);
+        masterDrive = new MainDecodeDrive(hardwareMap, telemetry, FtcDashboard.getInstance().getTelemetry());
         waitForStart();
         while(opModeIsActive()){
             masterDrive.postTelemetry();
@@ -29,7 +31,7 @@ public class MainDuoDrive extends LinearOpMode {
             if(gamepad2.dpadDownWasReleased() && masterDrive.getLaunchSpeed() > 0){
                 masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()-0.1);
             }
-            telemetry.update();
+            masterDrive.postTelemetry();
         }
     }
 }

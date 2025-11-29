@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -10,7 +11,7 @@ public class MainSoloDrive extends LinearOpMode {
     MainDecodeDrive masterDrive;
     @Override
     public void runOpMode() throws InterruptedException {
-        masterDrive = new MainDecodeDrive(hardwareMap, telemetry);
+        masterDrive = new MainDecodeDrive(hardwareMap, telemetry, FtcDashboard.getInstance().getTelemetry());
         waitForStart();
         while(opModeIsActive()){
             masterDrive.postTelemetry();
@@ -29,7 +30,7 @@ public class MainSoloDrive extends LinearOpMode {
             if(gamepad1.dpadDownWasReleased() && masterDrive.getLaunchSpeed() > 0){
                 masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()-0.1);
             }
-            telemetry.update();
+            masterDrive.postTelemetry();
         }
     }
 }

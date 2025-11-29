@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
-@Autonomous(name = "ForwardTest")
-public class RoadrunnerFoward extends LinearOpMode {
+@Autonomous(name = "Forward Test", group = "Test")
+public class ForwardTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {

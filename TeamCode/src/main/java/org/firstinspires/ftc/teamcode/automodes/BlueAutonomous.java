@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 import org.firstinspires.ftc.teamcode.resources.RobotMechanisms;
 
-@Autonomous(name="RoadRunnerTest")
-public class RoadRunnerAutoBeta extends LinearOpMode {
+@Autonomous(name="Three Cycle - Blue")
+public class BlueAutonomous extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));

@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
-@Autonomous(name = "SteveChallenge")
+@Autonomous(name = "Steve's Challenge", group = "Test")
 public class SteveChallenge extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

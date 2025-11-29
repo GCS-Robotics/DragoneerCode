@@ -171,7 +171,7 @@ public class MainDecodeDrive {
         if (currentSpeed <= 0.1) {
             currentSpeed = .1;
         }
-        drive.runDrive(gamepad, currentSpeed, gamepad.left_trigger > DEADZONE);
+        drive.runDrive(gamepad, currentSpeed, gamepad.left_trigger > DEADZONE, DEADZONE);
     }
     /**
      * Runs the intake if the boolean is true.

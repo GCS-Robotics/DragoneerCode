@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.resources;
 
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.RaceAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -44,22 +45,27 @@ public class AutonomousMovements {
         if(mod){
             modifier = -1;
         }
-        Action getReady = drive.actionBuilder(drive.localizer.getPose())
-                .strafeTo(new Vector2d(24, -24*modifier))
-                .turnTo(Math.toRadians(angle))
-                .build();
+        Action getReady = new ParallelAction(
+                drive.actionBuilder(drive.localizer.getPose())
+                        .strafeTo(new Vector2d(24, -24*modifier))
+                        .turnTo(Math.toRadians(angle))
+                        .build(),
+                bobot.primeLaunch());
         Action gpp = new SequentialAction(
                 bobot.fireGreen(),
                 bobot.firePurple(),
-                bobot.firePurple());
+                bobot.firePurple(),
+                bobot.cancelLaunch());
         Action pgp = new SequentialAction(
                 bobot.firePurple(),
                 bobot.fireGreen(),
-                bobot.firePurple());
+                bobot.firePurple(),
+                bobot.cancelLaunch());
         Action ppg = new SequentialAction(
                 bobot.firePurple(),
                 bobot.firePurple(),
-                bobot.fireGreen());
+                bobot.fireGreen(),
+                bobot.cancelLaunch());
         if(motifTag == 21){
             return new SequentialAction(getReady, gpp);
         }

@@ -39,50 +39,49 @@ public class RegularMecanumDrive {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
     }
-    public void runDrive(Gamepad gamepad, double speed, boolean reverseSwitch){
-        // QOL #2: Reverse Controls
+    public void runDrive(Gamepad gamepad, double speed, boolean reverseSwitch, double deadzone){
         if (reverseSwitch) {
             speed = speed * (-driveSpeed);
         }
         setDriveSpeed(speed);
-        if (abs(gamepad.right_stick_x) > .4) { // If the right stick is being moved sufficiently
+        if (abs(gamepad.right_stick_x) > deadzone) { // If the right stick is being moved sufficiently
             if (speed < 0) {
                 speed = abs(speed);
                 setDriveSpeed(speed);
             }
             // Tank Turn
-            if (gamepad.right_stick_x > .4) {
+            if (gamepad.right_stick_x > deadzone) {
                 turnRightTank(driveSpeed * gamepad.right_stick_x);
             }
-            if (gamepad.right_stick_x < -.4) {
+            if (gamepad.right_stick_x < -deadzone) {
                 turnLeftTank(driveSpeed * -gamepad.right_stick_x);
             }
-        } else if (abs(gamepad.left_stick_x) > .4 || abs(gamepad.left_stick_y) > .4) { // If the left stick is being moved sufficiently
+        } else if (abs(gamepad.left_stick_x) > deadzone || abs(gamepad.left_stick_y) > deadzone) { // If the left stick is being moved sufficiently
             // Forward/Back
-            if (gamepad.left_stick_y < -.4 && abs(gamepad.left_stick_x) < .4) {
+            if (gamepad.left_stick_y < -deadzone && abs(gamepad.left_stick_x) < deadzone) {
                 moveForward(driveSpeed * -gamepad.left_stick_y);
             }
-            if (gamepad.left_stick_y > .4 && abs(gamepad.left_stick_x) < .4) {
+            if (gamepad.left_stick_y > deadzone && abs(gamepad.left_stick_x) < deadzone) {
                 moveBackward(driveSpeed * gamepad.left_stick_y);
             }
             // Left/Right
-            if (gamepad.left_stick_x < -.4 && abs(gamepad.left_stick_y) < .4) {
+            if (gamepad.left_stick_x < -deadzone && abs(gamepad.left_stick_y) < deadzone) {
                 moveRight(driveSpeed * -gamepad.left_stick_x);
             }
-            if (gamepad.left_stick_x > .4 && abs(gamepad.left_stick_y) < .4) {
+            if (gamepad.left_stick_x > deadzone && abs(gamepad.left_stick_y) < deadzone) {
                 moveLeft(driveSpeed * gamepad.left_stick_x);
             }
             // Diagonals
-            if (gamepad.left_stick_y < -.4 && gamepad.left_stick_x > .4) {
+            if (gamepad.left_stick_y < -deadzone && gamepad.left_stick_x > deadzone) {
                 diagonalRightFront(driveSpeed);
             }
-            if (gamepad.left_stick_y < -.4 && gamepad.left_stick_x < -.4) {
+            if (gamepad.left_stick_y < -deadzone && gamepad.left_stick_x < -deadzone) {
                 diagonalLeftFront(driveSpeed);
             }
-            if (gamepad.left_stick_y > .4 && gamepad.left_stick_x > .4) {
+            if (gamepad.left_stick_y > deadzone && gamepad.left_stick_x > deadzone) {
                 diagonalRightBack(driveSpeed);
             }
-            if (gamepad.left_stick_y > .4 && gamepad.left_stick_x < -.4) {
+            if (gamepad.left_stick_y > deadzone && gamepad.left_stick_x < -deadzone) {
                 diagonalLeftBack(driveSpeed);
             }
         } else { // If the sticks aren't being touched

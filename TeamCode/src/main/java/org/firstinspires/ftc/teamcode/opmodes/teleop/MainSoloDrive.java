@@ -20,8 +20,9 @@ public class MainSoloDrive extends LinearOpMode {
             masterDrive.runOuttake(
                     gamepad1.startWasReleased(), // Prime the Launch
                     gamepad1.backWasReleased(), // Cancel the Launch
-                    gamepad1.xWasPressed(), // Fire a Purple
-                    gamepad1.aWasReleased()); // Fire a Green
+                    gamepad1.xWasPressed(), // Prepare a Purple
+                    gamepad1.aWasReleased()); // Prepare a Green
+            masterDrive.runKicker(gamepad1.yWasPressed());
             // Crank Up Launch Speed
             if(gamepad1.dpadUpWasReleased()){
                 masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()+5);

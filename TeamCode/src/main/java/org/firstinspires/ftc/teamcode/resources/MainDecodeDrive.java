@@ -72,7 +72,6 @@ public class MainDecodeDrive {
         kicker = hardwareMap.servo.get("kicker");
         BallColor = hardwareMap.colorSensor.get("colorSensor");
         kicker.setDirection(Servo.Direction.REVERSE);
-        kicker.setPosition(KICKER_BACK);
         balls[0] = -1;
         balls[1] = -1;
         balls[2] = -1;
@@ -162,7 +161,6 @@ public class MainDecodeDrive {
                     ballCount+=1;
                 }
             }
-            kicker.setPosition(KICKER_BACK);
             intake.setPower(intakeSpeed * reverse(r));
             if(ballCount >= 3){
                 return;
@@ -192,20 +190,17 @@ public class MainDecodeDrive {
      */
     public void runOuttake(boolean prime, boolean cancel, boolean firePurple, boolean fireGreen){
         if(prime && !primed) {
-            kicker.setPosition(KICKER_BACK);
             primed = true;
             drumRotor.outtakeMode();
             launcherLeft.setPower(launchSpeed);
             launcherRight.setPower(launchSpeed);
         }
         if (cancel) {
-            kicker.setPosition(KICKER_BACK);
             primed = false;
             launcherLeft.setPower(0);
             launcherRight.setPower(0);
         }
         if (firePurple && primed) {
-            kicker.setPosition(KICKER_BACK);
             int purpleLocation = -1;
             for(int i=0; i<balls.length; i++){
                 if(balls[i] == 1){
@@ -218,7 +213,6 @@ public class MainDecodeDrive {
             }
         }
         if (fireGreen && primed) {
-            kicker.setPosition(KICKER_BACK);
             int greenLocation = -1;
             for(int i=0; i<balls.length; i++){
                 if(balls[i] == 0){
@@ -229,11 +223,6 @@ public class MainDecodeDrive {
                 launching = true;
                 setDrumLaunch(greenLocation);
             }
-        }
-        if(drumRotor.reachedTarget() && launching && launchersHappy()){
-            kicker.setPosition(KICKER_KICKED);
-            balls[1] = -1;
-            launching = false;
         }
     }
     public boolean launchersHappy(){
@@ -247,16 +236,7 @@ public class MainDecodeDrive {
      * @param ballLocation Which ball in the balls[] array should be launched.
      */
     private void setDrumLaunch(int ballLocation){
-        kicker.setPosition(KICKER_BACK);
         if(ballLocation == 1){
-            return;
-        }
-        if(ballLocation == 2){
-            drumRotor.rotateTwoThirds();
-            int temp = balls[2];
-            balls[2] = balls[0];
-            balls[0] = balls[1];
-            balls[1] = temp;
             return;
         }
         if(ballLocation == 0){
@@ -264,6 +244,14 @@ public class MainDecodeDrive {
             int temp = balls[0];
             balls[0] = balls[2];
             balls[2] = balls[1];
+            balls[1] = temp;
+            return;
+        }
+        if(ballLocation == 2){
+            drumRotor.rotateTwoThirds();
+            int temp = balls[2];
+            balls[2] = balls[0];
+            balls[0] = balls[1];
             balls[1] = temp;
             return;
         }
@@ -324,5 +312,16 @@ public class MainDecodeDrive {
             return 1;
         }
         return -1;
+    }
+    public void runKicker(boolean kick){
+        if(kick){
+            if(drumRotor.reachedTarget() && launching && launchersHappy()){
+                balls[1] = -1;
+                launching = false;
+            }
+            kicker.setPosition(KICKER_KICKED);
+        } else{
+            kicker.setPosition(KICKER_BACK);
+        }
     }
 }

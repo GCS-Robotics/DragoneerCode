@@ -18,17 +18,17 @@ public class MainDuoDrive extends LinearOpMode {
             masterDrive.runDrive(gamepad1);
             masterDrive.runIntake(gamepad2.left_trigger > masterDrive.getDeadzone(), false);
             masterDrive.runOuttake(
-                    gamepad2.aWasReleased(), // Prime the Launch
-                    gamepad2.bWasReleased(), // Cancel the Launch
-                    gamepad2.leftBumperWasReleased(), // Fire a Purple
-                    gamepad2.rightBumperWasReleased()); // Fire a Green
+                    gamepad2.startWasReleased(), // Prime the Launch
+                    gamepad2.backWasReleased(), // Cancel the Launch
+                    gamepad2.xWasPressed(), // Fire a Purple
+                    gamepad2.aWasReleased()); // Fire a Green
             // Crank Up Launch Speed
-            if(gamepad2.dpadUpWasReleased() && masterDrive.getLaunchSpeed() < 1){
-                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()+0.1);
+            if(gamepad2.dpadUpWasReleased()){
+                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()+0.05);
             }
             // Crank Down Launch Speed
             if(gamepad2.dpadDownWasReleased() && masterDrive.getLaunchSpeed() > 0){
-                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()-0.1);
+                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()-0.05);
             }
             masterDrive.postTelemetry();
         }

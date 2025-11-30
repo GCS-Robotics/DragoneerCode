@@ -25,7 +25,7 @@ public class BlueAutonomous extends LinearOpMode {
     WebcamUtilities webcamUtils;
     @Override
     public void runOpMode() throws InterruptedException {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(-16, 0, Math.toRadians(-90)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(-16, 0, 0));
         bobot = new RobotMechanisms(hardwareMap, telemetry, FtcDashboard.getInstance().getTelemetry());
         moves = new AutonomousMovements(drive, bobot, false);
         webcamUtils = new WebcamUtilities(hardwareMap);
@@ -40,6 +40,7 @@ public class BlueAutonomous extends LinearOpMode {
         waitForStart();
         Actions.runBlocking(
                 new SequentialAction(
+                        drive.actionBuilder(drive.localizer.getPose()).turnTo(Math.toRadians(-90)).build(),
                         moves.intake(-12),
                         moves.fireMotif(135),
                         moves.intake(12),

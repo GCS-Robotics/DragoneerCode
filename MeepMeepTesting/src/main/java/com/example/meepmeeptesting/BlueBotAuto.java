@@ -17,8 +17,9 @@ public class BlueBotAuto {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .build();
 
+
         myBot.runAction(
-                myBot.getDrive().actionBuilder(new Pose2d(-16, 0, Math.toRadians(90)))
+                myBot.getDrive().actionBuilder(new Pose2d(48, -52, Math.toRadians(45)))
 
                         // FIRST CYCLE
                         .strafeTo(new Vector2d(-12, -24))

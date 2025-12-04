@@ -169,7 +169,6 @@ public class MainDecodeDrive {
             if(ballCount >= 3){
                 return;
             }
-            drumRotor.intakeMode();
             int ball = isGreenOrPurple();
             if(ball!=-1
                     && drumRotor.reachedTarget()) {
@@ -201,28 +200,23 @@ public class MainDecodeDrive {
         }
         if (cancel) {
             primed = false;
+            drumRotor.intakeMode();
+            int temp = balls[0];
+            balls[0] = balls[2];
+            balls[2] = balls[1];
+            balls[1] = temp;
             launcherLeft.setPower(0);
             launcherRight.setPower(0);
         }
         if (firePurple && primed) {
-            int purpleLocation = -1;
-            for(int i=0; i<balls.length; i++){
-                if(balls[i] == 1){
-                    purpleLocation = i;
-                }
-            }
+            int purpleLocation = getBestBallPosition(1);
             if(purpleLocation != -1){
                 launching = true;
                 setDrumLaunch(purpleLocation);
             }
         }
         if (fireGreen && primed) {
-            int greenLocation = -1;
-            for(int i=0; i<balls.length; i++){
-                if(balls[i] == 0){
-                    greenLocation = i;
-                }
-            }
+            int greenLocation = getBestBallPosition(0);
             if(greenLocation != -1){
                 launching = true;
                 setDrumLaunch(greenLocation);
@@ -230,11 +224,26 @@ public class MainDecodeDrive {
         }
     }
     public boolean launchersHappy(){
-        return abs(launcherRight.getVelocity(AngleUnit.DEGREES))+
-                abs(launcherLeft.getVelocity(AngleUnit.DEGREES))
+        return abs(launcherRight.getVelocity())+
+                abs(launcherLeft.getVelocity())
                 > 0;
     }
-
+    public int getBestBallPosition(int color){
+        int location = -1;
+        for(int i=0; i<balls.length; i++){
+            if(balls[i] == color){
+                if(location == -1){
+                    location = i;
+                }
+                else if(i == 1){
+                    location = i;
+                } else if (i < location){
+                    location = i;
+                }
+            }
+        }
+        return location;
+    }
     /**
      * Prepares the ball in the designated position for launch
      * @param ballLocation Which ball in the balls[] array should be launched.

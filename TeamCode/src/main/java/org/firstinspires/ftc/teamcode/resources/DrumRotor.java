@@ -11,7 +11,6 @@ public class DrumRotor {
     double targetPosition;
     double power;
     final int ROTATION_TICK = 288;
-    public boolean manual;
     public DrumRotor(HardwareMap hardwareMap, double pow){
         drum = hardwareMap.get(DcMotorEx.class, "drumRotor");
         drum.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -36,9 +35,6 @@ public class DrumRotor {
         targetPosition += ROTATION_TICK*2.0/3.0;
     }
     public void run(){
-        if(manual){
-            return;
-        }
         int position = drum.getCurrentPosition();
         if(targetPosition-position <= 0){
             drum.setPower(0);

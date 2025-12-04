@@ -47,7 +47,7 @@ public class MainDecodeDrive {
      * @param tel         For any functions that want to post to telemetry (must call telemetry.update() separately)
      */
     public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel, Telemetry dashTel) {
-        this(hardwareMap, tel, dashTel, 1.0, 1.0, 0.5, 1, 0.01);
+        this(hardwareMap, tel, dashTel, 1.0, 1.0, 1000, 1, 0.01);
     }
 
     /**
@@ -98,6 +98,10 @@ public class MainDecodeDrive {
      */
     public void setLaunchSpeed(double newSpeed) {
         launchSpeed = newSpeed;
+        if(primed){
+            launcherLeft.setVelocity(launchSpeed);
+            launcherRight.setVelocity(launchSpeed);
+        }
     }
 
     /**
@@ -192,8 +196,8 @@ public class MainDecodeDrive {
         if(prime && !primed) {
             primed = true;
             drumRotor.outtakeMode();
-            launcherLeft.setPower(launchSpeed);
-            launcherRight.setPower(launchSpeed);
+            launcherLeft.setVelocity(launchSpeed);
+            launcherRight.setVelocity(launchSpeed);
         }
         if (cancel) {
             primed = false;
@@ -263,6 +267,8 @@ public class MainDecodeDrive {
         drumRotor.run();
         Telemetry[] telemetries = {telemetry, dashboardTelemetry};
         for(Telemetry telemetry : telemetries) {
+            telemetry.addData("Drum Target Rotation (In Spins)", drumRotor.drum.getTargetPosition()/drumRotor.ROTATION_TICK);
+            telemetry.addData("Drum Current (In Spins)", drumRotor.drum.getCurrentPosition()/drumRotor.ROTATION_TICK);
             telemetry.addData("Drive Speed", currentSpeed);
             telemetry.addLine();
             telemetry.addData("Launch Speed", launchSpeed);

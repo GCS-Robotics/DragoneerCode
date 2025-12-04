@@ -25,11 +25,11 @@ public class MainDuoDrive extends LinearOpMode {
             masterDrive.runKicker(gamepad2.y);
             // Crank Up Launch Speed
             if(gamepad2.dpadUpWasReleased()){
-                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()+0.05);
+                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()+10);
             }
             // Crank Down Launch Speed
             if(gamepad2.dpadDownWasReleased() && masterDrive.getLaunchSpeed() > 0){
-                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()-0.05);
+                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()-10);
             }
             masterDrive.postTelemetry();
         }

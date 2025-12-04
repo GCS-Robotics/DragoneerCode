@@ -7,6 +7,8 @@ import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeBlueDark;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
+import java.util.ArrayList;
+
 public class BlueBotAuto {
     public static void main(String[] args) {
         System.setProperty("sun.java2d.opengl", "true");

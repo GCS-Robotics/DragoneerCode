@@ -35,45 +35,47 @@ public class ManualDuoDrive extends LinearOpMode {
         BallColor = hardwareMap.colorSensor.get("colorSensor");
         kicker.setDirection(Servo.Direction.REVERSE);
         waitForStart();
-        double currentSpeed = 1 - (gamepad1.right_trigger / 1.4);
-        if (currentSpeed <= 0.1) {
-            currentSpeed = .1;
+        while(opModeIsActive()) {
+            double currentSpeed = 1 - (gamepad1.right_trigger / 1.4);
+            if (currentSpeed <= 0.1) {
+                currentSpeed = .1;
+            }
+            drive.runDrive(gamepad1, currentSpeed, gamepad1.left_trigger > 0.2, 0.2);
+            if (gamepad2.left_trigger > 0.2) {
+                intake.setPower(1);
+            } else {
+                intake.setPower(0);
+            }
+            if (gamepad2.startWasPressed()) {
+                launcherLeft.setPower(0.5);
+                launcherRight.setPower(0.5);
+            }
+            if (gamepad2.backWasPressed()) {
+                launcherLeft.setPower(0);
+                launcherRight.setPower(0);
+            }
+            if (gamepad2.a) {
+                drumRotor.setPower(0.5);
+            } else if (gamepad2.b) {
+                drumRotor.setPower(-.5);
+            } else {
+                drumRotor.setPower(0);
+            }
+            if (gamepad2.y) {
+                kicker.setPosition(.35);
+            } else {
+                kicker.setPosition(.65);
+            }
+            // Crank Up Launch Speed
+            if (gamepad2.dpadUpWasReleased()) {
+                launchSpeed += 0.05;
+            }
+            // Crank Down Launch Speed
+            if (gamepad2.dpadDownWasReleased() && launchSpeed > 0) {
+                launchSpeed -= 0.05;
+            }
+            telemetry.addData("Launch Speed", launchSpeed);
+            telemetry.update();
         }
-        drive.runDrive(gamepad1, currentSpeed, gamepad1.left_trigger > 0.2, 0.2);
-        if(gamepad2.left_trigger > 0.2){
-            intake.setPower(1);
-        } else{
-            intake.setPower(0);
-        }
-        if(gamepad2.startWasPressed()){
-            launcherLeft.setPower(0.5);
-            launcherRight.setPower(0.5);
-        }
-        if(gamepad2.backWasPressed()){
-            launcherLeft.setPower(0);
-            launcherRight.setPower(0);
-        }
-        if(gamepad2.a){
-            drumRotor.setPower(0.5);
-        } else if(gamepad2.b){
-            drumRotor.setPower(-.5);
-        } else{
-            drumRotor.setPower(0);
-        }
-        if(gamepad2.y){
-            kicker.setPosition(.35);
-        } else{
-            kicker.setPosition(.65);
-        }
-        // Crank Up Launch Speed
-        if(gamepad2.dpadUpWasReleased()){
-            launchSpeed += 0.05;
-        }
-        // Crank Down Launch Speed
-        if(gamepad2.dpadDownWasReleased() && launchSpeed > 0){
-            launchSpeed -= 0.05;
-        }
-        telemetry.addData("Launch Speed", launchSpeed);
-        telemetry.update();
     }
 }

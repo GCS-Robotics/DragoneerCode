@@ -6,11 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class DrumRotor {
     DcMotorEx drum;
     double targetPosition;
     double power;
-    final int ROTATION_TICK = 288;
+    final double ROTATION_TICK = 286.58;
     public DrumRotor(HardwareMap hardwareMap, double pow){
         drum = hardwareMap.get(DcMotorEx.class, "drumRotor");
         drum.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -41,7 +43,7 @@ public class DrumRotor {
             return;
         }
         double progress;
-        if (targetPosition%ROTATION_TICK != 0){progress = (position%ROTATION_TICK) / (targetPosition%ROTATION_TICK);}
+        if (targetPosition != 0){progress = (position) / (targetPosition);}
         else{ progress = 0;}
         drum.setPower(power * (1-progress));
         if(drum.getPower() < power * 0.2){
@@ -50,5 +52,9 @@ public class DrumRotor {
     }
     public boolean reachedTarget(){
         return (!drum.isBusy() && targetPosition - drum.getCurrentPosition() <= 0);
+    }
+    public void telemetry(Telemetry tel){
+        tel.addData("Drum Target", targetPosition);
+        tel.addData("Thirds of Rotation", targetPosition/(ROTATION_TICK/3));
     }
 }

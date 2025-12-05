@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "Mecanum Motor Test")
+@TeleOp(name = "Mecanum Motor Test", group = "Test")
 public class MecanumMotorTest extends LinearOpMode {
     DcMotor leftFront;
     DcMotor rightFront;

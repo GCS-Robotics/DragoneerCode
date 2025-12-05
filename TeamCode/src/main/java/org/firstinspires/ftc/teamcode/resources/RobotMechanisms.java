@@ -62,7 +62,7 @@ public class RobotMechanisms {
                 drive.runOuttake(false, false, false, true);
                 init = false;
             }
-            return drive.launching;
+            return true;
         }
     }
     public class FirePurple implements Action {
@@ -74,7 +74,7 @@ public class RobotMechanisms {
                 drive.runOuttake(false, false, true, false);
                 init = false;
             }
-            return drive.launching;
+            return true;
         }
     }
     public Action primeLaunch(){return new PrimeLaunch();}

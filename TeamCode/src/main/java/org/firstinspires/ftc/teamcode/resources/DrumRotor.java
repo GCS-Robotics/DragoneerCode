@@ -12,7 +12,7 @@ public class DrumRotor {
     DcMotorEx drum;
     double targetPosition;
     double power;
-    final double ROTATION_TICK = 286.58;
+    final double ROTATION_TICK = 1993.6;
     public DrumRotor(HardwareMap hardwareMap, double pow){
         drum = hardwareMap.get(DcMotorEx.class, "drumRotor");
         drum.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

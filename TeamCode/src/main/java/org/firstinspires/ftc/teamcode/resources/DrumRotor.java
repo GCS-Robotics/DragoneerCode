@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.resources;
 
-import static java.lang.Math.abs;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,7 +11,7 @@ public class DrumRotor {
     double targetPosition;
     double power;
     final double ROTATION_TICK = 1993.6;
-    private int[] balls;
+    private final int[] balls;
 
     /**
      * Constrcts a Drum Rotor

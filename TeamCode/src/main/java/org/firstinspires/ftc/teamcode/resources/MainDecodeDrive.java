@@ -198,7 +198,6 @@ public class MainDecodeDrive {
                 abs(launcherLeft.getVelocity() - launchSpeed)
                 < 10;
     }
-
     /**
      * Posts all necessary information to telemetry
      */
@@ -248,10 +247,10 @@ public class MainDecodeDrive {
     }
     public void runKicker(boolean kick){
         if(kick){
-            if(drumRotor.reachedTarget()){
+            if(drumRotor.reachedTarget() && launchersHappy()){
                 drumRotor.launchBall();
+                kicker.setPosition(KICKER_KICKED);
             }
-            kicker.setPosition(KICKER_KICKED);
         } else{
             kicker.setPosition(KICKER_BACK);
         }

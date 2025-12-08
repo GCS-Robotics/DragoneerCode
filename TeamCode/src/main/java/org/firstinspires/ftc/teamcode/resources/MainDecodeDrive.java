@@ -32,15 +32,14 @@ public class MainDecodeDrive {
     // Telemetry
     Telemetry telemetry;
     Telemetry dashboardTelemetry;
-
-
     boolean primed = false;
-
+    boolean launching = false;
     /**
      * Constructs a master decode drive.
      *
      * @param hardwareMap Finds all of the hardware components from the Hardware Map
-     * @param tel         For any functions that want to post to telemetry (must call telemetry.update() separately)
+     * @param tel         For any functions that want to post to telemetry
+     * @param dashTel     For any functions that want to post to dashboard
      */
     public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel, Telemetry dashTel) {
         this(hardwareMap, tel, dashTel, 1.0, 1000, 1, 0.01);
@@ -50,34 +49,42 @@ public class MainDecodeDrive {
      * Constructs a master decode drive.
      *
      * @param hardwareMap Finds all of the hardware components from the Hardware Map
-     * @param tel         For any functions that want to post to telemetry (must call telemetry.update() separately)
+     * @param tel         For any functions that want to post to telemetry
+     * @param dashTel     For any functions that want to post to dashboard
      * @param s           Drive Speed
      * @param launchS     Launch Speed
      * @param drumS       Drum Speed
      * @param dz          Deadzone for driving inputs
      */
     public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel, Telemetry dashTel, double s, double launchS, double drumS, double dz) {
+        // Telemetry
         telemetry = tel;
         dashboardTelemetry = dashTel;
+        // Intake
         intake = hardwareMap.dcMotor.get("intake");
+        // Launchers
         launcherRight = hardwareMap.get(DcMotorEx.class, "launcherRight");
         launcherRight.setDirection(DcMotorSimple.Direction.REVERSE);
         launcherLeft = hardwareMap.get(DcMotorEx.class, "launcherLeft");
+        // Drum
         drumRotor = new DrumRotor(hardwareMap, drumS);
         kicker = hardwareMap.servo.get("kicker");
         BallColor = hardwareMap.colorSensor.get("colorSensor");
         kicker.setDirection(Servo.Direction.REVERSE);
+        // Drive
         drive = new RegularMecanumDrive(hardwareMap, s);
-        DcMotor[] motors = {launcherLeft, launcherRight};
-        for (DcMotor motor : motors) {
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
+        // Constants
         DRIVE_SPEED = s;
         launchSpeed = launchS;
         DEADZONE = dz;
         drumRotor.intakeMode();
     }
 
+    /**
+     * Reverse power if true
+     * @param do_it Whether or not power should be reversed
+     * @return -1 if true, 1 if false
+     */
     private int reverse(boolean do_it) {
         if (do_it) return -1;
         return 1;
@@ -127,6 +134,7 @@ public class MainDecodeDrive {
         }
         drive.runDrive(gamepad, currentSpeed, gamepad.left_trigger > DEADZONE, DEADZONE);
     }
+
     /**
      * Runs the intake if the boolean is true.
      * @param run Whether or not the intake should be active
@@ -167,10 +175,17 @@ public class MainDecodeDrive {
             launcherRight.setPower(0);
         }
         if (firePurple && primed) {
+            launching = true;
             drumRotor.setDrumLaunch(1);
         }
         if (fireGreen && primed) {
+            launching = true;
             drumRotor.setDrumLaunch(0);
+        }
+        if(launchersHappy() && drumRotor.reachedTarget() && launching){
+            runKicker(true);
+        } else{
+            runKicker(false);
         }
     }
     public boolean launchersHappy(){
@@ -227,10 +242,9 @@ public class MainDecodeDrive {
     }
     public void runKicker(boolean kick){
         if(kick){
-            if(drumRotor.reachedTarget() && launchersHappy()){
-                drumRotor.launchBall();
-                kicker.setPosition(KICKER_KICKED);
-            }
+            drumRotor.launchBall();
+            kicker.setPosition(KICKER_KICKED);
+            launching = false;
         } else{
             kicker.setPosition(KICKER_BACK);
         }

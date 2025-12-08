@@ -21,12 +21,12 @@ public class DrumRotor {
         power = pow;
     }
     public void intakeMode(){
-        if (targetPosition % (ROTATION_TICK / 3.0) <= ROTATION_TICK / 7.0) {
+        if (targetPosition/(ROTATION_TICK/3) % 1.0 <= 0.1) {
             targetPosition += ROTATION_TICK / 6.0;
         }
     }
     public void outtakeMode(){
-        if (targetPosition % (ROTATION_TICK / 3.0) > ROTATION_TICK / 7.0) {
+        if (targetPosition/(ROTATION_TICK/3) % 1.0 <= 0.6 && targetPosition/(ROTATION_TICK/3) % 1.0 >= 0.4) {
             targetPosition += ROTATION_TICK / 6.0;
         }
     }
@@ -42,13 +42,7 @@ public class DrumRotor {
             drum.setPower(0);
             return;
         }
-        double progress;
-        if (targetPosition != 0){progress = (position) / (targetPosition);}
-        else{ progress = 0;}
-        drum.setPower(power * (1-progress));
-        if(drum.getPower() < power * 0.2){
-            drum.setPower(power * 0.2);
-        }
+        drum.setPower(power);
     }
     public boolean reachedTarget(){
         return (!drum.isBusy() && targetPosition - drum.getCurrentPosition() <= 0);

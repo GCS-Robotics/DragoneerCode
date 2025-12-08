@@ -1,16 +1,20 @@
 package org.firstinspires.ftc.teamcode.resources;
 
+import static java.lang.Math.abs;
+
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class Launchers {
     private PIDFController launchControls;
     private DcMotorEx launcherLeft;
     private DcMotorEx launcherRight;
-    private double targetRPM = 1000;
+    private double targetRPM;
     private double TICKS_PER_REV = 28;
     private boolean run = false;
     public Launchers(HardwareMap hardwareMap){
@@ -50,5 +54,13 @@ public class Launchers {
     }
     private double ticksPerSecondToRPM(double tps) {
         return tps * 60.0 / TICKS_PER_REV;
+    }
+    public boolean launchersAtSpeed(){
+        return abs(ticksPerSecondToRPM(launcherRight.getVelocity()) - targetRPM) < 1 && abs(ticksPerSecondToRPM(launcherLeft.getVelocity()) - targetRPM) < 1;
+    }
+    public void launchTelemetry(Telemetry telemetry){
+        telemetry.addData("Target RPM", targetRPM);
+        telemetry.addData("Left RPM", ticksPerSecondToRPM(launcherLeft.getVelocity()));
+        telemetry.addData("Right RPM", ticksPerSecondToRPM(launcherRight.getVelocity()));
     }
 }

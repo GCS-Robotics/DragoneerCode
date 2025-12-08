@@ -21,59 +21,39 @@ public class RobotMechanisms {
         boolean init = true;
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            if(init){
-                drive.runOuttake(true, false, false, false);
-                init = false;
-            }
-            return !drive.primed;
+            return true;
         }
     }
     public class CancelLaunch implements Action {
         boolean init = true;
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
-            if(init){
-                drive.runOuttake(false, true, false, false);
-                init = false;
-            }
-            return drive.primed;
+            return true;
         }
     }
     public class Intake implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
-            drive.runIntake(true, false);
             return true;
         }
     }
     public class StopIntake implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
-            drive.runIntake(false, false);
             return false;
         }
     }
     public class FireGreen implements Action {
         boolean init = true;
-
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            if(init){
-                drive.runOuttake(false, false, false, true);
-                init = false;
-            }
             return true;
         }
     }
     public class FirePurple implements Action {
         boolean init = true;
-
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            if (init) {
-                drive.runOuttake(false, false, true, false);
-                init = false;
-            }
             return true;
         }
     }

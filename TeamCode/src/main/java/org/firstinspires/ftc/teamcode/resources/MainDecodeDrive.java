@@ -2,11 +2,8 @@ package org.firstinspires.ftc.teamcode.resources;
 
 import static java.lang.Math.abs;
 
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -22,17 +19,17 @@ public class MainDecodeDrive {
     // Mutable Variables
     double currentSpeed;
     // Hardware
-    DcMotor intake;
-    public DrumRotor drumRotor;
-    public Launchers launchers;
-    ColorSensor BallColor;
-    public Servo kicker;
-    RegularMecanumDrive drive;
+    private final DcMotor intake;
+    private final DrumRotor drumRotor;
+    private final Launchers launchers;
+    private final ColorSensor BallColor;
+    private final Servo kicker;
+    private final RegularMecanumDrive drive;
     // Telemetry
-    Telemetry telemetry;
-    Telemetry dashboardTelemetry;
-    boolean primed = false;
-    boolean launching = false;
+    private final Telemetry telemetry;
+    private final Telemetry dashboardTelemetry;
+    private boolean primed = false;
+    private boolean launching = false;
     /**
      * Constructs a master decode drive.
      *
@@ -87,7 +84,6 @@ public class MainDecodeDrive {
         return 1;
     }
 
-
     /**
      * Get the deadzone value.
      *
@@ -97,6 +93,12 @@ public class MainDecodeDrive {
         return DEADZONE;
     }
 
+    public void setLaunchSpeed(double speed){
+        launchers.setTargetRPM(speed);
+    }
+    public double getLaunchSpeed(){
+        return launchers.getTargetRPM();
+    }
 
     /**
      * Runs all of the drive commands using the left and right sticks of a gamepad.
@@ -157,14 +159,7 @@ public class MainDecodeDrive {
             launching = true;
             drumRotor.setDrumLaunch(0);
         }
-        if(launchersHappy() && drumRotor.reachedTarget() && launching){
-            runKicker(true);
-        } else{
-            runKicker(false);
-        }
-    }
-    public boolean launchersHappy(){
-        return true;
+        runKicker(launchers.launchersAtSpeed() && drumRotor.reachedTarget() && launching);
     }
     /**
      * Posts all necessary information to telemetry
@@ -177,9 +172,7 @@ public class MainDecodeDrive {
             telemetry.addLine();
             drumRotor.storageTelemetry(telemetry);
             telemetry.addLine();
-            telemetry.addData("Red", getColor()[0]);
-            telemetry.addData("Green", getColor()[1]);
-            telemetry.addData("Blue", getColor()[2]);
+            launchers.launchTelemetry(telemetry);
             telemetry.addLine();
             drumRotor.drumTelemetry(telemetry);
             telemetry.update();

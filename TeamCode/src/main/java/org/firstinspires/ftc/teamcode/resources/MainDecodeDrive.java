@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.resources;
 
 import static java.lang.Math.abs;
 
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -20,12 +21,10 @@ public class MainDecodeDrive {
     final double KICKER_KICKED = 0.3;
     // Mutable Variables
     double currentSpeed;
-    double launchSpeed = 1.0;
     // Hardware
     DcMotor intake;
-    DcMotorEx launcherRight;
-    DcMotorEx launcherLeft;
     public DrumRotor drumRotor;
+    public Launchers launchers;
     ColorSensor BallColor;
     public Servo kicker;
     RegularMecanumDrive drive;
@@ -63,9 +62,8 @@ public class MainDecodeDrive {
         // Intake
         intake = hardwareMap.dcMotor.get("intake");
         // Launchers
-        launcherRight = hardwareMap.get(DcMotorEx.class, "launcherRight");
-        launcherRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        launcherLeft = hardwareMap.get(DcMotorEx.class, "launcherLeft");
+        launchers = new Launchers(hardwareMap);
+        launchers.setTargetRPM(launchS);
         // Drum
         drumRotor = new DrumRotor(hardwareMap, drumS);
         kicker = hardwareMap.servo.get("kicker");
@@ -75,7 +73,6 @@ public class MainDecodeDrive {
         drive = new RegularMecanumDrive(hardwareMap, s);
         // Constants
         DRIVE_SPEED = s;
-        launchSpeed = launchS;
         DEADZONE = dz;
         drumRotor.intakeMode();
     }
@@ -90,27 +87,6 @@ public class MainDecodeDrive {
         return 1;
     }
 
-    /**
-     * Set the launch speed
-     *
-     * @param newSpeed Between 0 and 1
-     */
-    public void setLaunchSpeed(double newSpeed) {
-        launchSpeed = newSpeed;
-        if(primed){
-            launcherLeft.setVelocity(launchSpeed);
-            launcherRight.setVelocity(launchSpeed);
-        }
-    }
-
-    /**
-     * Get the launch speed
-     *
-     * @return Launch Speed
-     */
-    public double getLaunchSpeed() {
-        return launchSpeed;
-    }
 
     /**
      * Get the deadzone value.
@@ -162,17 +138,16 @@ public class MainDecodeDrive {
      * @param fireGreen Set to true once to fire a green, then stop the spinners after it's launched
      */
     public void runOuttake(boolean prime, boolean cancel, boolean firePurple, boolean fireGreen){
+        launchers.runLauncher();
         if(prime && !primed) {
             primed = true;
             drumRotor.outtakeMode();
-            launcherLeft.setVelocity(launchSpeed);
-            launcherRight.setVelocity(launchSpeed);
+            launchers.prime();
         }
         if (cancel) {
             primed = false;
             drumRotor.intakeMode();
-            launcherLeft.setPower(0);
-            launcherRight.setPower(0);
+            launchers.cancel();
         }
         if (firePurple && primed) {
             launching = true;
@@ -189,9 +164,7 @@ public class MainDecodeDrive {
         }
     }
     public boolean launchersHappy(){
-        return abs(launcherRight.getVelocity() - launchSpeed) < 10 &&
-                abs(launcherLeft.getVelocity() - launchSpeed)
-                < 10;
+        return true;
     }
     /**
      * Posts all necessary information to telemetry
@@ -201,8 +174,6 @@ public class MainDecodeDrive {
         Telemetry[] telemetries = {telemetry, dashboardTelemetry};
         for(Telemetry telemetry : telemetries) {
             telemetry.addData("Drive Speed", currentSpeed);
-            telemetry.addLine();
-            telemetry.addData("Launch Speed", launchSpeed);
             telemetry.addLine();
             drumRotor.storageTelemetry(telemetry);
             telemetry.addLine();

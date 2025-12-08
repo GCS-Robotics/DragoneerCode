@@ -15,31 +15,41 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class RobotMechanisms {
     private MainDecodeDrive drive;
     public RobotMechanisms(HardwareMap hardwareMap, Telemetry tel, Telemetry dashTel){
-        drive = new MainDecodeDrive(hardwareMap, tel, dashTel);
+        drive = new MainDecodeDrive(hardwareMap, tel, dashTel, 1, 1000, 1, 0.01);
     }
     public class PrimeLaunch implements Action {
         boolean init = true;
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return true;
+            if(init){
+                drive.runOuttake(true, false, false, false);
+            }
+            drive.runOuttake(false, false, false, false);
+            return drive.isSpunUp();
         }
     }
     public class CancelLaunch implements Action {
         boolean init = true;
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
-            return true;
+            if(init){
+                drive.runOuttake(false, true, false, false);
+            }
+            drive.runOuttake(false, false, false, false);
+            return false;
         }
     }
     public class Intake implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
+            drive.runIntake(true, false);
             return true;
         }
     }
     public class StopIntake implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
+            drive.runIntake(false, false);
             return false;
         }
     }
@@ -47,14 +57,22 @@ public class RobotMechanisms {
         boolean init = true;
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return true;
+            if(init){
+                drive.runOuttake(false, false, false, true);
+            }
+            drive.runOuttake(false, false, false, false);
+            return drive.isLaunching();
         }
     }
     public class FirePurple implements Action {
         boolean init = true;
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return true;
+            if(init){
+                drive.runOuttake(false, false, true, false);
+            }
+            drive.runOuttake(false, false, false, false);
+            return drive.isLaunching();
         }
     }
     public Action primeLaunch(){return new PrimeLaunch();}

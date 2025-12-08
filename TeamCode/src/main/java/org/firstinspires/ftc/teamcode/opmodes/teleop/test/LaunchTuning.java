@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.teleop;
+package org.firstinspires.ftc.teamcode.opmodes.teleop.test;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
 @TeleOp(name = "Test Firing", group = "Test")
-public class FiringMode extends LinearOpMode {
+public class LaunchTuning extends LinearOpMode {
     DcMotorEx launcherRight;
     DcMotorEx launcherLeft;
     public static double kP = 0.0;

@@ -99,6 +99,12 @@ public class MainDecodeDrive {
     public double getLaunchSpeed(){
         return launchers.getTargetRPM();
     }
+    public boolean isLaunching(){
+        return launching;
+    }
+    public boolean isSpunUp(){
+        return launchers.launchersAtSpeed();
+    }
 
     /**
      * Runs all of the drive commands using the left and right sticks of a gamepad.

@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class MainDecodeDrive {
     // Constants
@@ -23,7 +22,6 @@ public class MainDecodeDrive {
     double currentSpeed;
     double intakeSpeed = 1.0;
     double launchSpeed = 1.0;
-    int[] balls = new int[3]; // Ball at balls[1] is the ball that should be primed to fire
     // Hardware
     DcMotor intake;
     DcMotorEx launcherRight;
@@ -71,9 +69,6 @@ public class MainDecodeDrive {
         kicker = hardwareMap.servo.get("kicker");
         BallColor = hardwareMap.colorSensor.get("colorSensor");
         kicker.setDirection(Servo.Direction.REVERSE);
-        balls[0] = -1;
-        balls[1] = -1;
-        balls[2] = -1;
         drive = new RegularMecanumDrive(hardwareMap, s);
         DcMotor[] motors = {launcherLeft, launcherRight};
         for (DcMotor motor : motors) {
@@ -159,25 +154,12 @@ public class MainDecodeDrive {
      */
     public void runIntake(boolean run, boolean r){
         if(run && !primed) {
-            int ballCount = 0;
-            for(int ball : balls){
-                if(ball>=0){
-                    ballCount+=1;
-                }
-            }
+            drumRotor.intakeMode();
             intake.setPower(intakeSpeed * reverse(r));
-            if(ballCount >= 3){
-                return;
-            }
+            if(drumRotor.ballsFull()){return;}
             int ball = isGreenOrPurple();
-            if(ball!=-1
-                    && drumRotor.reachedTarget()) {
-                drumRotor.rotateThird();
-                // Shift over everything in ball storage
-                balls[0] = balls[2];
-                balls[2] = balls[1];
-                // Adds our new ball
-                balls[1] = ball;
+            if(ball!=-1 && drumRotor.reachedTarget()) {
+                drumRotor.intakeBall(ball);
             }
         } else {
             intake.setPower(0);
@@ -201,24 +183,14 @@ public class MainDecodeDrive {
         if (cancel) {
             primed = false;
             drumRotor.intakeMode();
-            int temp = balls[0];
-            balls[0] = balls[2];
-            balls[2] = balls[1];
-            balls[1] = temp;
             launcherLeft.setPower(0);
             launcherRight.setPower(0);
         }
         if (firePurple && primed) {
-            int purpleLocation = getBestBallPosition(1);
-            if(purpleLocation != -1){
-                setDrumLaunch(purpleLocation);
-            }
+            drumRotor.setDrumLaunch(1);
         }
         if (fireGreen && primed) {
-            int greenLocation = getBestBallPosition(0);
-            if(greenLocation != -1){
-                setDrumLaunch(greenLocation);
-            }
+            drumRotor.setDrumLaunch(0);
         }
     }
     public boolean launchersHappy(){
@@ -226,47 +198,7 @@ public class MainDecodeDrive {
                 abs(launcherLeft.getVelocity() - launchSpeed)
                 < 10;
     }
-    public int getBestBallPosition(int color){
-        int location = -1;
-        for(int i=0; i<balls.length; i++){
-            if(balls[i] == color){
-                if(location == -1){
-                    location = i;
-                }
-                else if(i == 1){
-                    location = i;
-                } else if (i < location){
-                    location = i;
-                }
-            }
-        }
-        return location;
-    }
-    /**
-     * Prepares the ball in the designated position for launch
-     * @param ballLocation Which ball in the balls[] array should be launched.
-     */
-    private void setDrumLaunch(int ballLocation){
-        if(ballLocation == 1){
-            return;
-        }
-        if(ballLocation == 0){
-            drumRotor.rotateThird();
-            int temp = balls[0];
-            balls[0] = balls[2];
-            balls[2] = balls[1];
-            balls[1] = temp;
-            return;
-        }
-        if(ballLocation == 2){
-            drumRotor.rotateTwoThirds();
-            int temp = balls[2];
-            balls[2] = balls[0];
-            balls[0] = balls[1];
-            balls[1] = temp;
-            return;
-        }
-    }
+
     /**
      * Posts all necessary information to telemetry
      */
@@ -278,25 +210,13 @@ public class MainDecodeDrive {
             telemetry.addLine();
             telemetry.addData("Launch Speed", launchSpeed);
             telemetry.addLine();
-            for (int i = 0; i < balls.length; i++) {
-                String ballDesc = "Stored Ball - ";
-                if (i == 1) {
-                    ballDesc = "Launch Ball - ";
-                }
-                if (balls[i] == 0) {
-                    telemetry.addData(ballDesc, "Green");
-                } else if (balls[i] == 1) {
-                    telemetry.addData(ballDesc, "Purple");
-                } else {
-                    telemetry.addData(ballDesc, "N/A");
-                }
-            }
+            drumRotor.storageTelemetry(telemetry);
             telemetry.addLine();
             telemetry.addData("Red", getColor()[0]);
             telemetry.addData("Green", getColor()[1]);
             telemetry.addData("Blue", getColor()[2]);
             telemetry.addLine();
-            drumRotor.telemetry(telemetry);
+            drumRotor.drumTelemetry(telemetry);
             telemetry.update();
         }
     }
@@ -329,7 +249,7 @@ public class MainDecodeDrive {
     public void runKicker(boolean kick){
         if(kick){
             if(drumRotor.reachedTarget()){
-                balls[1] = -1;
+                drumRotor.launchBall();
             }
             kicker.setPosition(KICKER_KICKED);
         } else{

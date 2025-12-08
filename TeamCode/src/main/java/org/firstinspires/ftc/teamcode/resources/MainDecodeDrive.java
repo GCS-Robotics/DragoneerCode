@@ -20,7 +20,6 @@ public class MainDecodeDrive {
     final double KICKER_KICKED = 0.3;
     // Mutable Variables
     double currentSpeed;
-    double intakeSpeed = 1.0;
     double launchSpeed = 1.0;
     // Hardware
     DcMotor intake;
@@ -44,7 +43,7 @@ public class MainDecodeDrive {
      * @param tel         For any functions that want to post to telemetry (must call telemetry.update() separately)
      */
     public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel, Telemetry dashTel) {
-        this(hardwareMap, tel, dashTel, 1.0, 1.0, 1000, 1, 0.01);
+        this(hardwareMap, tel, dashTel, 1.0, 1000, 1, 0.01);
     }
 
     /**
@@ -53,12 +52,11 @@ public class MainDecodeDrive {
      * @param hardwareMap Finds all of the hardware components from the Hardware Map
      * @param tel         For any functions that want to post to telemetry (must call telemetry.update() separately)
      * @param s           Drive Speed
-     * @param intakeS     Intake Speed
      * @param launchS     Launch Speed
      * @param drumS       Drum Speed
      * @param dz          Deadzone for driving inputs
      */
-    public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel, Telemetry dashTel, double s, double intakeS, double launchS, double drumS, double dz) {
+    public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel, Telemetry dashTel, double s, double launchS, double drumS, double dz) {
         telemetry = tel;
         dashboardTelemetry = dashTel;
         intake = hardwareMap.dcMotor.get("intake");
@@ -75,7 +73,6 @@ public class MainDecodeDrive {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
         DRIVE_SPEED = s;
-        intakeSpeed = intakeS;
         launchSpeed = launchS;
         DEADZONE = dz;
         drumRotor.intakeMode();
@@ -106,23 +103,6 @@ public class MainDecodeDrive {
      */
     public double getLaunchSpeed() {
         return launchSpeed;
-    }
-    /**
-     * Set the intake speed
-     *
-     * @param newSpeed Between 0 and 1
-     */
-    public void setIntakeSpeed(double newSpeed) {
-        intakeSpeed = newSpeed;
-    }
-
-    /**
-     * Get the intake speed
-     *
-     * @return Intake Speed
-     */
-    public double getIntakeSpeed() {
-        return intakeSpeed;
     }
 
     /**
@@ -155,7 +135,7 @@ public class MainDecodeDrive {
     public void runIntake(boolean run, boolean r){
         if(run && !primed) {
             drumRotor.intakeMode();
-            intake.setPower(intakeSpeed * reverse(r));
+            intake.setPower(reverse(r));
             if(drumRotor.ballsFull()){return;}
             int ball = isGreenOrPurple();
             if(ball!=-1 && drumRotor.reachedTarget()) {

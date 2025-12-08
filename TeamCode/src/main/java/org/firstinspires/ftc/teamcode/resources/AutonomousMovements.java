@@ -88,6 +88,7 @@ public class AutonomousMovements {
         return new SequentialAction(
                 drive.actionBuilder(drive.localizer.getPose())
                         .strafeTo(new Vector2d(xCoordinate, -24*modifier))
+                        .turnTo(Math.toDegrees(90))
                         .build(),
                 new RaceAction(
                         drive.actionBuilder(drive.localizer.getPose())

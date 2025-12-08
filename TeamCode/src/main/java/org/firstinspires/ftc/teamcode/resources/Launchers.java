@@ -45,11 +45,8 @@ public class Launchers {
             double currentRPM = ticksPerSecondToRPM(shooter.getVelocity());
             if (run) {
                 outputPower = launchControls.calculate(currentRPM, targetRPM);
-
-                shooter.setPower(outputPower);
-            } else {
-                shooter.setPower(0);
             }
+            shooter.setPower(outputPower);
         }
     }
     private double ticksPerSecondToRPM(double tps) {

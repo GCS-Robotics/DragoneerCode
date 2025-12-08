@@ -21,10 +21,10 @@ public class BlueBotAuto {
 
 
         myBot.runAction(
-                myBot.getDrive().actionBuilder(new Pose2d(48, -52, Math.toRadians(45)))
-
+                myBot.getDrive().actionBuilder(new Pose2d(-60, -43, Math.toRadians(50)))
                         // FIRST CYCLE
                         .strafeTo(new Vector2d(-12, -24))
+                        .turnTo(Math.toRadians(90))
                         .strafeTo(new Vector2d(-12, -34.5))
                         .strafeTo(new Vector2d(-12, -39.5))
                         .strafeTo(new Vector2d(-12, -44.5))

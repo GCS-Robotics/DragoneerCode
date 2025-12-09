@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop.test;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,14 +12,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
 @TeleOp(name = "Test Firing", group = "Test")
+@Config
 public class LaunchTuning extends LinearOpMode {
-    DcMotorEx launcherRight;
-    DcMotorEx launcherLeft;
     public static double kP = 0.0;
     public static double kI = 0.0;
     public static double kD = 0.0;
     public static double kF = 6000.0; // Start with 1 / maxRPM
-    double targetRPM = 1000;
+    public static double targetRPM = 1000;
+    DcMotorEx launcherRight;
+    DcMotorEx launcherLeft;
     private final double TICKS_PER_REV = 28.0;
     private boolean shooterEnabled = false;
 
@@ -59,13 +61,13 @@ public class LaunchTuning extends LinearOpMode {
                     outputPower = pidfController.calculate(currentRPM, targetRPM);
 
                     shooter.setPower(outputPower);
-                    //Here is us defining the "packet" of values to send to the Dashboard
-                    packet.put("Launcher "+i+" Status", shooterEnabled ? "ENABLED" : "DISABLED");
-                    packet.put("Target RPM", targetRPM);
-                    packet.put("Actual RPM", currentRPM);
-                    packet.put("Output Power", outputPower);
-                    packet.addLine("");
                 }
+                //Here is us defining the "packet" of values to send to the Dashboard
+                packet.put("Launcher "+i+" Status", shooterEnabled ? "ENABLED" : "DISABLED");
+                packet.put("Target RPM", targetRPM);
+                packet.put("Actual RPM", currentRPM);
+                packet.put("Output Power", outputPower);
+                packet.addLine("");
             }
             dashboard.sendTelemetryPacket(packet);
         }

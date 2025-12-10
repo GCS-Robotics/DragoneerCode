@@ -25,11 +25,11 @@ public class MainSoloDrive extends LinearOpMode {
             masterDrive.runKicker(gamepad1.y);
             // Crank Up Launch Speed
             if(gamepad1.dpadUpWasReleased()){
-                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()+10);
+                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()+50);
             }
             // Crank Down Launch Speed
             if(gamepad1.dpadDownWasReleased() && masterDrive.getLaunchSpeed() > 0){
-                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()-10);
+                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()-50);
             }
             masterDrive.postTelemetry();
         }

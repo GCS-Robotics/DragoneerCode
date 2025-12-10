@@ -24,7 +24,7 @@ public class MainDecodeDrive {
     private final Launchers launchers;
     private final ColorSensor BallColor;
     private final Servo kicker;
-    private final RegularMecanumDrive drive;
+    private final RoadRunnerMecanumDrive drive;
     // Telemetry
     private final Telemetry telemetry;
     private final Telemetry dashboardTelemetry;
@@ -67,7 +67,7 @@ public class MainDecodeDrive {
         BallColor = hardwareMap.colorSensor.get("colorSensor");
         kicker.setDirection(Servo.Direction.REVERSE);
         // Drive
-        drive = new RegularMecanumDrive(hardwareMap, s);
+        drive = new RoadRunnerMecanumDrive(hardwareMap, s);
         // Constants
         DRIVE_SPEED = s;
         DEADZONE = dz;

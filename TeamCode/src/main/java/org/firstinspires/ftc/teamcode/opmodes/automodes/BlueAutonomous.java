@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.resources.RobotMechanisms;
 
 import java.util.List;
 
-@Autonomous(name="Three Cycle - Blue")
+@Autonomous(name="Three Cycle - Blue", group = "Autonomous")
 public class BlueAutonomous extends LinearOpMode {
     MecanumDrive drive;
     RobotMechanisms bobot;
@@ -25,7 +25,7 @@ public class BlueAutonomous extends LinearOpMode {
     WebcamUtilities webcamUtils;
     @Override
     public void runOpMode() throws InterruptedException {
-        drive = new MecanumDrive(hardwareMap, new Pose2d(-60, -43, Math.toRadians(50)));
+        drive = new MecanumDrive(hardwareMap, new Pose2d(-60, -45, Math.toRadians(52-14)));
         bobot = new RobotMechanisms(hardwareMap, telemetry, FtcDashboard.getInstance().getTelemetry());
         moves = new AutonomousMovements(drive, bobot, false);
         webcamUtils = new WebcamUtilities(hardwareMap);
@@ -38,14 +38,10 @@ public class BlueAutonomous extends LinearOpMode {
         }
         telemetry.addData("Motif Seen", motifTag);
         waitForStart();
+        if(isStopRequested()){return;}
         Actions.runBlocking(
                 new SequentialAction(
-                        moves.intake(-12),
-                        moves.fireMotif(135),
-                        moves.intake(12),
-                        moves.fireMotif(135),
-                        moves.intake(24),
-                        moves.fireMotif(135)
+                        moves.intake(-12)
             )
         );
         webcamUtils.endVisionPortal();

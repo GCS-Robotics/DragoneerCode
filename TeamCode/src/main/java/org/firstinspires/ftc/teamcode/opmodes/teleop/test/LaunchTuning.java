@@ -29,8 +29,10 @@ public class LaunchTuning extends LinearOpMode {
         launcherRight = hardwareMap.get(DcMotorEx.class, "launcherRight");
         launcherRight.setDirection(DcMotorSimple.Direction.REVERSE);
         launcherRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        launcherRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         launcherLeft = hardwareMap.get(DcMotorEx.class, "launcherLeft");
         launcherLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        launcherLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
         PIDFController pidfController = new PIDFController(kP, kI, kD, kF);
@@ -54,21 +56,30 @@ public class LaunchTuning extends LinearOpMode {
                 DcMotorEx shooter = shooters[i];
                 double outputPower = 0;
                 double currentRPM = ticksPerSecondToRPM(shooter.getVelocity());
-
-                if (shooterEnabled) {
-                    pidfController.setPIDF(kP, kI, kD, kF);
-
-                    outputPower = pidfController.calculate(currentRPM, targetRPM);
-
-                    shooter.setPower(outputPower);
+                double temp = targetRPM;
+                if (!shooterEnabled) {
+                    targetRPM = 0;
                 }
+                pidfController.setPIDF(kP, kI, kD, kF);
+
+                outputPower = pidfController.calculate(currentRPM, targetRPM);
+
+                shooter.setPower(outputPower);
+
+                targetRPM = temp;
                 //Here is us defining the "packet" of values to send to the Dashboard
                 packet.put("Launcher "+i+" Status", shooterEnabled ? "ENABLED" : "DISABLED");
+                telemetry.addData("Launcher "+i+" Status", shooterEnabled ? "ENABLED" : "DISABLED");
                 packet.put("Target RPM", targetRPM);
-                packet.put("Actual RPM", currentRPM);
-                packet.put("Output Power", outputPower);
+                telemetry.addData("Target RPM", targetRPM);
+                packet.put("Motor "+i+" Actual RPM", currentRPM);
+                telemetry.addData("Motor "+i+" Actual RPM", currentRPM);
+                packet.put("Motor "+i+" Output Power", outputPower);
+                telemetry.addData("Motor "+i+" Output Power", outputPower);
                 packet.addLine("");
+                telemetry.addLine();
             }
+            telemetry.update();
             dashboard.sendTelemetryPacket(packet);
         }
     }

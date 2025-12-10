@@ -24,6 +24,7 @@ public class RobotMechanisms {
             if(init){
                 drive.runOuttake(true, false, false, false);
             }
+            drive.runDrum();
             drive.runOuttake(false, false, false, false);
             return drive.isSpunUp();
         }
@@ -35,6 +36,7 @@ public class RobotMechanisms {
             if(init){
                 drive.runOuttake(false, true, false, false);
             }
+            drive.runDrum();
             drive.runOuttake(false, false, false, false);
             return false;
         }
@@ -43,6 +45,7 @@ public class RobotMechanisms {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
             drive.runIntake(true, false);
+            drive.runDrum();
             return true;
         }
     }
@@ -50,6 +53,7 @@ public class RobotMechanisms {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
             drive.runIntake(false, false);
+            drive.runDrum();
             return false;
         }
     }
@@ -60,6 +64,7 @@ public class RobotMechanisms {
             if(init){
                 drive.runOuttake(false, false, false, true);
             }
+            drive.runDrum();
             drive.runOuttake(false, false, false, false);
             return drive.isLaunching();
         }
@@ -71,6 +76,7 @@ public class RobotMechanisms {
             if(init){
                 drive.runOuttake(false, false, true, false);
             }
+            drive.runDrum();
             drive.runOuttake(false, false, false, false);
             return drive.isLaunching();
         }

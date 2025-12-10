@@ -17,8 +17,9 @@ public class Launchers {
     private double targetRPM;
     private double TICKS_PER_REV = 28;
     private boolean run = false;
+    private double[] pidf = new double[]{0.005, 0.05, 0.00003, 0};
     public Launchers(HardwareMap hardwareMap){
-        launchControls = new PIDFController(0, 0, 0, 6000);
+        launchControls = new PIDFController(pidf[0], pidf[1], pidf[2], pidf[3]);
         launcherRight = hardwareMap.get(DcMotorEx.class, "launcherRight");
         launcherRight.setDirection(DcMotorSimple.Direction.REVERSE);
         launcherRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

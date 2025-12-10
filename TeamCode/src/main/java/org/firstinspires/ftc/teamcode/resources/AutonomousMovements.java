@@ -1,11 +1,21 @@
 package org.firstinspires.ftc.teamcode.resources;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Arclength;
 import com.acmerobotics.roadrunner.ParallelAction;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Pose2dDual;
+import com.acmerobotics.roadrunner.PosePath;
+import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.RaceAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.VelConstraint;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
 public class AutonomousMovements {
@@ -85,17 +95,21 @@ public class AutonomousMovements {
         if(mod){
             modifier = -1;
         }
+        VelConstraint vel = new VelConstraint() {
+            @Override
+            public double maxRobotVel(@NonNull Pose2dDual<Arclength> pose2dDual, @NonNull PosePath posePath, double v) {
+                return 6;
+            }
+        };
         return new SequentialAction(
                 drive.actionBuilder(drive.localizer.getPose())
                         .strafeTo(new Vector2d(xCoordinate, -24*modifier))
                         .turnTo(Math.toDegrees(90))
                         .build(),
                 new RaceAction(
-                        drive.actionBuilder(drive.localizer.getPose())
-                                .strafeTo(new Vector2d(xCoordinate, -34.5*modifier))
-                                .strafeTo(new Vector2d(xCoordinate, -39.5*modifier))
-                                .strafeTo(new Vector2d(xCoordinate, -44.5*modifier))
-                                .strafeTo(new Vector2d(xCoordinate, -24*modifier))
+                        drive.actionBuilder(new Pose2d(xCoordinate, -24*modifier, Math.toDegrees(90)))
+                                .strafeTo(new Vector2d(xCoordinate, -50*modifier), vel)
+                                .strafeTo(new Vector2d(xCoordinate, -24*modifier), vel)
                                 .build(),
                         bobot.intake()
                 ),

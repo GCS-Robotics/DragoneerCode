@@ -171,7 +171,7 @@ public class MainDecodeDrive {
      * Posts all necessary information to telemetry
      */
     public void postTelemetry(){
-        drumRotor.run();
+        runDrum();
         Telemetry[] telemetries = {telemetry, dashboardTelemetry};
         for(Telemetry telemetry : telemetries) {
             telemetry.addData("Drive Speed", currentSpeed);
@@ -183,6 +183,9 @@ public class MainDecodeDrive {
             drumRotor.drumTelemetry(telemetry);
             telemetry.update();
         }
+    }
+    public void runDrum(){
+        drumRotor.run();
     }
 
     /**

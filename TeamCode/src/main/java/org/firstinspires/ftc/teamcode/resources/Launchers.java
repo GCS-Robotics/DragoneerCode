@@ -53,9 +53,16 @@ public class Launchers {
     private double ticksPerSecondToRPM(double tps) {
         return tps * 60.0 / TICKS_PER_REV;
     }
-    public boolean launchersAtSpeed(){
-        return abs(ticksPerSecondToRPM(launcherRight.getVelocity()) - targetRPM) < 1 && abs(ticksPerSecondToRPM(launcherLeft.getVelocity()) - targetRPM) < 1;
+    public boolean launchersAtSpeed() {
+        double rightRpm = Math.abs(ticksPerSecondToRPM(launcherRight.getVelocity()));
+        double leftRpm  = Math.abs(ticksPerSecondToRPM(launcherLeft.getVelocity()));
+
+        boolean rightDone = Math.abs(rightRpm - targetRPM) < 100;
+        boolean leftDone  = Math.abs(leftRpm  - targetRPM) < 100;
+
+        return rightDone && leftDone;
     }
+
     public void launchTelemetry(Telemetry telemetry){
         telemetry.addData("Target RPM", targetRPM);
         telemetry.addData("Left RPM", ticksPerSecondToRPM(launcherLeft.getVelocity()));

@@ -10,7 +10,7 @@ public class DrumRotor {
     DcMotorEx drum;
     double targetPosition;
     double power;
-    final double ROTATION_TICK = 1968.7;
+    final double ROTATION_TICK = 1978.7;
     private final int[] balls;
 
     /**
@@ -23,7 +23,9 @@ public class DrumRotor {
         drum = hardwareMap.get(DcMotorEx.class, "drumRotor");
         drum.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drum.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drum.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        drum.setTargetPosition(0);
+        drum.setTargetPositionTolerance((int)ROTATION_TICK/360);
+        drum.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         power = pow;
         balls = b;
     }
@@ -91,12 +93,8 @@ public class DrumRotor {
      * Actually runs the drum's run to position clone
      */
     public void run(){
-        int position = drum.getCurrentPosition();
-        if(targetPosition-position <= 0){
-            drum.setPower(0);
-            return;
-        }
         drum.setPower(power);
+        drum.setTargetPosition((int)targetPosition);
     }
 
     /**
@@ -104,7 +102,7 @@ public class DrumRotor {
      * @return If the drum is at or past the target position
      */
     public boolean reachedTarget(){
-        return (!drum.isBusy() && targetPosition - drum.getCurrentPosition() <= 0);
+        return (!drum.isBusy() && targetPosition - drum.getCurrentPosition() <= ROTATION_TICK/360);
     }
 
     /**

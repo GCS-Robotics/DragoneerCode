@@ -38,7 +38,7 @@ public class MainDecodeDrive {
      * @param dashTel     For any functions that want to post to dashboard
      */
     public MainDecodeDrive(HardwareMap hardwareMap, Telemetry tel, Telemetry dashTel) {
-        this(hardwareMap, tel, dashTel, 1.0, 1000, 1, 0.01);
+        this(hardwareMap, tel, dashTel, 1.0, 2000, 1, 0.01);
     }
 
     /**
@@ -126,6 +126,7 @@ public class MainDecodeDrive {
      */
     public void runIntake(boolean run, boolean r){
         if(run && !primed) {
+            runKicker(false);
             drumRotor.intakeMode();
             intake.setPower(reverse(r));
             if(drumRotor.ballsFull()){return;}
@@ -151,8 +152,10 @@ public class MainDecodeDrive {
             primed = true;
             drumRotor.outtakeMode();
             launchers.prime();
+            runKicker(false);
         }
         if (cancel) {
+            runKicker(false);
             primed = false;
             drumRotor.intakeMode();
             launchers.cancel();
@@ -160,12 +163,18 @@ public class MainDecodeDrive {
         if (firePurple && primed) {
             launching = true;
             drumRotor.setDrumLaunch(1);
+            runKicker(false);
         }
         if (fireGreen && primed) {
             launching = true;
             drumRotor.setDrumLaunch(0);
+            runKicker(false);
         }
-        runKicker(launchers.launchersAtSpeed() && drumRotor.reachedTarget() && launching);
+        if(drumRotor.reachedTarget() && launching){
+            runKicker(true);
+            drumRotor.launchBall();
+            launching = false;
+        }
     }
     /**
      * Posts all necessary information to telemetry
@@ -179,6 +188,7 @@ public class MainDecodeDrive {
             drumRotor.storageTelemetry(telemetry);
             telemetry.addLine();
             launchers.launchTelemetry(telemetry);
+            telemetry.addData("Launchers At Speed", launchers.launchersAtSpeed());
             telemetry.addLine();
             drumRotor.drumTelemetry(telemetry);
             telemetry.update();
@@ -215,9 +225,7 @@ public class MainDecodeDrive {
     }
     public void runKicker(boolean kick){
         if(kick){
-            drumRotor.launchBall();
             kicker.setPosition(KICKER_KICKED);
-            launching = false;
         } else{
             kicker.setPosition(KICKER_BACK);
         }

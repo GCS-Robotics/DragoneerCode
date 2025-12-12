@@ -10,7 +10,7 @@ public class DrumRotor {
     DcMotorEx drum;
     double targetPosition;
     double power;
-    final double ROTATION_TICK = 1978.7;
+    final double ROTATION_TICK = 1982.7;
     private int[] balls;
 
     /**

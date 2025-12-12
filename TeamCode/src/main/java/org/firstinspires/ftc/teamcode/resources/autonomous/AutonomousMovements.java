@@ -42,18 +42,15 @@ public class AutonomousMovements {
         this.motifTag = motifTag;
     }
 
-    /**
-     * Goes to launching position, then fires balls in motif order. If motif is unknown, will fire Purple, Purple, Green.
-     * @param angle The firing angle.
-     * @return The action that does everything.
-     */
-    public Action fireMotif(double angle){
+    public Action fireMotif(Pose2d startPose) {
         int modifier = 1;
+        double angle = Math.toRadians(225);
         if(mod){
             modifier = -1;
+            angle = Math.toRadians(360-225);
         }
         Action getReady = new ParallelAction(
-                drive.actionBuilder(drive.localizer.getPose())
+                drive.actionBuilder(startPose)
                         .strafeTo(new Vector2d(24, -24*modifier))
                         .turnTo(Math.toRadians(angle))
                         .build(),
@@ -73,21 +70,24 @@ public class AutonomousMovements {
                 bobot.fireArtifact(1),
                 bobot.fireArtifact(0),
                 bobot.cancelLaunch());
-        if(motifTag == 21){
+        if (motifTag == 21) {
             return new SequentialAction(getReady, gpp);
         }
-        if(motifTag == 22){
+        if (motifTag == 22) {
             return new SequentialAction(getReady, pgp);
         }
         return new SequentialAction(getReady, ppg);
     }
+    public Action fireMotif() {
+        int modifier = 1;
+        if(mod){
+            modifier = -1;
+        }
+        return fireMotif(new Pose2d(new Vector2d(24, -24 * modifier), Math.toDegrees(90)));
+    }
 
-    /**
-     * Grabs balls from a certain x-coordinate (Blue-side only).
-     * @param xCoordinate The coordinate of the balls.
-     * @return The action that does everything.
-     */
-    public Action intake(int xCoordinate){
+
+    public Action intake(int xCoordinate, Pose2d startPose){
         int modifier = 1;
         if(mod){
             modifier = -1;
@@ -95,7 +95,7 @@ public class AutonomousMovements {
         VelConstraint vel = new VelConstraint() {
             @Override
             public double maxRobotVel(@NonNull Pose2dDual<Arclength> pose2dDual, @NonNull PosePath posePath, double v) {
-                return 6;
+                return 10;
             }
         };
         return new SequentialAction(
@@ -110,7 +110,20 @@ public class AutonomousMovements {
                                 .build(),
                         bobot.intake()
                 ),
+                drive.actionBuilder(new Pose2d(xCoordinate, -24*modifier, Math.toDegrees(90)))
+                        .strafeTo(new Vector2d(24, -24*modifier))
+                        .build(),
                 bobot.stopIntake()
         );
+    }
+
+    public Action intake(int xCoordinate){
+        int modifier = 1;
+        double angle = Math.toRadians(225);
+        if(mod){
+            modifier = -1;
+            angle = Math.toRadians(360-225);
+        }
+        return intake(xCoordinate, new Pose2d(new Vector2d(24, -24*modifier), angle));
     }
 }

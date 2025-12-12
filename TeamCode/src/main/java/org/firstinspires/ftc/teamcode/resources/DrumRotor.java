@@ -11,7 +11,7 @@ public class DrumRotor {
     double targetPosition;
     double power;
     final double ROTATION_TICK = 1978.7;
-    private final int[] balls;
+    private int[] balls;
 
     /**
      * Constrcts a Drum Rotor
@@ -193,6 +193,9 @@ public class DrumRotor {
             }
         }
         return location;
+    }
+    public void setPreload(int[] news){
+        balls = news;
     }
     public void launchBall(){
         balls[1] = -1;

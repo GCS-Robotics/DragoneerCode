@@ -60,7 +60,7 @@ public class Launchers {
         boolean rightDone = Math.abs(rightRpm - targetRPM) < 100;
         boolean leftDone  = Math.abs(leftRpm  - targetRPM) < 100;
 
-        return rightDone && leftDone;
+        return rightDone || leftDone;
     }
 
     public void launchTelemetry(Telemetry telemetry){

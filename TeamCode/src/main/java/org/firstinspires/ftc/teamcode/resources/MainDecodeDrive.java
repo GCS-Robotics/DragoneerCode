@@ -230,4 +230,7 @@ public class MainDecodeDrive {
             kicker.setPosition(KICKER_BACK);
         }
     }
+    public void setPreload(int[] balls){
+        drumRotor.setPreload(balls);
+    }
 }

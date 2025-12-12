@@ -17,16 +17,22 @@ public class RobotMechanisms {
     public RobotMechanisms(HardwareMap hardwareMap, Telemetry tel, Telemetry dashTel){
         drive = new MainDecodeDrive(hardwareMap, tel, dashTel, 1, 1000, 1, 0.01);
     }
+    public RobotMechanisms(HardwareMap hardwareMap, Telemetry tel, Telemetry dashTel, int[] preload){
+        this(hardwareMap, tel, dashTel);
+        drive.setPreload(preload);
+    }
     public class PrimeLaunch implements Action {
         boolean init = true;
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             if(init){
                 drive.runOuttake(true, false, false, false);
+                init = false;
+                return true;
             }
             drive.runDrum();
             drive.runOuttake(false, false, false, false);
-            return drive.isSpunUp();
+            return !drive.isSpunUp();
         }
     }
     public class CancelLaunch implements Action {
@@ -35,6 +41,8 @@ public class RobotMechanisms {
         public boolean run(@NonNull TelemetryPacket telemetryPacket){
             if(init){
                 drive.runOuttake(false, true, false, false);
+                init = false;
+                return true;
             }
             drive.runDrum();
             drive.runOuttake(false, false, false, false);
@@ -62,7 +70,9 @@ public class RobotMechanisms {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             if(init){
-                drive.runOuttake(false, false, false, true);
+                drive.runOuttake(true, false, false, true);
+                init = false;
+                return true;
             }
             drive.runDrum();
             drive.runOuttake(false, false, false, false);
@@ -71,16 +81,26 @@ public class RobotMechanisms {
     }
     public class FirePurple implements Action {
         boolean init = true;
+        boolean started = false;
+
         @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            if(init){
-                drive.runOuttake(false, false, true, false);
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (init) {
+                drive.runOuttake(true, false, true, false); // fire
+                init = false;
+                return true;
             }
             drive.runDrum();
             drive.runOuttake(false, false, false, false);
+            if (!started) {
+                started = true;
+                return true;
+            }
+
             return drive.isLaunching();
         }
     }
+
     public Action primeLaunch(){return new PrimeLaunch();}
     public Action cancelLaunch(){return new CancelLaunch();}
     public Action intake(){return new Intake();}

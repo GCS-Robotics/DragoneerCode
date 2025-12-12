@@ -4,37 +4,44 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.resources.MainDecodeDrive;
+import org.firstinspires.ftc.teamcode.resources.base_function.DecodeBot;
 
 @TeleOp(name = "Main Drive (2P)", group = "Main Drive")
 public class MainDuoDrive extends LinearOpMode {
-    MainDecodeDrive masterDrive;
+    DecodeBot bot;
     @Override
     public void runOpMode() throws InterruptedException {
-        masterDrive = new MainDecodeDrive(hardwareMap, telemetry, FtcDashboard.getInstance().getTelemetry());
+        bot = new DecodeBot(hardwareMap, telemetry, FtcDashboard.getInstance().getTelemetry());
         waitForStart();
         while(opModeIsActive()){
-            masterDrive.postTelemetry();
-            masterDrive.runDrive(gamepad1);
-            masterDrive.runIntake(gamepad2.left_trigger > masterDrive.getDeadzone(), false);
-            masterDrive.runOuttake(
-                    gamepad2.startWasReleased(), // Prime the Launch
-                    gamepad2.backWasReleased(), // Cancel the Launch
-                    gamepad2.xWasPressed(), // Prepare a Purple
-                    gamepad2.aWasReleased()); // Prepare a Green
-            if(gamepad2.y){
-                masterDrive.runKicker(gamepad2.y);
+            bot.drive.runDrive(gamepad1);
+            bot.runIntake(gamepad2.left_trigger > 0.2 && !bot.launching && !bot.flywheels.isPrimed()); // Run Intake
+            if(gamepad2.start){ // Start Launchers
+                bot.flywheels.prime();
+                bot.retractKicker();
             }
-            // Crank Up Launch Speed
-            if(gamepad2.dpadUpWasReleased()){
-                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()+50);
+            if(gamepad2.back){ // Stop Launchers
+                bot.flywheels.cancel();
+                bot.retractKicker();
             }
-            // Crank Down Launch Speed
-            if(gamepad2.dpadDownWasReleased() && masterDrive.getLaunchSpeed() > 0){
-                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()-50);
+            if(gamepad2.x){ // Launch Purple
+                bot.retractKicker();
+                bot.launchBall(1);
             }
-            masterDrive.runDrum();
-            masterDrive.postTelemetry();
+            if(gamepad2.a){ // Launch Green
+                bot.retractKicker();
+                bot.launchBall(0);
+            }
+            if(gamepad2.dpadUpWasPressed()){ // Increase Launch Speed
+                bot.flywheels.setTargetRPM(bot.flywheels.getTargetRPM()+50);
+            }
+            if(gamepad2.dpadDownWasPressed() &&
+                    bot.flywheels.getTargetRPM()-50 >= 0){ // Decrease Launch Speed
+                bot.flywheels.setTargetRPM(bot.flywheels.getTargetRPM()-50);
+            }
+            bot.drum.run(true);
+            bot.kick();
+            bot.postTelemetry();
         }
     }
 }

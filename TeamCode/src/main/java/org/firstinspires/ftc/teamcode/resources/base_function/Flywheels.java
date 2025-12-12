@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.resources;
+package org.firstinspires.ftc.teamcode.resources.base_function;
 
 import static java.lang.Math.abs;
 
@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Launchers {
+public class Flywheels extends Mechanism{
     private PIDFController launchControls;
     private DcMotorEx launcherLeft;
     private DcMotorEx launcherRight;
@@ -18,7 +18,7 @@ public class Launchers {
     private double TICKS_PER_REV = 28;
     private boolean run = false;
     private double[] pidf = new double[]{0.005, 0.05, 0.00003, 0};
-    public Launchers(HardwareMap hardwareMap){
+    public Flywheels(HardwareMap hardwareMap){
         launchControls = new PIDFController(pidf[0], pidf[1], pidf[2], pidf[3]);
         launcherRight = hardwareMap.get(DcMotorEx.class, "launcherRight");
         launcherRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -35,10 +35,12 @@ public class Launchers {
     public void prime(){
         run = true;
     }
+    public boolean isPrimed(){ return run;}
     public void cancel(){
         run = false;
     }
-    public void runLauncher(){
+    @Override
+    public void run(boolean running){
         DcMotorEx[] shooters = new DcMotorEx[]{launcherLeft, launcherRight};
         for(int i = 0; i < shooters.length; i++){
             DcMotorEx shooter = shooters[i];
@@ -46,26 +48,32 @@ public class Launchers {
             double currentRPM = ticksPerSecondToRPM(shooter.getVelocity());
             if (run) {
                 outputPower = launchControls.calculate(currentRPM, targetRPM);
+            } else{
+                if(currentRPM >= 100){
+                    outputPower = launchControls.calculate(currentRPM, 0);
+                }
             }
             shooter.setPower(outputPower);
         }
+    }
+    @Override
+    public void postTelemetry(Telemetry telemetry){
+        telemetry.addData("Target RPM", targetRPM);
+        telemetry.addData("Left RPM", ticksPerSecondToRPM(launcherLeft.getVelocity()));
+        telemetry.addData("Right RPM", ticksPerSecondToRPM(launcherRight.getVelocity()));
+        telemetry.addLine();
+        telemetry.addData("Spinners at Speed", launchersAtSpeed());
     }
     private double ticksPerSecondToRPM(double tps) {
         return tps * 60.0 / TICKS_PER_REV;
     }
     public boolean launchersAtSpeed() {
-        double rightRpm = Math.abs(ticksPerSecondToRPM(launcherRight.getVelocity()));
-        double leftRpm  = Math.abs(ticksPerSecondToRPM(launcherLeft.getVelocity()));
+        double rightRpm = abs(ticksPerSecondToRPM(launcherRight.getVelocity()));
+        double leftRpm  = abs(ticksPerSecondToRPM(launcherLeft.getVelocity()));
 
-        boolean rightDone = Math.abs(rightRpm - targetRPM) < 100;
-        boolean leftDone  = Math.abs(leftRpm  - targetRPM) < 100;
+        boolean rightDone = abs(rightRpm - targetRPM) < 100;
+        boolean leftDone  = abs(leftRpm  - targetRPM) < 100;
 
-        return rightDone || leftDone;
-    }
-
-    public void launchTelemetry(Telemetry telemetry){
-        telemetry.addData("Target RPM", targetRPM);
-        telemetry.addData("Left RPM", ticksPerSecondToRPM(launcherLeft.getVelocity()));
-        telemetry.addData("Right RPM", ticksPerSecondToRPM(launcherRight.getVelocity()));
+        return rightDone || leftDone; // It's this bad only because our tuning lowkey sucks.
     }
 }

@@ -4,37 +4,46 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.resources.MainDecodeDrive;
+import org.firstinspires.ftc.teamcode.resources.base_function.DecodeBot;
 
 @TeleOp(name = "Main Drive (1P)", group = "Main Drive")
 public class MainSoloDrive extends LinearOpMode {
-    MainDecodeDrive masterDrive;
+    DecodeBot bot;
     @Override
     public void runOpMode() throws InterruptedException {
-        masterDrive = new MainDecodeDrive(hardwareMap, telemetry, FtcDashboard.getInstance().getTelemetry());
+        bot = new DecodeBot(hardwareMap, telemetry, FtcDashboard.getInstance().getTelemetry());
         waitForStart();
         while(opModeIsActive()){
-            masterDrive.postTelemetry();
-            masterDrive.runDrive(gamepad1);
-            masterDrive.runIntake(gamepad1.left_bumper, false);
-            masterDrive.runOuttake(
-                    gamepad1.startWasReleased(), // Prime the Launch
-                    gamepad1.backWasReleased(), // Cancel the Launch
-                    gamepad1.xWasPressed(), // Prepare a Purple
-                    gamepad1.aWasReleased()); // Prepare a Green
-            if(gamepad1.y){
-                masterDrive.runKicker(gamepad1.y);
+            bot.drive.runDrive(gamepad1);
+            if(gamepad1.left_bumper && !bot.launching && !bot.flywheels.isPrimed()){ // Run Intake
+                bot.runIntake();
             }
-            // Crank Up Launch Speed
-            if(gamepad1.dpadUpWasReleased()){
-                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()+50);
+            if(gamepad1.start){ // Start Launchers
+                bot.flywheels.prime();
+                bot.retractKicker();
             }
-            // Crank Down Launch Speed
-            if(gamepad1.dpadDownWasReleased() && masterDrive.getLaunchSpeed() > 0){
-                masterDrive.setLaunchSpeed(masterDrive.getLaunchSpeed()-50);
+            if(gamepad1.back){ // Stop Launchers
+                bot.flywheels.cancel();
+                bot.retractKicker();
             }
-            masterDrive.runDrum();
-            masterDrive.postTelemetry();
+            if(gamepad1.x){ // Launch Purple
+                bot.retractKicker();
+                bot.launchBall(1);
+            }
+            if(gamepad1.a){ // Launch Green
+                bot.retractKicker();
+                bot.launchBall(0);
+            }
+            if(gamepad1.dpadUpWasPressed()){ // Increase Launch Speed
+                bot.flywheels.setTargetRPM(bot.flywheels.getTargetRPM()+50);
+            }
+            if(gamepad1.dpadDownWasPressed() &&
+                    bot.flywheels.getTargetRPM()-50 >= 0){ // Decrease Launch Speed
+                bot.flywheels.setTargetRPM(bot.flywheels.getTargetRPM()-50);
+            }
+            bot.drum.run(true);
+            bot.kick();
+            bot.postTelemetry();
         }
     }
 }

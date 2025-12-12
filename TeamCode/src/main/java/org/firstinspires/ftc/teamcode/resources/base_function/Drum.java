@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.resources;
+package org.firstinspires.ftc.teamcode.resources.base_function;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -6,27 +6,21 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class DrumRotor {
+public class Drum extends Mechanism{
     DcMotorEx drum;
     double targetPosition;
     double power;
     final double ROTATION_TICK = 1982.7;
-    private int[] balls;
+    private static int[] balls;
 
     /**
-     * Constrcts a Drum Rotor
+     * Constructs a Drum Rotor
      * @param hardwareMap Finds all of our hardware
      * @param pow The power to run the drum at
      * @param b The balls that we have preloaded
      */
-    public DrumRotor(HardwareMap hardwareMap, double pow, int[] b){
-        drum = hardwareMap.get(DcMotorEx.class, "drumRotor");
-        drum.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        drum.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drum.setTargetPosition(0);
-        drum.setTargetPositionTolerance((int)ROTATION_TICK/360);
-        drum.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        power = pow;
+    public Drum(HardwareMap hardwareMap, double pow, int[] b){
+        this(hardwareMap, pow);
         balls = b;
     }
 
@@ -35,8 +29,14 @@ public class DrumRotor {
      * @param hardwareMap Find all of our hardware
      * @param pow The power to run the drum at
      */
-    public DrumRotor(HardwareMap hardwareMap, double pow){
-        this(hardwareMap, pow, new int[]{-1, -1, -1});
+    public Drum(HardwareMap hardwareMap, double pow){
+        drum = hardwareMap.get(DcMotorEx.class, "drumRotor");
+        drum.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        drum.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drum.setTargetPosition(0);
+        drum.setTargetPositionTolerance((int)ROTATION_TICK/360);
+        drum.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        power = pow;
     }
 
     /**
@@ -92,9 +92,19 @@ public class DrumRotor {
     /**
      * Actually runs the drum's run to position clone
      */
-    public void run(){
-        drum.setPower(power);
-        drum.setTargetPosition((int)targetPosition);
+    @Override
+    public void run(boolean running){
+        if(!reachedTarget()){
+            drum.setPower(power);
+            drum.setTargetPosition((int)targetPosition);
+        }
+    }
+
+    @Override
+    public void postTelemetry(Telemetry telemetry){
+        drumTelemetry(telemetry);
+        telemetry.addLine();
+        storageTelemetry(telemetry);
     }
 
     /**
@@ -109,7 +119,7 @@ public class DrumRotor {
      * Gives telemetry for how much the drum has rotated
      * @param telemetry The telemetry to post to.
      */
-    public void drumTelemetry(Telemetry telemetry){
+    private void drumTelemetry(Telemetry telemetry){
         telemetry.addData("Drum Target", targetPosition);
         telemetry.addData("Thirds of Rotation", targetPosition/(ROTATION_TICK/3));
     }
@@ -118,7 +128,7 @@ public class DrumRotor {
      * Gives telemetry for which ball is stored where
      * @param telemetry The telemetry to post to.
      */
-    public void storageTelemetry(Telemetry telemetry){
+    private void storageTelemetry(Telemetry telemetry){
         for (int i = 0; i < balls.length; i++) {
             String ballDesc = "Stored Ball - ";
             if (i == 1) {
@@ -193,9 +203,6 @@ public class DrumRotor {
             }
         }
         return location;
-    }
-    public void setPreload(int[] news){
-        balls = news;
     }
     public void launchBall(){
         balls[1] = -1;

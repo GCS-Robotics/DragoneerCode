@@ -1,26 +1,23 @@
-package org.firstinspires.ftc.teamcode.resources;
+package org.firstinspires.ftc.teamcode.resources.autonomous;
 
 import androidx.annotation.NonNull;
 
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Arclength;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Pose2dDual;
 import com.acmerobotics.roadrunner.PosePath;
-import com.acmerobotics.roadrunner.ProfileAccelConstraint;
 import com.acmerobotics.roadrunner.RaceAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
 public class AutonomousMovements {
     private MecanumDrive drive;
-    private RobotMechanisms bobot;
+    private RobotActions bobot;
     private boolean mod;
     private int motifTag;
 
@@ -30,7 +27,7 @@ public class AutonomousMovements {
      * @param rm The object necessary for mechanisms.
      * @param m Set to false if on blue-side, set to true if on red-side.
      */
-    public AutonomousMovements(MecanumDrive md, RobotMechanisms rm, boolean m){
+    public AutonomousMovements(MecanumDrive md, RobotActions rm, boolean m){
         drive = md;
         bobot = rm;
         mod = m;
@@ -60,21 +57,21 @@ public class AutonomousMovements {
                         .strafeTo(new Vector2d(24, -24*modifier))
                         .turnTo(Math.toRadians(angle))
                         .build(),
-                bobot.primeLaunch());
+                bobot.primeLaunch(1000));
         Action gpp = new SequentialAction(
-                bobot.fireGreen(),
-                bobot.firePurple(),
-                bobot.firePurple(),
+                bobot.fireArtifact(0),
+                bobot.fireArtifact(1),
+                bobot.fireArtifact(1),
                 bobot.cancelLaunch());
         Action pgp = new SequentialAction(
-                bobot.firePurple(),
-                bobot.fireGreen(),
-                bobot.firePurple(),
+                bobot.fireArtifact(1),
+                bobot.fireArtifact(0),
+                bobot.fireArtifact(1),
                 bobot.cancelLaunch());
         Action ppg = new SequentialAction(
-                bobot.firePurple(),
-                bobot.firePurple(),
-                bobot.fireGreen(),
+                bobot.fireArtifact(1),
+                bobot.fireArtifact(1),
+                bobot.fireArtifact(0),
                 bobot.cancelLaunch());
         if(motifTag == 21){
             return new SequentialAction(getReady, gpp);

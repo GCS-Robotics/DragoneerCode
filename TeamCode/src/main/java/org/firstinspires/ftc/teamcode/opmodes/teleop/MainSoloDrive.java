@@ -15,9 +15,7 @@ public class MainSoloDrive extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
             bot.drive.runDrive(gamepad1);
-            if(gamepad1.left_bumper && !bot.launching && !bot.flywheels.isPrimed()){ // Run Intake
-                bot.runIntake();
-            }
+            bot.runIntake(gamepad1.left_bumper && !bot.launching && !bot.flywheels.isPrimed()); // Run Intakw
             if(gamepad1.start){ // Start Launchers
                 bot.flywheels.prime();
                 bot.retractKicker();

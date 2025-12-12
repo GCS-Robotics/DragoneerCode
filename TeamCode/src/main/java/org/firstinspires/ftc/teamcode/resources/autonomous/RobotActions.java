@@ -82,6 +82,7 @@ public class RobotActions {
                     bot.flywheels.prime();
                 }
                 bot.drum.setDrumLaunch(artifact);
+                bot.retractKicker();
             }
             bot.drum.run(true);
             bot.flywheels.run(true);

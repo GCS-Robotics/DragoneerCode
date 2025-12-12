@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.automodes;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Arclength;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -23,14 +24,16 @@ import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 @Autonomous(name = "Blue Autonomous")
  public class BlueAutonomous extends LinearOpMode {
     AutonomousMovements bobot;
+    Pose2d startPose = new Pose2d(-55, -45, Math.toRadians(55));
 
     @Override
     public void runOpMode() throws InterruptedException {
+        bobot = new AutonomousMovements(new MecanumDrive(hardwareMap, startPose), new RobotActions(hardwareMap, telemetry, FtcDashboard.getInstance().getTelemetry()), false);
         waitForStart();
         if(isStopRequested()) return;
         Actions.runBlocking(
                 new SequentialAction(
-                        bobot.fireMotif(new Pose2d(-55, -45, Math.toRadians(55))),
+                        bobot.fireMotif(startPose),
                         bobot.intake(-12),
                         bobot.fireMotif(),
                         bobot.intake(12),

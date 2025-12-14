@@ -72,7 +72,7 @@ public class Flywheels extends Mechanism{
         telemetry.addData("Left RPM", ticksPerSecondToRPM(launcherLeft.getVelocity()));
         telemetry.addData("Right RPM", ticksPerSecondToRPM(launcherRight.getVelocity()));
         telemetry.addLine();
-        telemetry.addData("Spinners at Speed", launchersAtSpeed());
+        telemetry.addData("Spinner State", state);
     }
     private double ticksPerSecondToRPM(double tps) {
         return tps * 60.0 / TICKS_PER_REV;

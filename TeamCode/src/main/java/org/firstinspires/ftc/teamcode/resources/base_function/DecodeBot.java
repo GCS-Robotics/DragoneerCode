@@ -47,7 +47,9 @@ public class DecodeBot {
                 drum.intakeBall(ball);
             }
         }
-        else intake.run(false);
+        else {
+            intake.run(false);
+        }
         // Prime Mode
         if(state == States.General.PRIMED){
             drum.outtakeMode();
@@ -55,7 +57,7 @@ public class DecodeBot {
         } else if(state == States.General.LAUNCHING){
             drum.outtakeMode();
             flywheels.prime();
-            if(drum.reachedTarget() && flywheels.state == States.Outtake.READY){
+            if(drum.reachedTarget()){
                 kicker.kick();
                 drum.launchBall();
                 state = States.General.PRIMED;
@@ -98,6 +100,13 @@ public class DecodeBot {
             kicker.retract();
             state = States.General.LAUNCHING;
             drum.setDrumLaunch(States.Artifact.GREEN);
+        }
+    }
+    public void tweakRPM(boolean up, boolean down, double increment){
+        if(up){
+            flywheels.setTargetRPM(flywheels.getTargetRPM()+increment);
+        }if(down){
+            flywheels.setTargetRPM(flywheels.getTargetRPM()-increment);
         }
     }
 }

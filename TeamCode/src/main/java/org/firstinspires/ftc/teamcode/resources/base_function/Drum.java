@@ -151,6 +151,9 @@ public class Drum extends Mechanism{
         telemetry.addData("Drum Target", targetPosition);
         telemetry.addData("Actual Drum", drum.getCurrentPosition());
         telemetry.addData("Thirds of Rotation", targetPosition/(ROTATION_TICK/3));
+        telemetry.addLine();
+        telemetry.addData("Drum Mode", mode);
+        telemetry.addData("Drum State", state);
     }
 
     /**

@@ -22,6 +22,11 @@ public class MainSoloDrive extends LinearOpMode {
                     gamepad1.xWasPressed(),
                     gamepad1.aWasPressed()
             );
+            bot.tweakRPM(
+                    gamepad1.dpadUpWasPressed(),
+                    gamepad1.dpadDownWasPressed(),
+                    50
+            );
             bot.postTelemetry();
         }
         bot.drum.resetBalls();

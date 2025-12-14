@@ -13,6 +13,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 
+import org.firstinspires.ftc.teamcode.resources.States;
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
 public class AutonomousMovements {
@@ -54,19 +55,19 @@ public class AutonomousMovements {
                         .build(),
                 bobot.primeLaunch());
         Action gpp = new SequentialAction(
-                bobot.fireArtifact(0, thing),
-                bobot.fireArtifact(1),
-                bobot.fireArtifact(1),
+                bobot.fireArtifact(States.Artifact.GREEN),
+                bobot.fireArtifact(States.Artifact.PURPLE),
+                bobot.fireArtifact(States.Artifact.PURPLE),
                 bobot.cancelLaunch());
         Action pgp = new SequentialAction(
-                bobot.fireArtifact(1, thing),
-                bobot.fireArtifact(0),
-                bobot.fireArtifact(1),
+                bobot.fireArtifact(States.Artifact.PURPLE),
+                bobot.fireArtifact(States.Artifact.GREEN),
+                bobot.fireArtifact(States.Artifact.PURPLE),
                 bobot.cancelLaunch());
         Action ppg = new SequentialAction(
-                bobot.fireArtifact(1, thing),
-                bobot.fireArtifact(1),
-                bobot.fireArtifact(0),
+                bobot.fireArtifact(States.Artifact.PURPLE),
+                bobot.fireArtifact(States.Artifact.PURPLE),
+                bobot.fireArtifact(States.Artifact.GREEN),
                 bobot.cancelLaunch());
         if (motifTag == 21) {
             return new SequentialAction(getReady, gpp);

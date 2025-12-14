@@ -4,8 +4,9 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.resources.States;
 
-public class Color extends Mechanism{
+public class Color {
     ColorSensor colorSensor;
     public Color(HardwareMap hardwareMap){
         colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
@@ -13,17 +14,15 @@ public class Color extends Mechanism{
     private double[] getRGB(){
         return new double[]{colorSensor.red(), colorSensor.green(), colorSensor.blue()};
     }
-    public int isGreenOrPurple(){
+    public States.Artifact isGreenOrPurple(){
         double[] rgb = getRGB();
-        //if green > blue and green > red*2, and green > 150, return 0
         if(rgb[1] > rgb[2] && rgb[1] > rgb[0] && rgb[1] > 150){
-            return 0;
+            return States.Artifact.GREEN;
         }
-        //if blue > green * 1.2 and blue > red * 1.5 and blue > 150
         if(rgb[2] > rgb[1] * 1.2 && rgb[2] > rgb[0] * 1.5 && rgb[2] > 150){
-            return 1;
+            return States.Artifact.PURPLE;
         }
-        return -1;
+        return States.Artifact.NONE;
     }
     public void postTelemetry(Telemetry telemetry){
         telemetry.addData("Red", getRGB()[0]);

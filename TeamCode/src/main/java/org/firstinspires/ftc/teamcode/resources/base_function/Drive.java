@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
-public class Drive extends Mechanism{
+public class Drive {
     // All the motors
     private final MecanumDrive drive;
     // Used to convert the factor booleans to numbers, which are more useful

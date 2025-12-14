@@ -8,27 +8,26 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.resources.States;
 import org.firstinspires.ftc.teamcode.resources.base_function.DecodeBot;
 
 public class RobotActions {
     public DecodeBot bot;
     final double launchRPM = 1800;
     public RobotActions(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry){
-        bot = new DecodeBot(hardwareMap, telemetry, dashTelemetry, new int[]{0,1,1});
+        bot = new DecodeBot(hardwareMap, telemetry, dashTelemetry, new States.Artifact[]{States.Artifact.GREEN, States.Artifact.PURPLE, States.Artifact.PURPLE});
         bot.flywheels.setTargetRPM(launchRPM);
         bot.flywheels.cancel();
     }
-    public RobotActions(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry, int[] preload){
+    public RobotActions(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry, States.Artifact[] preload){
         bot = new DecodeBot(hardwareMap, telemetry, dashTelemetry, preload);
     }
     // Intake Action
     public class Intake implements Action{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            bot.flywheels.cancel();
-            bot.drum.intakeMode();
+            bot.run(null);
             bot.runIntake(true);
-            bot.drum.run(true);
             return true;
         }
     }
@@ -37,10 +36,9 @@ public class RobotActions {
     public class StopIntake implements Action{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            bot.intake.run(false);
-            bot.drum.intakeMode();
-            bot.drum.run(true);
-            return false;
+            bot.run(null);
+            bot.runIntake(false);
+            return bot.state == States.General.INTAKE;
         }
     }
     public Action stopIntake(){return new StopIntake();}
@@ -51,14 +49,13 @@ public class RobotActions {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             if(init){
                 bot.flywheels.setTargetRPM(launchRPM);
-                bot.flywheels.prime();
+                bot.setOuttake(true, false, false, false);
                 init = false;
             }
-            bot.drum.intakeMode();
             bot.drum.run(true);
             bot.flywheels.run(true);
             telemetryPacket.addLine("Priming Launch!");
-            return !bot.flywheels.launchersAtSpeed() || !bot.drum.reachedTarget();
+            return bot.flywheels.state != States.Outtake.READY || bot.drum.state == States.DrumState.MOVING;
         }
     }
     public Action primeLaunch(){return new PrimeLaunch();}
@@ -66,63 +63,49 @@ public class RobotActions {
     public class CancelLaunch implements Action{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            bot.flywheels.cancel();
-            return false;
+            bot.run(null);
+            bot.setOuttake(false, true, false, false);
+            return bot.state == States.General.IDLE;
         }
     }
     public Action cancelLaunch(){return new CancelLaunch();}
     // Fire Ball Action
     public class FireArtifact implements Action{
-        int artifact;
+        States.Artifact artifact;
         ElapsedTime timer;
         boolean init = true;
         boolean completed = false;
         boolean drumRotated = false;
         double startTime = -1;
-        public boolean secondTime = false;
-        public FireArtifact(int artifact){
+        public FireArtifact(States.Artifact artifact){
             this.artifact = artifact;
             timer = new ElapsedTime();
-        }
-        public FireArtifact(int artifact, boolean secondTime){
-            this(artifact);
-            this.secondTime = secondTime;
         }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             if(init){
                 if(!bot.flywheels.isPrimed()){
-                    bot.flywheels.prime();
-                    if(secondTime){
-                        bot.drum.targetPosition += bot.drum.ROTATION_TICK / 6;
-                    }
+                    bot.setOuttake(true, false, false, false);
                 }
-                bot.drum.outtakeMode();
-                bot.drum.setDrumLaunch(artifact);
-                bot.kicker.retract();
-                init = false;
+                if(artifact == States.Artifact.PURPLE){
+                    bot.setOuttake(false, false, true, false);
+                }
+                if(artifact == States.Artifact.GREEN){
+                    bot.setOuttake(false, false, false, true);
+                }
+                init = bot.state != States.General.LAUNCHING;
                 return true;
             }
-            bot.drum.run(true);
-            bot.flywheels.run(true);
-            if(bot.flywheels.launchersAtSpeed() && bot.drum.reachedTarget() && !drumRotated){
+            bot.run(null);
+            if(bot.state == States.General.PRIMED && !drumRotated){
                 drumRotated = true;
                 startTime = timer.seconds();
-                bot.kicker.kick();
-                bot.drum.launchBall();
             }
             if(startTime != -1 && timer.seconds() - startTime >= 0.5){
                 completed = true;
             }
-            telemetryPacket.addLine("Drum Done? "+drumRotated);
-            telemetryPacket.addLine("Time? "+timer.seconds());
-            telemetryPacket.addLine("");
-            for(int i=0; i < 3; i++){
-                telemetryPacket.addLine(i+": "+bot.drum.getBall(i));
-            }
             return !completed;
         }
     }
-    public Action fireArtifact(int artifact){return new FireArtifact(artifact);}
-    public Action fireArtifact(int artifact, boolean secondTime){return new FireArtifact(artifact, secondTime);}
+    public Action fireArtifact(States.Artifact artifact){return new FireArtifact(artifact);}
 }

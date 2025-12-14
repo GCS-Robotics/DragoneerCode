@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.resources.States;
 
 public class Flywheels extends Mechanism{
     private PIDFController launchControls;
@@ -18,6 +19,7 @@ public class Flywheels extends Mechanism{
     private double TICKS_PER_REV = 28;
     private boolean primed = false;
     private double[] pidf = new double[]{0.005, 0.05, 0.00003, 0};
+    public States.Outtake state = States.Outtake.IDLE;
     public Flywheels(HardwareMap hardwareMap){
         launchControls = new PIDFController(pidf[0], pidf[1], pidf[2], pidf[3]);
         launcherRight = hardwareMap.get(DcMotorEx.class, "launcherRight");
@@ -34,10 +36,12 @@ public class Flywheels extends Mechanism{
     }
     public void prime(){
         primed = true;
+        state = States.Outtake.PRIMED;
     }
     public boolean isPrimed(){ return primed;}
     public void cancel(){
         primed = false;
+        state = States.Outtake.BRAKING;
     }
     @Override
     public void run(boolean running){
@@ -46,8 +50,18 @@ public class Flywheels extends Mechanism{
             DcMotorEx shooter = shooters[i];
             double outputPower = 0;
             double currentRPM = ticksPerSecondToRPM(shooter.getVelocity());
-            if (primed) {
+            if (state == States.Outtake.PRIMED || state == States.Outtake.READY) {
                 outputPower = launchControls.calculate(currentRPM, targetRPM);
+                if(launchersAtSpeed()){
+                    state = States.Outtake.READY;
+                } else {
+                    state = States.Outtake.PRIMED;
+                }
+            } else if (state == States.Outtake.BRAKING){
+                outputPower = launchControls.calculate(currentRPM, 0);
+                if(launchersAtSpeed(0)){
+                    state = States.Outtake.IDLE;
+                }
             }
             shooter.setPower(outputPower);
         }
@@ -63,13 +77,16 @@ public class Flywheels extends Mechanism{
     private double ticksPerSecondToRPM(double tps) {
         return tps * 60.0 / TICKS_PER_REV;
     }
-    public boolean launchersAtSpeed() {
+    public boolean launchersAtSpeed(double target) {
         double rightRpm = abs(ticksPerSecondToRPM(launcherRight.getVelocity()));
         double leftRpm  = abs(ticksPerSecondToRPM(launcherLeft.getVelocity()));
 
-        boolean rightDone = abs(rightRpm - targetRPM) < 100;
-        boolean leftDone  = abs(leftRpm  - targetRPM) < 100;
+        boolean rightDone = abs(rightRpm - target) < 100;
+        boolean leftDone  = abs(leftRpm  - target) < 100;
 
         return rightDone || leftDone; // It's this bad only because our tuning lowkey sucks.
+    }
+    public boolean launchersAtSpeed() {
+        return launchersAtSpeed(targetRPM);
     }
 }

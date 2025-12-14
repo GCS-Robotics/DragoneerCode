@@ -3,13 +3,14 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.resources.States;
 import org.firstinspires.ftc.teamcode.resources.base_function.Drum;
 
 @TeleOp(name = "Prepare Drum", group = "Main Drive")
 public class PrepareDrumPosition extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        Drum drum = new Drum(hardwareMap, 1, new int[]{-1, -1, -1});
+        Drum drum = new Drum(hardwareMap, 1, new States.Artifact[]{States.Artifact.NONE, States.Artifact.NONE, States.Artifact.NONE});
         waitForStart();
         while(opModeIsActive()){
             if(gamepad2.leftBumperWasPressed()){

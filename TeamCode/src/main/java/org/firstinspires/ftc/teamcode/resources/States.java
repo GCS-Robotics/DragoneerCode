@@ -25,4 +25,9 @@ public class States {
         IDLE,
         MOVING
     }
+    public enum Artifact{
+        PURPLE,
+        GREEN,
+        NONE
+    }
 }

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.resources.States;
 
 public class Drum extends Mechanism{
     DcMotorEx drum;
@@ -14,19 +15,16 @@ public class Drum extends Mechanism{
     double power;
     public final double ROTATION_TICK = 1992;
     final double ONE_DEGREE = ROTATION_TICK/360;
-    private static int[] balls;
-    enum State {
-        INTAKE,
-        OUTTAKE
-    }
-    State state = State.OUTTAKE;
+    private static States.Artifact[] balls;
+    private States.DrumMode mode = States.DrumMode.OUTTAKE;
+    public States.DrumState state = States.DrumState.IDLE;
     /**
      * Constructs a Drum Rotor
      * @param hardwareMap Finds all of our hardware
      * @param pow The power to run the drum at
      * @param b The balls that we have preloaded
      */
-    public Drum(HardwareMap hardwareMap, double pow, int[] b){
+    public Drum(HardwareMap hardwareMap, double pow, States.Artifact[] b){
         this(hardwareMap, pow);
         balls = b;
     }
@@ -49,7 +47,7 @@ public class Drum extends Mechanism{
         resetToZero();
         power = pow;
         if(balls == null){
-            balls = new int[]{-1, -1, -1};
+            balls = new States.Artifact[]{States.Artifact.NONE, States.Artifact.NONE, States.Artifact.NONE};
         }
     }
 
@@ -59,8 +57,8 @@ public class Drum extends Mechanism{
      */
     public int countBalls(){
         int ballCount = 0;
-        for(int ball : balls){
-            if(ball>=0){
+        for(States.Artifact ball : balls){
+            if(ball!= States.Artifact.NONE){
                 ballCount+=1;
             }
         }
@@ -72,10 +70,10 @@ public class Drum extends Mechanism{
      */
     public void intakeMode(){
         if (reachedTarget() &&
-                state == State.OUTTAKE){
+                mode == States.DrumMode.OUTTAKE){
             targetPosition += ROTATION_TICK / 6.0;
-            state = State.INTAKE;
-            int temp = balls[0];
+            mode = States.DrumMode.INTAKE;
+            States.Artifact temp = balls[0];
             balls[0] = balls[2];
             balls[2] = balls[1];
             balls[1] = temp;
@@ -87,9 +85,9 @@ public class Drum extends Mechanism{
      */
     public void outtakeMode(){
         if (reachedTarget() &&
-                state == State.INTAKE) {
+                mode == States.DrumMode.INTAKE) {
             targetPosition += ROTATION_TICK / 6.0;
-            state = State.OUTTAKE;
+            mode = States.DrumMode.OUTTAKE;
         }
     }
 
@@ -98,7 +96,7 @@ public class Drum extends Mechanism{
      */
     public void rotateThird(){
         targetPosition += ROTATION_TICK/3.0;
-        int temp = balls[0];
+        States.Artifact temp = balls[0];
         balls[0] = balls[2];
         balls[2] = balls[1];
         balls[1] = temp;
@@ -109,7 +107,7 @@ public class Drum extends Mechanism{
      */
     public void rotateBackAThird(){
         targetPosition -= ROTATION_TICK/3.0;
-        int temp = balls[2];
+        States.Artifact temp = balls[2];
         balls[2] = balls[0];
         balls[0] = balls[1];
         balls[1] = temp;
@@ -123,8 +121,10 @@ public class Drum extends Mechanism{
         if(!reachedTarget()){
             drum.setPower(power);
             drum.setTargetPosition((int)targetPosition);
+            state = States.DrumState.MOVING;
         } else {
             drum.setPower(0);
+            state = States.DrumState.IDLE;
         }
     }
 
@@ -164,9 +164,9 @@ public class Drum extends Mechanism{
                 ballDesc = "Launch Ball - ";
             }
             ballDesc = i+" "+ballDesc;
-            if (balls[i] == 0) {
+            if (balls[i] == States.Artifact.GREEN) {
                 telemetry.addData(ballDesc, "Green");
-            } else if (balls[i] == 1) {
+            } else if (balls[i] == States.Artifact.PURPLE) {
                 telemetry.addData(ballDesc, "Purple");
             } else {
                 telemetry.addData(ballDesc, "N/A");
@@ -174,15 +174,12 @@ public class Drum extends Mechanism{
         }
     }
 
-    /**
-     * Rotates and intakes a new ball
-     * @param newBall The integer representing the new ball
-     */
-    public void intakeBall(int newBall){
+
+    public void intakeBall(States.Artifact newBall){
         targetPosition += ROTATION_TICK/3;
         addBall(newBall);
     }
-    public void addBall(int newBall){
+    public void addBall(States.Artifact newBall){
         balls[0] = balls[2];
         balls[2] = balls[1];
         // Adds our new ball
@@ -192,7 +189,7 @@ public class Drum extends Mechanism{
      * Prepares the ball in the designated position for launch
      * @param ballType The color of ball we want to launch
      */
-    public void setDrumLaunch(int ballType){
+    public void setDrumLaunch(States.Artifact ballType){
         outtakeMode();
         int ballLocation = getBestBallPosition(ballType);
         if(ballLocation == 1){
@@ -207,7 +204,7 @@ public class Drum extends Mechanism{
         }
     }
 
-    public int getBall(int location){
+    public States.Artifact getBall(int location){
         return balls[location];
     }
     public void rotateSixth(){
@@ -219,7 +216,7 @@ public class Drum extends Mechanism{
      * @param color The color we want to load
      * @return The ball that we want to load
      */
-    private int getBestBallPosition(int color){
+    private int getBestBallPosition(States.Artifact color){
         int location = -1;
         for(int i=0; i<balls.length; i++){
             if(balls[i] == color){
@@ -236,9 +233,9 @@ public class Drum extends Mechanism{
         return location;
     }
     public void launchBall(){
-        balls[1] = -1;
+        balls[1] = States.Artifact.NONE;
     }
     public void resetBalls(){
-        balls = new int[]{-1, -1, -1};
+        balls = new States.Artifact[]{States.Artifact.NONE, States.Artifact.NONE, States.Artifact.NONE};
     }
 }

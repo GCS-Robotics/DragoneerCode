@@ -22,15 +22,15 @@ public class MainSoloDrive extends LinearOpMode {
                     bot.flywheels.prime();
                     bot.retractKicker();
                 }
-                if(gamepad1.back && bot.flywheels.isPrimed()){ // Stop Launchers
+                if(gamepad1.back && bot.flywheels.isPrimed() && !bot.launching){ // Stop Launchers
                     bot.flywheels.cancel();
                     bot.retractKicker();
                 }
-                if(gamepad1.x){ // Launch Purple
+                if(gamepad1.x && bot.flywheels.isPrimed() && !bot.launching){ // Launch Purple
                     bot.retractKicker();
                     bot.launchBall(1);
                 }
-                if(gamepad1.a){ // Launch Green
+                if(gamepad1.a && bot.flywheels.isPrimed() && !bot.launching){ // Launch Green
                     bot.retractKicker();
                     bot.launchBall(0);
                 }

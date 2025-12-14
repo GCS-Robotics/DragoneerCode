@@ -22,15 +22,15 @@ public class MainDuoDrive extends LinearOpMode {
                     bot.flywheels.prime();
                     bot.retractKicker();
                 }
-                if(gamepad2.back && bot.flywheels.isPrimed()){ // Stop Launchers
+                if(gamepad2.back && bot.flywheels.isPrimed() && !bot.launching){ // Stop Launchers
                     bot.flywheels.cancel();
                     bot.retractKicker();
                 }
-                if(gamepad2.x){ // Launch Purple
+                if(gamepad2.x && bot.flywheels.isPrimed() && !bot.launching){ // Launch Purple
                     bot.retractKicker();
                     bot.launchBall(1);
                 }
-                if(gamepad2.a){ // Launch Green
+                if(gamepad2.a && bot.flywheels.isPrimed() && !bot.launching){ // Launch Green
                     bot.retractKicker();
                     bot.launchBall(0);
                 }

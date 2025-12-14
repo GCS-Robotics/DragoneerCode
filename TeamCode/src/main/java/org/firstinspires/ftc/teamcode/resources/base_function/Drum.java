@@ -105,10 +105,10 @@ public class Drum extends Mechanism{
     }
 
     /**
-     * Rotates the drum two thirds of a rotation
+     * Rotates the drum backwards a third of a rotation
      */
-    public void rotateTwoThirds(){
-        targetPosition += ROTATION_TICK*2.0/3.0;
+    public void rotateBackAThird(){
+        targetPosition -= ROTATION_TICK/3.0;
         int temp = balls[2];
         balls[2] = balls[0];
         balls[0] = balls[1];
@@ -140,7 +140,7 @@ public class Drum extends Mechanism{
      * @return If the drum is at or past the target position
      */
     public boolean reachedTarget(){
-        return (!drum.isBusy() && targetPosition - drum.getCurrentPosition() <= ROTATION_TICK/360);
+        return (!drum.isBusy() && abs(targetPosition - drum.getCurrentPosition()) <= ROTATION_TICK/360);
     }
 
     /**
@@ -149,6 +149,7 @@ public class Drum extends Mechanism{
      */
     private void drumTelemetry(Telemetry telemetry){
         telemetry.addData("Drum Target", targetPosition);
+        telemetry.addData("Actual Drum", drum.getCurrentPosition());
         telemetry.addData("Thirds of Rotation", targetPosition/(ROTATION_TICK/3));
     }
 
@@ -202,7 +203,7 @@ public class Drum extends Mechanism{
             return;
         }
         if(ballLocation == 2){
-            rotateTwoThirds();
+            rotateBackAThird();
         }
     }
 

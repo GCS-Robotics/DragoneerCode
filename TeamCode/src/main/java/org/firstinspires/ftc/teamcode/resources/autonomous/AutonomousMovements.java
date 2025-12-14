@@ -86,10 +86,10 @@ public class AutonomousMovements {
 
     public Action intake(int xCoordinate, Pose2d startPose){
         int modifier = 1;
-        double angle = 270;
+        double angle = Math.toRadians(270);
         if(mod){
             modifier = -1;
-            angle = 360-angle;
+            angle = Math.toRadians(90);
         }
         VelConstraint vel = new VelConstraint() {
             @Override
@@ -100,10 +100,10 @@ public class AutonomousMovements {
         return new SequentialAction(
                 drive.actionBuilder(startPose)
                         .strafeTo(new Vector2d(xCoordinate, -12*modifier))
-                        .turnTo(Math.toRadians(angle))
+                        .turnTo(angle)
                         .build(),
                 new RaceAction(
-                        drive.actionBuilder(new Pose2d(xCoordinate, -12*modifier, Math.toRadians(angle)))
+                        drive.actionBuilder(new Pose2d(xCoordinate, -12*modifier, angle))
                                 .strafeTo(new Vector2d(xCoordinate, -45*modifier), vel)
                                 .strafeTo(new Vector2d(xCoordinate, -12*modifier), vel)
                                 .strafeTo(new Vector2d(0, 0))

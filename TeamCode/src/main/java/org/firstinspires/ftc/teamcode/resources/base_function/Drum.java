@@ -31,6 +31,13 @@ public class Drum extends Mechanism{
         balls = b;
     }
 
+    public void resetToZero(){
+        drum.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drum.setTargetPosition(0);
+        drum.setTargetPositionTolerance((int)ONE_DEGREE/2);
+        drum.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
     /**
      * Constructs a Drum Rotor
      * @param hardwareMap Find all of our hardware
@@ -39,10 +46,7 @@ public class Drum extends Mechanism{
     public Drum(HardwareMap hardwareMap, double pow){
         drum = hardwareMap.get(DcMotorEx.class, "drumRotor");
         drum.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        drum.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drum.setTargetPosition(0);
-        drum.setTargetPositionTolerance((int)ONE_DEGREE/2);
-        drum.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        resetToZero();
         power = pow;
         if(balls == null){
             balls = new int[]{-1, -1, -1};

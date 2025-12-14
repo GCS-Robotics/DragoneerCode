@@ -34,6 +34,9 @@ public class MainDuoDrive extends LinearOpMode {
                     bot.retractKicker();
                     bot.launchBall(0);
                 }
+                if(gamepad2.bWasPressed() && !bot.launching){
+                    bot.drum.rotateThird();
+                }
                 if(gamepad2.dpadUpWasPressed()){ // Increase Launch Speed
                     bot.flywheels.setTargetRPM(bot.flywheels.getTargetRPM()+50);
                 }

@@ -9,34 +9,26 @@ public class DecodeBot {
     public Intake intake;
     public Flywheels flywheels;
     public Drum drum;
-    private Servo kicker;
+    public Kicker kicker;
     public Color color;
     public Drive drive;
     public Telemetry telemetry;
     public Telemetry dashTelemetry;
     public boolean launching = false;
     public boolean busy = false;
-    private final double KICKED = 0.65;
-    private final double NOT_KICKED = 0.35;
     public DecodeBot(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry){
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
-        drum = new Drum(hardwareMap, 1.0);
         drive = new Drive(hardwareMap);
         color = new Color(hardwareMap);
-        kicker = hardwareMap.get(Servo.class, "kicker");
+        kicker = new Kicker(hardwareMap);
         this.telemetry = telemetry;
         this.dashTelemetry = dashTelemetry;
+        drum = new Drum(hardwareMap, 1.0);
     }
     public DecodeBot(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry, int[] balls){
-        intake = new Intake(hardwareMap);
-        flywheels = new Flywheels(hardwareMap);
+        this(hardwareMap, telemetry, dashTelemetry);
         drum = new Drum(hardwareMap, 1.0, balls);
-        drive = new Drive(hardwareMap);
-        color = new Color(hardwareMap);
-        kicker = hardwareMap.get(Servo.class, "kicker");
-        this.telemetry = telemetry;
-        this.dashTelemetry = dashTelemetry;
     }
     public void postTelemetry(){
         for(Telemetry telemetry : new Telemetry[]{telemetry, dashTelemetry}){
@@ -54,7 +46,7 @@ public class DecodeBot {
             return;
         }
         drum.intakeMode();
-        retractKicker();
+        kicker.retract();
         intake.run(true);
         int ball = color.isGreenOrPurple();
         if(ball != -1 && drum.reachedTarget() && drum.countBalls() < 3){
@@ -65,21 +57,15 @@ public class DecodeBot {
         launching = true;
         drum.setDrumLaunch(color);
     }
-    public void retractKicker(){
-        kicker.setPosition(NOT_KICKED);
-    }
-    public void deployKicker(){
-        kicker.setPosition(KICKED);
-    }
     public void kick(){
         if(drum.reachedTarget() && launching){
-            deployKicker();
+            kicker.kick();
             drum.launchBall();
             launching = false;
         }
     }
     public void reindex(){
-        retractKicker();
+        kicker.retract();
         busy = true;
         reindexCount = 0;
         drum.resetBalls();

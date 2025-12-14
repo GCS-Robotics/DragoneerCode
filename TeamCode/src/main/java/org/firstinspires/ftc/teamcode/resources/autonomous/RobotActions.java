@@ -99,7 +99,7 @@ public class RobotActions {
                 }
                 bot.drum.outtakeMode();
                 bot.drum.setDrumLaunch(artifact);
-                bot.retractKicker();
+                bot.kicker.retract();
                 init = false;
                 return true;
             }
@@ -108,7 +108,7 @@ public class RobotActions {
             if(bot.flywheels.launchersAtSpeed() && bot.drum.reachedTarget() && !drumRotated){
                 drumRotated = true;
                 startTime = timer.seconds();
-                bot.deployKicker();
+                bot.kicker.kick();
                 bot.drum.launchBall();
             }
             if(startTime != -1 && timer.seconds() - startTime >= 0.5){

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Color {
+public class Color extends Mechanism{
     ColorSensor colorSensor;
     public Color(HardwareMap hardwareMap){
         colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");

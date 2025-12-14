@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
-public class Drive {
+public class Drive extends Mechanism{
     // All the motors
     private final MecanumDrive drive;
     // Used to convert the factor booleans to numbers, which are more useful
@@ -27,7 +27,7 @@ public class Drive {
     public Drive(HardwareMap hardwareMap) {
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
     }
-    public void runDrive(Gamepad gamepad){
+    public void run(Gamepad gamepad){
         double speed = 1 - gamepad.right_trigger;
         if(speed < 0.2){
             speed = 0.2;

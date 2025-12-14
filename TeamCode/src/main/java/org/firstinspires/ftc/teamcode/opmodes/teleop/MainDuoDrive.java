@@ -14,24 +14,24 @@ public class MainDuoDrive extends LinearOpMode {
         bot = new DecodeBot(hardwareMap, telemetry, FtcDashboard.getInstance().getTelemetry());
         waitForStart();
         while(opModeIsActive()){
-            bot.drive.runDrive(gamepad1);
+            bot.drive.run(gamepad1);
             if(!bot.busy){
                 bot.runIntake(gamepad2.left_trigger > 0.2 && !bot.launching && !bot.flywheels.isPrimed()); // Run Intake
                 if(gamepad2.start && !bot.flywheels.isPrimed()){ // Start Launchers
                     bot.drum.outtakeMode();
                     bot.flywheels.prime();
-                    bot.retractKicker();
+                    bot.kicker.retract();
                 }
                 if(gamepad2.back && bot.flywheels.isPrimed() && !bot.launching){ // Stop Launchers
                     bot.flywheels.cancel();
-                    bot.retractKicker();
+                    bot.kicker.retract();
                 }
                 if(gamepad2.x && bot.flywheels.isPrimed() && !bot.launching){ // Launch Purple
-                    bot.retractKicker();
+                    bot.kicker.retract();
                     bot.launchBall(1);
                 }
                 if(gamepad2.a && bot.flywheels.isPrimed() && !bot.launching){ // Launch Green
-                    bot.retractKicker();
+                    bot.kicker.retract();
                     bot.launchBall(0);
                 }
                 if(gamepad2.bWasPressed() && !bot.launching){
@@ -54,7 +54,7 @@ public class MainDuoDrive extends LinearOpMode {
             if(bot.busy){
                 bot.drum.run(true);
                 bot.reindexing();
-                bot.drive.runDrive(gamepad1);
+                bot.drive.run(gamepad1);
             }
             bot.postTelemetry();
         }

@@ -38,7 +38,7 @@ import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
                         bobot.fireMotif()
                 )
         );
-        bobot.bobot.bot.retractKicker();
+        bobot.bobot.bot.kicker.retract();
         bobot.bobot.bot.flywheels.setTargetRPM(0);
         while(opModeIsActive()){
             bobot.bobot.bot.flywheels.run(true);

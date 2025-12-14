@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.resources.base_function;
 
+import static java.lang.Math.abs;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -8,9 +10,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Drum extends Mechanism{
     DcMotorEx drum;
-    double targetPosition;
+    public double targetPosition;
     double power;
-    final double ROTATION_TICK = 1982.7;
+    public final double ROTATION_TICK = 1992;
+    final double POS_1 = 0;
+    final double POS_2 = ROTATION_TICK/3;
+    final double POS_3 = ROTATION_TICK*2/3;
+    final double ONE_DEGREE = ROTATION_TICK/360;
     private static int[] balls;
 
     /**
@@ -34,30 +40,36 @@ public class Drum extends Mechanism{
         drum.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drum.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drum.setTargetPosition(0);
-        drum.setTargetPositionTolerance((int)ROTATION_TICK/360);
+        drum.setTargetPositionTolerance((int)ONE_DEGREE/2);
         drum.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         power = pow;
+        if(balls == null){
+            balls = new int[]{-1, -1, -1};
+        }
     }
 
     /**
      * Checks if all the balls are full
      * @return Whether or not all the balls are filled
      */
-    public boolean ballsFull(){
+    public int countBalls(){
         int ballCount = 0;
         for(int ball : balls){
             if(ball>=0){
                 ballCount+=1;
             }
         }
-        return ballCount >= 3;
+        return ballCount;
     }
 
     /**
      * Moves the drum into a position to be ready for intake mode.
      */
     public void intakeMode(){
-        if (targetPosition/(ROTATION_TICK/3) % 1.0 <= 0.1) {
+        if (reachedTarget() &&
+                abs(targetPosition%ROTATION_TICK - POS_1) < ONE_DEGREE ||
+                abs(targetPosition%ROTATION_TICK - POS_2) < ONE_DEGREE ||
+                abs(targetPosition%ROTATION_TICK - POS_3) < ONE_DEGREE){
             targetPosition += ROTATION_TICK / 6.0;
             int temp = balls[0];
             balls[0] = balls[2];
@@ -70,7 +82,10 @@ public class Drum extends Mechanism{
      * Moves the drum into a position to be ready for outtake mode.
      */
     public void outtakeMode(){
-        if (targetPosition/(ROTATION_TICK/3) % 1.0 <= 0.6 && targetPosition/(ROTATION_TICK/3) % 1.0 >= 0.4) {
+        if (reachedTarget() &&
+                (abs(targetPosition%ROTATION_TICK - (POS_1+ROTATION_TICK/6)) < ONE_DEGREE ||
+                abs(targetPosition%ROTATION_TICK - (POS_2+ROTATION_TICK/6)) < ONE_DEGREE ||
+                abs(targetPosition%ROTATION_TICK - (POS_3+ROTATION_TICK/6)) < ONE_DEGREE)) {
             targetPosition += ROTATION_TICK / 6.0;
         }
     }
@@ -80,6 +95,11 @@ public class Drum extends Mechanism{
      */
     public void rotateThird(){
         targetPosition += ROTATION_TICK/3.0;
+        outtakeMode();
+        int temp = balls[0];
+        balls[0] = balls[2];
+        balls[2] = balls[1];
+        balls[1] = temp;
     }
 
     /**
@@ -87,6 +107,11 @@ public class Drum extends Mechanism{
      */
     public void rotateTwoThirds(){
         targetPosition += ROTATION_TICK*2.0/3.0;
+        outtakeMode();
+        int temp = balls[2];
+        balls[2] = balls[0];
+        balls[0] = balls[1];
+        balls[1] = temp;
     }
 
     /**
@@ -97,6 +122,8 @@ public class Drum extends Mechanism{
         if(!reachedTarget()){
             drum.setPower(power);
             drum.setTargetPosition((int)targetPosition);
+        } else {
+            drum.setPower(0);
         }
     }
 
@@ -150,8 +177,10 @@ public class Drum extends Mechanism{
      * @param newBall The integer representing the new ball
      */
     public void intakeBall(int newBall){
-        rotateThird();
-        // Shift over everything in ball storage
+        targetPosition += ROTATION_TICK/3;
+        addBall(newBall);
+    }
+    public void addBall(int newBall){
         balls[0] = balls[2];
         balls[2] = balls[1];
         // Adds our new ball
@@ -168,19 +197,18 @@ public class Drum extends Mechanism{
         }
         if(ballLocation == 0){
             rotateThird();
-            int temp = balls[0];
-            balls[0] = balls[2];
-            balls[2] = balls[1];
-            balls[1] = temp;
             return;
         }
         if(ballLocation == 2){
             rotateTwoThirds();
-            int temp = balls[2];
-            balls[2] = balls[0];
-            balls[0] = balls[1];
-            balls[1] = temp;
         }
+    }
+
+    public int getBall(int location){
+        return balls[location];
+    }
+    public void rotateSixth(){
+        targetPosition += ROTATION_TICK/6;
     }
 
     /**
@@ -206,5 +234,8 @@ public class Drum extends Mechanism{
     }
     public void launchBall(){
         balls[1] = -1;
+    }
+    public void resetBalls(){
+        balls = new int[]{-1, -1, -1};
     }
 }

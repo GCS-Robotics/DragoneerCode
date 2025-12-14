@@ -14,9 +14,9 @@ public class Flywheels extends Mechanism{
     private PIDFController launchControls;
     private DcMotorEx launcherLeft;
     private DcMotorEx launcherRight;
-    private double targetRPM;
+    private double targetRPM = 2000;
     private double TICKS_PER_REV = 28;
-    private boolean run = false;
+    private boolean primed = false;
     private double[] pidf = new double[]{0.005, 0.05, 0.00003, 0};
     public Flywheels(HardwareMap hardwareMap){
         launchControls = new PIDFController(pidf[0], pidf[1], pidf[2], pidf[3]);
@@ -33,11 +33,11 @@ public class Flywheels extends Mechanism{
         return targetRPM;
     }
     public void prime(){
-        run = true;
+        primed = true;
     }
-    public boolean isPrimed(){ return run;}
+    public boolean isPrimed(){ return primed;}
     public void cancel(){
-        run = false;
+        primed = false;
     }
     @Override
     public void run(boolean running){
@@ -46,12 +46,8 @@ public class Flywheels extends Mechanism{
             DcMotorEx shooter = shooters[i];
             double outputPower = 0;
             double currentRPM = ticksPerSecondToRPM(shooter.getVelocity());
-            if (run) {
+            if (primed) {
                 outputPower = launchControls.calculate(currentRPM, targetRPM);
-            } else{
-                if(currentRPM >= 100){
-                    outputPower = launchControls.calculate(currentRPM, 0);
-                }
             }
             shooter.setPower(outputPower);
         }

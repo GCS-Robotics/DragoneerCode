@@ -15,8 +15,9 @@ public class DecodeBot {
     public Telemetry telemetry;
     public Telemetry dashTelemetry;
     public boolean launching = false;
-    private final double KICKED = 0.3;
-    private final double NOT_KICKED = 0.65;
+    public boolean busy = false;
+    private final double KICKED = 0.65;
+    private final double NOT_KICKED = 0.35;
     public DecodeBot(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry){
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
@@ -42,6 +43,9 @@ public class DecodeBot {
             drum.postTelemetry(telemetry);
             telemetry.addLine();
             flywheels.postTelemetry(telemetry);
+            telemetry.addLine();
+            color.postTelemetry(telemetry);
+            telemetry.update();
         }
     }
     public void runIntake(boolean running){
@@ -51,10 +55,12 @@ public class DecodeBot {
         }
         retractKicker();
         intake.run(true);
-        if(drum.ballsFull()) return;
         int ball = color.isGreenOrPurple();
-        if(ball != -1 && drum.reachedTarget()){
+        if(ball != -1 && drum.reachedTarget() && drum.countBalls() < 3){
             drum.intakeBall(ball);
+        }
+        if(ball == -1 && drum.reachedTarget()){
+            drum.intakeMode();
         }
     }
     public void launchBall(int color){
@@ -72,6 +78,30 @@ public class DecodeBot {
             deployKicker();
             drum.launchBall();
             launching = false;
+        }
+    }
+    public void reindex(){
+        retractKicker();
+        busy = true;
+        reindexCount = 0;
+        drum.resetBalls();
+        drum.rotateThird();
+    }
+    private int reindexCount = 0;
+    public void reindexing(){
+        if(!drum.reachedTarget()){
+            int ball = color.isGreenOrPurple();
+            if(ball != -1 && drum.reachedTarget()){
+                drum.intakeBall(ball);
+                reindexCount++;
+            }
+        } else{
+            if(reindexCount < 3){
+                reindexCount++;
+            }
+            if(reindexCount == 3){
+                busy = false;
+            }
         }
     }
 }

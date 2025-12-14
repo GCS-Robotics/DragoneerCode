@@ -1,18 +1,8 @@
-package org.firstinspires.ftc.teamcode.opmodes.automodes;
-
-import androidx.annotation.NonNull;
+package org.firstinspires.ftc.teamcode.opmodes.automodes.test;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Arclength;
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Pose2dDual;
-import com.acmerobotics.roadrunner.PosePath;
-import com.acmerobotics.roadrunner.RaceAction;
 import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.VelConstraint;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -21,10 +11,10 @@ import org.firstinspires.ftc.teamcode.resources.autonomous.AutonomousMovements;
 import org.firstinspires.ftc.teamcode.resources.autonomous.RobotActions;
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
-@Autonomous(name = "Blue Autonomous")
- public class BlueAutonomous extends LinearOpMode {
+@Autonomous(name = "One Boi Test")
+ public class OneArtifactTest extends LinearOpMode {
     AutonomousMovements bobot;
-    Pose2d startPose = new Pose2d(-50, -50, Math.toRadians(55));
+    Pose2d startPose = new Pose2d(-55, -45, Math.toRadians(55));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -33,15 +23,10 @@ import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
         if(isStopRequested()) return;
         Actions.runBlocking(
                 new SequentialAction(
-                        bobot.fireMotif(startPose),
-                        bobot.intake(-9),
-                        bobot.fireMotif()
+                        bobot.bobot.fireArtifact(1),
+                        bobot.bobot.fireArtifact(1),
+                        bobot.bobot.fireArtifact(0)
                 )
         );
-        bobot.bobot.bot.retractKicker();
-        bobot.bobot.bot.flywheels.setTargetRPM(0);
-        while(opModeIsActive()){
-            bobot.bobot.bot.flywheels.run(true);
-        }
     }
 }

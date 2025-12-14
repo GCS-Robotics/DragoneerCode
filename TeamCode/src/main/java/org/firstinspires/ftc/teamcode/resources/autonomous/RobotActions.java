@@ -12,8 +12,11 @@ import org.firstinspires.ftc.teamcode.resources.base_function.DecodeBot;
 
 public class RobotActions {
     public DecodeBot bot;
+    final double launchRPM = 1800;
     public RobotActions(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry){
-        bot = new DecodeBot(hardwareMap, telemetry, dashTelemetry, new int[]{-1,-1,-1});
+        bot = new DecodeBot(hardwareMap, telemetry, dashTelemetry, new int[]{0,1,1});
+        bot.flywheels.setTargetRPM(launchRPM);
+        bot.flywheels.cancel();
     }
     public RobotActions(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry, int[] preload){
         bot = new DecodeBot(hardwareMap, telemetry, dashTelemetry, preload);
@@ -22,40 +25,51 @@ public class RobotActions {
     public class Intake implements Action{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            bot.flywheels.cancel();
             bot.runIntake(true);
             bot.drum.run(true);
             return true;
         }
     }
     public Action intake(){return new Intake();}
+    // Drum Done
+    public class AwaitDrumDone implements Action{
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket){
+            bot.drum.run(true);
+            return !bot.drum.reachedTarget();
+        }
+    }
+    public Action awaitDrumDone(){return new AwaitDrumDone();}
     // Stop Intake Action
     public class StopIntake implements Action{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            bot.drum.targetPosition += bot.drum.ROTATION_TICK/6;
             bot.intake.run(false);
             bot.drum.run(true);
-            return true;
+            return false;
         }
     }
     public Action stopIntake(){return new StopIntake();}
     // Prime Launch Action
     public class PrimeLaunch implements Action{
         boolean init = true;
-        double rpm;
-        private PrimeLaunch(double speed){
-            rpm = speed;
-        }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             if(init){
+                bot.drum.outtakeMode();
+                bot.flywheels.setTargetRPM(launchRPM);
                 bot.flywheels.prime();
                 init = false;
             }
+            bot.drum.run(true);
             bot.flywheels.run(true);
-            return !bot.flywheels.launchersAtSpeed();
+            telemetryPacket.addLine("Priming Launch!");
+            return !bot.flywheels.launchersAtSpeed() || !bot.drum.reachedTarget();
         }
     }
-    public Action primeLaunch(double rpm){return new PrimeLaunch(rpm);}
+    public Action primeLaunch(){return new PrimeLaunch();}
     // Cancel Launch Action
     public class CancelLaunch implements Action{
         @Override
@@ -72,30 +86,50 @@ public class RobotActions {
         boolean init = true;
         boolean completed = false;
         boolean drumRotated = false;
+        double startTime = -1;
+        public boolean secondTime = false;
         public FireArtifact(int artifact){
             this.artifact = artifact;
+            timer = new ElapsedTime();
+        }
+        public FireArtifact(int artifact, boolean secondTime){
+            this(artifact);
+            this.secondTime = secondTime;
         }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             if(init){
                 if(!bot.flywheels.isPrimed()){
                     bot.flywheels.prime();
+                    if(secondTime){
+                        bot.drum.targetPosition += bot.drum.ROTATION_TICK / 6;
+                    }
                 }
                 bot.drum.setDrumLaunch(artifact);
                 bot.retractKicker();
+                init = false;
+                return true;
             }
             bot.drum.run(true);
             bot.flywheels.run(true);
-            if(drumRotated && timer.seconds() < 0.125){
+            if(bot.flywheels.launchersAtSpeed() && bot.drum.reachedTarget() && !drumRotated){
+                drumRotated = true;
+                startTime = timer.seconds();
+                bot.deployKicker();
+                bot.drum.launchBall();
+            }
+            if(startTime != -1 && timer.seconds() - startTime >= 0.5){
                 completed = true;
             }
-            if(bot.drum.reachedTarget()){
-                drumRotated = true;
-                timer = new ElapsedTime();
-                bot.deployKicker();
+            telemetryPacket.addLine("Drum Done? "+drumRotated);
+            telemetryPacket.addLine("Time? "+timer.seconds());
+            telemetryPacket.addLine("");
+            for(int i=0; i < 3; i++){
+                telemetryPacket.addLine(i+": "+bot.drum.getBall(i));
             }
             return !completed;
         }
     }
     public Action fireArtifact(int artifact){return new FireArtifact(artifact);}
+    public Action fireArtifact(int artifact, boolean secondTime){return new FireArtifact(artifact, secondTime);}
 }

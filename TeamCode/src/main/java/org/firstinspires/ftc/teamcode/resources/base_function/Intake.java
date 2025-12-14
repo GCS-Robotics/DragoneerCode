@@ -9,7 +9,7 @@ public class Intake extends Mechanism{
     DcMotor intake;
     double speed;
     public Intake(HardwareMap hardwareMap, double speed){
-        intake = hardwareMap.get(DcMotor.class, "Intake");
+        intake = hardwareMap.get(DcMotor.class, "intake");
         this.speed = speed;
     }
     public Intake(HardwareMap hardwareMap){

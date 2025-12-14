@@ -15,33 +15,43 @@ public class MainDuoDrive extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
             bot.drive.runDrive(gamepad1);
-            bot.runIntake(gamepad2.left_trigger > 0.2 && !bot.launching && !bot.flywheels.isPrimed()); // Run Intake
-            if(gamepad2.start){ // Start Launchers
-                bot.flywheels.prime();
-                bot.retractKicker();
+            if(!bot.busy){
+                bot.runIntake(gamepad2.left_trigger > 0.2 && !bot.launching && !bot.flywheels.isPrimed()); // Run Intake
+                if(gamepad2.start && !bot.flywheels.isPrimed()){ // Start Launchers
+                    bot.flywheels.prime();
+                    bot.drum.outtakeMode();
+                    bot.retractKicker();
+                }
+                if(gamepad2.back && bot.flywheels.isPrimed() && bot.drum.countBalls() == 0){ // Stop Launchers
+                    bot.flywheels.cancel();
+                    bot.retractKicker();
+                }
+                if(gamepad2.x){ // Launch Purple
+                    bot.retractKicker();
+                    bot.launchBall(1);
+                }
+                if(gamepad2.a){ // Launch Green
+                    bot.retractKicker();
+                    bot.launchBall(0);
+                }
+                if(gamepad2.dpadUpWasPressed()){ // Increase Launch Speed
+                    bot.flywheels.setTargetRPM(bot.flywheels.getTargetRPM()+50);
+                }
+                if(gamepad2.dpadDownWasPressed() &&
+                        bot.flywheels.getTargetRPM()-50 >= 0){ // Decrease Launch Speed
+                    bot.flywheels.setTargetRPM(bot.flywheels.getTargetRPM()-50);
+                }
+                bot.drum.run(true);
+                bot.flywheels.run(true);
+                bot.kick();
             }
-            if(gamepad2.back){ // Stop Launchers
-                bot.flywheels.cancel();
-                bot.retractKicker();
+            if(bot.busy){
+                bot.drum.run(true);
+                bot.reindexing();
+                bot.drive.runDrive(gamepad1);
             }
-            if(gamepad2.x){ // Launch Purple
-                bot.retractKicker();
-                bot.launchBall(1);
-            }
-            if(gamepad2.a){ // Launch Green
-                bot.retractKicker();
-                bot.launchBall(0);
-            }
-            if(gamepad2.dpadUpWasPressed()){ // Increase Launch Speed
-                bot.flywheels.setTargetRPM(bot.flywheels.getTargetRPM()+50);
-            }
-            if(gamepad2.dpadDownWasPressed() &&
-                    bot.flywheels.getTargetRPM()-50 >= 0){ // Decrease Launch Speed
-                bot.flywheels.setTargetRPM(bot.flywheels.getTargetRPM()-50);
-            }
-            bot.drum.run(true);
-            bot.kick();
             bot.postTelemetry();
         }
+        bot.drum.resetBalls();
     }
 }

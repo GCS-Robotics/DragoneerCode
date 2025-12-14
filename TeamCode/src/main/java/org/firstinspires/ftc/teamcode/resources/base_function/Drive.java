@@ -29,9 +29,12 @@ public class Drive {
     }
     public void runDrive(Gamepad gamepad){
         double speed = 1 - gamepad.right_trigger;
+        if(speed < 0.2){
+            speed = 0.2;
+        }
         if(gamepad.left_trigger < 0.2){
             speed *= -1;
         }
-        drive.setDrivePowers(new PoseVelocity2d(new Vector2d(-gamepad.left_stick_y*speed, -gamepad.left_stick_x*speed), -gamepad.right_stick_x*speed));
+        drive.setDrivePowers(new PoseVelocity2d(new Vector2d(gamepad.left_stick_y*speed, gamepad.left_stick_x*speed), -gamepad.right_stick_x*abs(speed)));
     }
 }

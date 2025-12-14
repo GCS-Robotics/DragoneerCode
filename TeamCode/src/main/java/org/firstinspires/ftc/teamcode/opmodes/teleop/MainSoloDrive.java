@@ -13,15 +13,18 @@ public class MainSoloDrive extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         bot = new DecodeBot(hardwareMap, telemetry, FtcDashboard.getInstance().getTelemetry());
         waitForStart();
+        bot.drum.intakeMode();
         while(opModeIsActive()){
             bot.drive.runDrive(gamepad1);
             bot.runIntake(gamepad1.left_bumper && !bot.launching && !bot.flywheels.isPrimed()); // Run Intakw
             if(gamepad1.start){ // Start Launchers
                 bot.flywheels.prime();
+                bot.drum.outtakeMode();
                 bot.retractKicker();
             }
             if(gamepad1.back){ // Stop Launchers
                 bot.flywheels.cancel();
+                bot.drum.intakeMode();
                 bot.retractKicker();
             }
             if(gamepad1.x){ // Launch Purple
@@ -40,6 +43,7 @@ public class MainSoloDrive extends LinearOpMode {
                 bot.flywheels.setTargetRPM(bot.flywheels.getTargetRPM()-50);
             }
             bot.drum.run(true);
+            bot.flywheels.run(true);
             bot.kick();
             bot.postTelemetry();
         }

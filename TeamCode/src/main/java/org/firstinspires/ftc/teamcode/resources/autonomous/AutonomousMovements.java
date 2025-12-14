@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
 public class AutonomousMovements {
     private MecanumDrive drive;
-    private RobotActions bobot;
+    public RobotActions bobot;
     private boolean mod;
     private int motifTag;
 
@@ -41,32 +41,30 @@ public class AutonomousMovements {
     public void setMotifTag(int motifTag) {
         this.motifTag = motifTag;
     }
-
     public Action fireMotif(Pose2d startPose) {
-        int modifier = 1;
-        double angle = Math.toRadians(225);
+        boolean thing = true;
+        double angle = Math.toRadians(50);
         if(mod){
-            modifier = -1;
-            angle = Math.toRadians(360-225);
+            angle = Math.toRadians(360-50);
         }
         Action getReady = new ParallelAction(
                 drive.actionBuilder(startPose)
-                        .strafeTo(new Vector2d(24, -24*modifier))
-                        .turnTo(Math.toRadians(angle))
+                        .strafeTo(new Vector2d(0, 0))
+                        .turnTo(angle)
                         .build(),
-                bobot.primeLaunch(1000));
+                bobot.primeLaunch());
         Action gpp = new SequentialAction(
-                bobot.fireArtifact(0),
+                bobot.fireArtifact(0, thing),
                 bobot.fireArtifact(1),
                 bobot.fireArtifact(1),
                 bobot.cancelLaunch());
         Action pgp = new SequentialAction(
-                bobot.fireArtifact(1),
+                bobot.fireArtifact(1, thing),
                 bobot.fireArtifact(0),
                 bobot.fireArtifact(1),
                 bobot.cancelLaunch());
         Action ppg = new SequentialAction(
-                bobot.fireArtifact(1),
+                bobot.fireArtifact(1, thing),
                 bobot.fireArtifact(1),
                 bobot.fireArtifact(0),
                 bobot.cancelLaunch());
@@ -79,51 +77,48 @@ public class AutonomousMovements {
         return new SequentialAction(getReady, ppg);
     }
     public Action fireMotif() {
-        int modifier = 1;
+        double angle = Math.toRadians(270);
         if(mod){
-            modifier = -1;
+            angle = Math.toRadians(360 - 270);
         }
-        return fireMotif(new Pose2d(new Vector2d(24, -24 * modifier), Math.toDegrees(90)));
+        return fireMotif(new Pose2d(new Vector2d(0, 0), angle));
     }
-
 
     public Action intake(int xCoordinate, Pose2d startPose){
         int modifier = 1;
+        double angle = 270;
         if(mod){
             modifier = -1;
+            angle = 360-angle;
         }
         VelConstraint vel = new VelConstraint() {
             @Override
             public double maxRobotVel(@NonNull Pose2dDual<Arclength> pose2dDual, @NonNull PosePath posePath, double v) {
-                return 10;
+                return 8;
             }
         };
         return new SequentialAction(
-                drive.actionBuilder(drive.localizer.getPose())
-                        .strafeTo(new Vector2d(xCoordinate, -24*modifier))
-                        .turnTo(Math.toDegrees(90))
+                drive.actionBuilder(startPose)
+                        .strafeTo(new Vector2d(xCoordinate, -12*modifier))
+                        .turnTo(Math.toRadians(angle))
                         .build(),
                 new RaceAction(
-                        drive.actionBuilder(new Pose2d(xCoordinate, -24*modifier, Math.toDegrees(90)))
-                                .strafeTo(new Vector2d(xCoordinate, -50*modifier), vel)
-                                .strafeTo(new Vector2d(xCoordinate, -24*modifier), vel)
+                        drive.actionBuilder(new Pose2d(xCoordinate, -12*modifier, Math.toRadians(angle)))
+                                .strafeTo(new Vector2d(xCoordinate, -45*modifier), vel)
+                                .strafeTo(new Vector2d(xCoordinate, -12*modifier), vel)
+                                .strafeTo(new Vector2d(0, 0))
                                 .build(),
                         bobot.intake()
                 ),
-                drive.actionBuilder(new Pose2d(xCoordinate, -24*modifier, Math.toDegrees(90)))
-                        .strafeTo(new Vector2d(24, -24*modifier))
-                        .build(),
                 bobot.stopIntake()
         );
     }
 
     public Action intake(int xCoordinate){
-        int modifier = 1;
-        double angle = Math.toRadians(225);
+        double angle = Math.toRadians(50);
         if(mod){
-            modifier = -1;
-            angle = Math.toRadians(360-225);
+            angle = Math.toRadians(360-50);
         }
-        return intake(xCoordinate, new Pose2d(new Vector2d(24, -24*modifier), angle));
+        return intake(xCoordinate, new Pose2d(new Vector2d(0, 0), angle));
     }
 }

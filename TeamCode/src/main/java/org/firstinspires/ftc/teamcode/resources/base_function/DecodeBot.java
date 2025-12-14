@@ -53,14 +53,12 @@ public class DecodeBot {
             intake.run(false);
             return;
         }
+        drum.intakeMode();
         retractKicker();
         intake.run(true);
         int ball = color.isGreenOrPurple();
         if(ball != -1 && drum.reachedTarget() && drum.countBalls() < 3){
             drum.intakeBall(ball);
-        }
-        if(ball == -1 && drum.reachedTarget()){
-            drum.intakeMode();
         }
     }
     public void launchBall(int color){

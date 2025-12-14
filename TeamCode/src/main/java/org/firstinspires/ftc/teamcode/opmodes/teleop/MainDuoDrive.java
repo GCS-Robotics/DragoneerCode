@@ -18,11 +18,11 @@ public class MainDuoDrive extends LinearOpMode {
             if(!bot.busy){
                 bot.runIntake(gamepad2.left_trigger > 0.2 && !bot.launching && !bot.flywheels.isPrimed()); // Run Intake
                 if(gamepad2.start && !bot.flywheels.isPrimed()){ // Start Launchers
-                    bot.flywheels.prime();
                     bot.drum.outtakeMode();
+                    bot.flywheels.prime();
                     bot.retractKicker();
                 }
-                if(gamepad2.back && bot.flywheels.isPrimed() && bot.drum.countBalls() == 0){ // Stop Launchers
+                if(gamepad2.back && bot.flywheels.isPrimed()){ // Stop Launchers
                     bot.flywheels.cancel();
                     bot.retractKicker();
                 }
@@ -40,6 +40,9 @@ public class MainDuoDrive extends LinearOpMode {
                 if(gamepad2.dpadDownWasPressed() &&
                         bot.flywheels.getTargetRPM()-50 >= 0){ // Decrease Launch Speed
                     bot.flywheels.setTargetRPM(bot.flywheels.getTargetRPM()-50);
+                }
+                if(bot.flywheels.isPrimed()){
+                    bot.drum.outtakeMode();
                 }
                 bot.drum.run(true);
                 bot.flywheels.run(true);

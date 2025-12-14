@@ -13,12 +13,13 @@ public class Drum extends Mechanism{
     public double targetPosition;
     double power;
     public final double ROTATION_TICK = 1992;
-    final double POS_1 = 0;
-    final double POS_2 = ROTATION_TICK/3;
-    final double POS_3 = ROTATION_TICK*2/3;
     final double ONE_DEGREE = ROTATION_TICK/360;
     private static int[] balls;
-
+    enum State {
+        INTAKE,
+        OUTTAKE
+    }
+    State state = State.OUTTAKE;
     /**
      * Constructs a Drum Rotor
      * @param hardwareMap Finds all of our hardware
@@ -67,10 +68,9 @@ public class Drum extends Mechanism{
      */
     public void intakeMode(){
         if (reachedTarget() &&
-                abs(targetPosition%ROTATION_TICK - POS_1) < ONE_DEGREE ||
-                abs(targetPosition%ROTATION_TICK - POS_2) < ONE_DEGREE ||
-                abs(targetPosition%ROTATION_TICK - POS_3) < ONE_DEGREE){
+                state == State.OUTTAKE){
             targetPosition += ROTATION_TICK / 6.0;
+            state = State.INTAKE;
             int temp = balls[0];
             balls[0] = balls[2];
             balls[2] = balls[1];
@@ -83,10 +83,9 @@ public class Drum extends Mechanism{
      */
     public void outtakeMode(){
         if (reachedTarget() &&
-                (abs(targetPosition%ROTATION_TICK - (POS_1+ROTATION_TICK/6)) < ONE_DEGREE ||
-                abs(targetPosition%ROTATION_TICK - (POS_2+ROTATION_TICK/6)) < ONE_DEGREE ||
-                abs(targetPosition%ROTATION_TICK - (POS_3+ROTATION_TICK/6)) < ONE_DEGREE)) {
+                state == State.INTAKE) {
             targetPosition += ROTATION_TICK / 6.0;
+            state = State.OUTTAKE;
         }
     }
 
@@ -95,7 +94,6 @@ public class Drum extends Mechanism{
      */
     public void rotateThird(){
         targetPosition += ROTATION_TICK/3.0;
-        outtakeMode();
         int temp = balls[0];
         balls[0] = balls[2];
         balls[2] = balls[1];
@@ -107,7 +105,6 @@ public class Drum extends Mechanism{
      */
     public void rotateTwoThirds(){
         targetPosition += ROTATION_TICK*2.0/3.0;
-        outtakeMode();
         int temp = balls[2];
         balls[2] = balls[0];
         balls[0] = balls[1];
@@ -191,6 +188,7 @@ public class Drum extends Mechanism{
      * @param ballType The color of ball we want to launch
      */
     public void setDrumLaunch(int ballType){
+        outtakeMode();
         int ballLocation = getBestBallPosition(ballType);
         if(ballLocation == 1){
             return;

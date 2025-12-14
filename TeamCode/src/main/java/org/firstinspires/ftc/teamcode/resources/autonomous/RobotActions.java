@@ -26,27 +26,19 @@ public class RobotActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             bot.flywheels.cancel();
+            bot.drum.intakeMode();
             bot.runIntake(true);
             bot.drum.run(true);
             return true;
         }
     }
     public Action intake(){return new Intake();}
-    // Drum Done
-    public class AwaitDrumDone implements Action{
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket){
-            bot.drum.run(true);
-            return !bot.drum.reachedTarget();
-        }
-    }
-    public Action awaitDrumDone(){return new AwaitDrumDone();}
     // Stop Intake Action
     public class StopIntake implements Action{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            bot.drum.targetPosition += bot.drum.ROTATION_TICK/6;
             bot.intake.run(false);
+            bot.drum.intakeMode();
             bot.drum.run(true);
             return false;
         }
@@ -58,11 +50,11 @@ public class RobotActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             if(init){
-                bot.drum.outtakeMode();
                 bot.flywheels.setTargetRPM(launchRPM);
                 bot.flywheels.prime();
                 init = false;
             }
+            bot.drum.intakeMode();
             bot.drum.run(true);
             bot.flywheels.run(true);
             telemetryPacket.addLine("Priming Launch!");
@@ -105,6 +97,7 @@ public class RobotActions {
                         bot.drum.targetPosition += bot.drum.ROTATION_TICK / 6;
                     }
                 }
+                bot.drum.outtakeMode();
                 bot.drum.setDrumLaunch(artifact);
                 bot.retractKicker();
                 init = false;

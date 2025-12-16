@@ -7,10 +7,6 @@ public class States {
         PRIMED,
         LAUNCHING
     }
-    public enum Intake{
-        IDLE,
-        RUNNING
-    }
     public enum Outtake{
         IDLE,
         PRIMED,

@@ -15,18 +15,18 @@ public class RobotActions {
     public DecodeBot bot;
     final double launchRPM = 1800;
     public RobotActions(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry){
-        bot = new DecodeBot(hardwareMap, telemetry, dashTelemetry, new States.Artifact[]{States.Artifact.GREEN, States.Artifact.PURPLE, States.Artifact.PURPLE});
-        bot.flywheels.setTargetRPM(launchRPM);
-        bot.flywheels.cancel();
+        this(hardwareMap, telemetry, dashTelemetry, new States.Artifact[]{States.Artifact.GREEN , States.Artifact.PURPLE, States.Artifact.PURPLE});
     }
     public RobotActions(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry, States.Artifact[] preload){
         bot = new DecodeBot(hardwareMap, telemetry, dashTelemetry, preload);
+        bot.flywheels.setTargetRPM(launchRPM);
+        bot.flywheels.cancel();
     }
     // Intake Action
     public class Intake implements Action{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            bot.run(null);
+            bot.run();
             bot.runIntake(true);
             return true;
         }
@@ -36,7 +36,7 @@ public class RobotActions {
     public class StopIntake implements Action{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            bot.run(null);
+            bot.run();
             bot.runIntake(false);
             return bot.state == States.General.INTAKE;
         }
@@ -63,7 +63,7 @@ public class RobotActions {
     public class CancelLaunch implements Action{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            bot.run(null);
+            bot.run();
             bot.setOuttake(false, true, false, false);
             return bot.state == States.General.IDLE;
         }
@@ -96,7 +96,7 @@ public class RobotActions {
                 init = bot.state != States.General.LAUNCHING;
                 return true;
             }
-            bot.run(null);
+            bot.run();
             if(bot.state == States.General.PRIMED && !drumRotated){
                 drumRotated = true;
                 startTime = timer.seconds();

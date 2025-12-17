@@ -29,6 +29,6 @@ public class MainDuoDrive extends LinearOpMode {
             );
             bot.postTelemetry();
         }
-        bot.drum.resetBalls();
+        bot.drum.resetStatics();
     }
 }

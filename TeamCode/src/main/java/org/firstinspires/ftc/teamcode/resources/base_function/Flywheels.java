@@ -12,13 +12,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.resources.States;
 
 public class Flywheels extends Mechanism{
-    private PIDFController launchControls;
-    private DcMotorEx launcherLeft;
-    private DcMotorEx launcherRight;
+    private final PIDFController launchControls;
+    private final DcMotorEx launcherLeft;
+    private final DcMotorEx launcherRight;
     private double targetRPM = 2000;
-    private double TICKS_PER_REV = 28;
-    private boolean primed = false;
-    private double[] pidf = new double[]{0.005, 0.05, 0.00003, 0};
+    private final double TICKS_PER_REV = 28;
+    private final double[] pidf = new double[]{0.005, 0.05, 0.00003, 0};
     public States.Outtake state = States.Outtake.IDLE;
     public Flywheels(HardwareMap hardwareMap){
         launchControls = new PIDFController(pidf[0], pidf[1], pidf[2], pidf[3]);
@@ -35,31 +34,31 @@ public class Flywheels extends Mechanism{
         return targetRPM;
     }
     public void prime(){
-        primed = true;
-        state = States.Outtake.PRIMED;
+        if(state == States.Outtake.IDLE){
+            state = States.Outtake.PRIMED;
+        }
     }
-    public boolean isPrimed(){ return primed;}
     public void cancel(){
-        primed = false;
-        state = States.Outtake.BRAKING;
+        if(state != States.Outtake.IDLE){
+            state = States.Outtake.BRAKING;
+        }
     }
     @Override
     public void run(boolean running){
         DcMotorEx[] shooters = new DcMotorEx[]{launcherLeft, launcherRight};
-        for(int i = 0; i < shooters.length; i++){
-            DcMotorEx shooter = shooters[i];
+        for (DcMotorEx shooter : shooters) {
             double outputPower = 0;
             double currentRPM = ticksPerSecondToRPM(shooter.getVelocity());
             if (state == States.Outtake.PRIMED || state == States.Outtake.READY) {
                 outputPower = launchControls.calculate(currentRPM, targetRPM);
-                if(launchersAtSpeed()){
+                if (state == States.Outtake.PRIMED && launchersAtSpeed()) {
                     state = States.Outtake.READY;
                 } else {
                     state = States.Outtake.PRIMED;
                 }
-            } else if (state == States.Outtake.BRAKING){
+            } else if (state == States.Outtake.BRAKING) {
                 outputPower = launchControls.calculate(currentRPM, 0);
-                if(launchersAtSpeed(0)){
+                if (launchersAtSpeed(0)) {
                     state = States.Outtake.IDLE;
                 }
             }

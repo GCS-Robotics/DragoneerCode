@@ -31,10 +31,7 @@ public class DecodeBot {
         this(hardwareMap, telemetry, dashTelemetry);
         drum = new Drum(hardwareMap, 1.0, balls);
     }
-    public void run(Gamepad driveGamepad){
-        if(driveGamepad != null){
-            drive.run(driveGamepad);
-        }
+    public void run(){
         drum.run(true);
         flywheels.run(true);
         // Intake Mode
@@ -51,13 +48,10 @@ public class DecodeBot {
             intake.run(false);
         }
         // Prime Mode
-        if(state == States.General.PRIMED){
+        if(state == States.General.PRIMED || state == States.General.LAUNCHING){
             drum.outtakeMode();
             flywheels.prime();
-        } else if(state == States.General.LAUNCHING){
-            drum.outtakeMode();
-            flywheels.prime();
-            if(drum.reachedTarget()){
+            if(drum.state == States.DrumState.IDLE && flywheels.state == States.Outtake.READY && state == States.General.LAUNCHING) {
                 kicker.kick();
                 drum.launchBall();
                 state = States.General.PRIMED;
@@ -65,6 +59,10 @@ public class DecodeBot {
         } else{
             flywheels.cancel();
         }
+    }
+    public void run(Gamepad driveGamepad){
+        drive.run(driveGamepad);
+        run();
     }
     public void postTelemetry(){
         for(Telemetry telemetry : new Telemetry[]{telemetry, dashTelemetry}){

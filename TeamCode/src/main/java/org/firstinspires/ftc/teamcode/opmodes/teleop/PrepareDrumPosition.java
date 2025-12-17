@@ -11,6 +11,7 @@ public class PrepareDrumPosition extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Drum drum = new Drum(hardwareMap, 1, new States.Artifact[]{States.Artifact.NONE, States.Artifact.NONE, States.Artifact.NONE});
+        drum.resetStatics();
         waitForStart();
         while(opModeIsActive()){
             if(gamepad2.leftBumperWasPressed()){
@@ -21,5 +22,6 @@ public class PrepareDrumPosition extends LinearOpMode {
             }
             drum.run(true);
         }
+        drum.resetStatics();
     }
 }

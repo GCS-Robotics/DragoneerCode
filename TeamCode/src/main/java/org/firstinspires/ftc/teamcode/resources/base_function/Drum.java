@@ -11,13 +11,13 @@ import org.firstinspires.ftc.teamcode.resources.States;
 
 public class Drum extends Mechanism{
     DcMotorEx drum;
-    public double targetPosition;
+    public static double targetPosition;
     double power;
     public final double ROTATION_TICK = 1992;
     final double ONE_DEGREE = ROTATION_TICK/360;
     private static States.Artifact[] balls;
     private States.DrumMode mode = States.DrumMode.OUTTAKE;
-    public States.DrumState state = States.DrumState.IDLE;
+    public static States.DrumState state = States.DrumState.IDLE;
     /**
      * Constructs a Drum Rotor
      * @param hardwareMap Finds all of our hardware
@@ -29,13 +29,6 @@ public class Drum extends Mechanism{
         balls = b;
     }
 
-    public void resetToZero(){
-        drum.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drum.setTargetPosition(0);
-        drum.setTargetPositionTolerance((int)ONE_DEGREE/2);
-        drum.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
-
     /**
      * Constructs a Drum Rotor
      * @param hardwareMap Find all of our hardware
@@ -44,10 +37,9 @@ public class Drum extends Mechanism{
     public Drum(HardwareMap hardwareMap, double pow){
         drum = hardwareMap.get(DcMotorEx.class, "drumRotor");
         drum.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        resetToZero();
         power = pow;
         if(balls == null){
-            balls = new States.Artifact[]{States.Artifact.NONE, States.Artifact.NONE, States.Artifact.NONE};
+            resetStatics();
         }
     }
 
@@ -238,7 +230,13 @@ public class Drum extends Mechanism{
     public void launchBall(){
         balls[1] = States.Artifact.NONE;
     }
-    public void resetBalls(){
+    public void resetStatics(){
         balls = new States.Artifact[]{States.Artifact.NONE, States.Artifact.NONE, States.Artifact.NONE};
+        targetPosition = 0;
+        mode = States.DrumMode.OUTTAKE;
+        drum.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drum.setTargetPosition(0);
+        drum.setTargetPositionTolerance((int)ONE_DEGREE/2);
+        drum.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 }

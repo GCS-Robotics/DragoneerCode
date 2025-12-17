@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
 public class Drive {
@@ -35,6 +36,9 @@ public class Drive {
         if(gamepad.left_trigger < 0.2){
             speed *= -1;
         }
-        drive.setDrivePowers(new PoseVelocity2d(new Vector2d(gamepad.left_stick_y*speed, gamepad.left_stick_x*speed), -gamepad.right_stick_x*abs(speed)));
+        run(new Vector2d(gamepad.left_stick_y*speed, gamepad.left_stick_x*speed), -gamepad.right_stick_x*abs(speed));
+    }
+    public void run(Vector2d vectorVelocity, double angularVelocity){
+        drive.setDrivePowers(new PoseVelocity2d(vectorVelocity, angularVelocity));
     }
 }

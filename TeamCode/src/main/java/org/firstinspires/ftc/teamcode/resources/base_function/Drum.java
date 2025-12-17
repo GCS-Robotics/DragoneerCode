@@ -10,14 +10,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.resources.States;
 
 public class Drum extends Mechanism{
-    DcMotorEx drum;
-    public static double targetPosition;
-    double power;
     public final double ROTATION_TICK = 1992;
-    final double ONE_DEGREE = ROTATION_TICK/360;
+    private final double ONE_DEGREE = ROTATION_TICK/360;
+    private final DcMotorEx drum;
+    private final double power;
+    private static double targetPosition;
     private static States.Artifact[] balls;
-    private States.DrumMode mode = States.DrumMode.OUTTAKE;
-    public static States.DrumState state = States.DrumState.IDLE;
+    private static States.DrumMode mode = States.DrumMode.OUTTAKE;
+    public States.DrumState state = States.DrumState.IDLE;
     /**
      * Constructs a Drum Rotor
      * @param hardwareMap Finds all of our hardware
@@ -40,6 +40,8 @@ public class Drum extends Mechanism{
         power = pow;
         if(balls == null){
             resetStatics();
+        } else{
+            resetDrum();
         }
     }
 
@@ -50,7 +52,7 @@ public class Drum extends Mechanism{
     public int countBalls(){
         int ballCount = 0;
         for(States.Artifact ball : balls){
-            if(ball!= States.Artifact.NONE){
+            if(ball != States.Artifact.NONE){
                 ballCount+=1;
             }
         }
@@ -61,9 +63,8 @@ public class Drum extends Mechanism{
      * Moves the drum into a position to be ready for intake mode.
      */
     public void intakeMode(){
-        if (reachedTarget() &&
-                mode == States.DrumMode.OUTTAKE){
-            targetPosition += ROTATION_TICK / 6.0;
+        if (mode == States.DrumMode.OUTTAKE){
+            rotateSixth();
             mode = States.DrumMode.INTAKE;
             States.Artifact temp = balls[0];
             balls[0] = balls[2];
@@ -76,9 +77,8 @@ public class Drum extends Mechanism{
      * Moves the drum into a position to be ready for outtake mode.
      */
     public void outtakeMode(){
-        if (reachedTarget() &&
-                mode == States.DrumMode.INTAKE) {
-            targetPosition += ROTATION_TICK / 6.0;
+        if (mode == States.DrumMode.INTAKE) {
+            rotateSixth();
             mode = States.DrumMode.OUTTAKE;
         }
     }
@@ -131,8 +131,8 @@ public class Drum extends Mechanism{
      * Returns whether or not the drum has reached its target
      * @return If the drum is at or past the target position
      */
-    public boolean reachedTarget(){
-        return (!drum.isBusy() && abs(targetPosition - drum.getCurrentPosition()) <= ROTATION_TICK/360);
+    private boolean reachedTarget(){
+        return (!drum.isBusy() && abs(targetPosition - drum.getCurrentPosition()) <= ONE_DEGREE);
     }
 
     /**
@@ -140,10 +140,6 @@ public class Drum extends Mechanism{
      * @param telemetry The telemetry to post to.
      */
     private void drumTelemetry(Telemetry telemetry){
-        telemetry.addData("Drum Target", targetPosition);
-        telemetry.addData("Actual Drum", drum.getCurrentPosition());
-        telemetry.addData("Thirds of Rotation", targetPosition/(ROTATION_TICK/3));
-        telemetry.addLine();
         telemetry.addData("Drum Mode", mode);
         telemetry.addData("Drum State", state);
     }
@@ -168,8 +164,6 @@ public class Drum extends Mechanism{
             }
         }
     }
-
-
     public void intakeBall(States.Artifact newBall){
         targetPosition += ROTATION_TICK/3;
         addBall(newBall);
@@ -198,14 +192,9 @@ public class Drum extends Mechanism{
             rotateBackAThird();
         }
     }
-
-    public States.Artifact getBall(int location){
-        return balls[location];
-    }
     public void rotateSixth(){
         targetPosition += ROTATION_TICK/6;
     }
-
     /**
      * Figures out the best ball position to rotate to
      * @param color The color we want to load
@@ -234,8 +223,12 @@ public class Drum extends Mechanism{
         balls = new States.Artifact[]{States.Artifact.NONE, States.Artifact.NONE, States.Artifact.NONE};
         targetPosition = 0;
         mode = States.DrumMode.OUTTAKE;
+        resetDrum();
+
+    }
+    private void resetDrum(){
         drum.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drum.setTargetPosition(0);
+        drum.setTargetPosition((int)targetPosition);
         drum.setTargetPositionTolerance((int)ONE_DEGREE/2);
         drum.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }

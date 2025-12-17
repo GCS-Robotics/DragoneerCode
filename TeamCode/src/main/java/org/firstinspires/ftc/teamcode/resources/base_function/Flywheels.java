@@ -49,7 +49,7 @@ public class Flywheels extends Mechanism{
         for (DcMotorEx shooter : shooters) {
             double outputPower = 0;
             double currentRPM = ticksPerSecondToRPM(shooter.getVelocity());
-            if (state == States.Outtake.PRIMED || state == States.Outtake.READY) {
+            if (active()) {
                 outputPower = launchControls.calculate(currentRPM, targetRPM);
                 if (state == States.Outtake.PRIMED && launchersAtSpeed()) {
                     state = States.Outtake.READY;
@@ -87,5 +87,8 @@ public class Flywheels extends Mechanism{
     }
     public boolean launchersAtSpeed() {
         return launchersAtSpeed(targetRPM);
+    }
+    public boolean active(){
+        return state == States.Outtake.PRIMED || state == States.Outtake.READY;
     }
 }

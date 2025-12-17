@@ -84,7 +84,7 @@ public class RobotActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             if(init){
-                if(!bot.flywheels.isPrimed()){
+                if(!bot.flywheels.active()){
                     bot.setOuttake(true, false, false, false);
                 }
                 if(artifact == States.Artifact.PURPLE){

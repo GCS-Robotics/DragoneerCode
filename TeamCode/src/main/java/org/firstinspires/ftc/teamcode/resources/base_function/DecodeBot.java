@@ -40,7 +40,7 @@ public class DecodeBot {
             kicker.retract();
             intake.run(true);
             States.Artifact ball = color.isGreenOrPurple();
-            if(ball != States.Artifact.NONE && drum.reachedTarget() && drum.countBalls() < 3){
+            if(ball != States.Artifact.NONE && drum.state == States.DrumState.IDLE && drum.countBalls() < 3){
                 drum.intakeBall(ball);
             }
         }

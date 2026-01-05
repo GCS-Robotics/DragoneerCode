@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.resources.States;
 
 public class Drum extends Mechanism{
-    public final double ROTATION_TICK = 1992;
+    public final double ROTATION_TICK = 1425.1;
     private final double ONE_DEGREE = ROTATION_TICK/360;
     private final DcMotorEx drum;
     private final double power;

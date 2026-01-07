@@ -51,7 +51,8 @@ public class DecodeBot {
         if(state == States.General.PRIMED || state == States.General.LAUNCHING){
             drum.outtakeMode();
             flywheels.prime();
-            if(drum.state == States.DrumState.IDLE && flywheels.state == States.Outtake.READY && state == States.General.LAUNCHING) {
+            if(drum.state == States.DrumState.IDLE
+                    && state == States.General.LAUNCHING) {
                 kicker.kick();
                 drum.launchBall();
                 state = States.General.PRIMED;
@@ -66,6 +67,7 @@ public class DecodeBot {
     }
     public void postTelemetry(){
         for(Telemetry telemetry : new Telemetry[]{telemetry, dashTelemetry}){
+            telemetry.addData("Robot State", state);
             drum.postTelemetry(telemetry);
             telemetry.addLine();
             flywheels.postTelemetry(telemetry);

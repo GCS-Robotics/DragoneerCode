@@ -1,33 +1,30 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop.test;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.LLResultTypes.FiducialResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.resources.autonomous.LimelightHandler;
 
 import java.util.List;
 
+@TeleOp(name = "April Tag Test", group = "Test")
 public class AprilTagTest extends LinearOpMode {
-    Limelight3A limelight;
+    LimelightHandler limelight;
     @Override
     public void runOpMode() throws InterruptedException {
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.pipelineSwitch(0);
-        limelight.start();
+        limelight = new LimelightHandler(hardwareMap);
         waitForStart();
         while(opModeIsActive()){
-            LLResult result = limelight.getLatestResult();
-            if(result != null){
-                if(result.isValid()){
-                    List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-                    telemetry.addData("Tag Amount", fiducialResults.size());
-                    for(int i = 0; i < fiducialResults.size(); i++){
-                        telemetry.addData("Tag "+i, fiducialResults.get(i).getFiducialId());
-                    }
-                }
+            List<FiducialResult> fiducialResults = limelight.findAprilTags();
+            telemetry.addLine("Fiducial Results:");
+            for(int i = 0 ; i < fiducialResults.size(); i ++){
+                telemetry.addData("Tag "+i, fiducialResults.get(i).getFiducialId());
             }
+            telemetry.update();
         }
     }
 }

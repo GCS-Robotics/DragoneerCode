@@ -2,12 +2,15 @@ package org.firstinspires.ftc.teamcode.resources.base_function;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.resources.States;
 import org.firstinspires.ftc.teamcode.resources.autonomous.LimelightHandler;
 
 public class DecodeBot {
+    private IMU imu;
     public LimelightHandler limelight;
     public Intake intake;
     public Flywheels flywheels;
@@ -19,6 +22,7 @@ public class DecodeBot {
     public Telemetry dashTelemetry;
     public States.General state;
     public DecodeBot(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry){
+        imu = hardwareMap.get(IMU.class, "imu");
         limelight = new LimelightHandler(hardwareMap);
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
@@ -119,7 +123,7 @@ public class DecodeBot {
         return limelight.findAprilTags().get(0).getFiducialId();
     }
     public float getDistanceToGoal(){
-        if(state != States.General.LAUNCHING && state != States.General.PRIMED){
+        if((state != States.General.LAUNCHING && state != States.General.PRIMED)){
             return -1;
         }
         float distance = 0;

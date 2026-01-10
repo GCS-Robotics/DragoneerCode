@@ -5,8 +5,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.resources.States;
+import org.firstinspires.ftc.teamcode.resources.autonomous.LimelightHandler;
 
 public class DecodeBot {
+    public LimelightHandler limelight;
     public Intake intake;
     public Flywheels flywheels;
     public Drum drum;
@@ -17,6 +19,7 @@ public class DecodeBot {
     public Telemetry dashTelemetry;
     public States.General state;
     public DecodeBot(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry){
+        limelight = new LimelightHandler(hardwareMap);
         intake = new Intake(hardwareMap);
         flywheels = new Flywheels(hardwareMap);
         drive = new Drive(hardwareMap);
@@ -108,5 +111,18 @@ public class DecodeBot {
         }if(down){
             flywheels.setTargetRPM(flywheels.getTargetRPM()-increment);
         }
+    }
+    public int getMotifTag() {
+        if(state == States.General.LAUNCHING || state == States.General.PRIMED){
+            return -1;
+        }
+        return limelight.findAprilTags().get(0).getFiducialId();
+    }
+    public float getDistanceToGoal(){
+        if(state != States.General.LAUNCHING && state != States.General.PRIMED){
+            return -1;
+        }
+        float distance = 0;
+        return distance;
     }
 }

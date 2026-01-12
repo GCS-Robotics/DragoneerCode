@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.resources.autonomous;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Arclength;
 import com.acmerobotics.roadrunner.ParallelAction;
@@ -13,6 +14,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.VelConstraint;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.resources.States;
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
@@ -20,7 +22,7 @@ public class AutonomousMovements {
     private MecanumDrive drive;
     public RobotActions bobot;
     private boolean mod;
-    private int motifTag;
+    private int motifTag = -1;
 
     /**
      * Creates the object that handles larger-scale actions in our autonomous modes.
@@ -42,18 +44,35 @@ public class AutonomousMovements {
     public void setMotifTag(int motifTag) {
         this.motifTag = motifTag;
     }
+    public Action driveToMotif(Pose2d startPose){
+        return new SequentialAction(
+                drive.actionBuilder(startPose)
+                        .strafeTo(new Vector2d(0, 0))
+                        .turnTo(0)
+                        .build(),
+                scanTag());
+    }
     public Action fireMotif(Pose2d startPose) {
-        boolean thing = true;
         double angle = Math.toRadians(50);
         if(mod){
             angle = Math.toRadians(360-50);
         }
-        Action getReady = new ParallelAction(
-                drive.actionBuilder(startPose)
-                        .strafeTo(new Vector2d(0, 0))
-                        .turnTo(angle)
-                        .build(),
-                bobot.primeLaunch());
+        Action getReady;
+        if(startPose.equals(new Pose2d(0, 0, 0))){
+            getReady = new RaceAction(
+                    drive.actionBuilder(startPose)
+                            .turnTo(angle)
+                            .build(),
+                    bobot.primeLaunch());
+        }
+        else{
+            getReady = new RaceAction(
+                    drive.actionBuilder(startPose)
+                            .strafeTo(new Vector2d(0, 0))
+                            .turnTo(angle)
+                            .build(),
+                    bobot.primeLaunch());
+        }
         Action gpp = new SequentialAction(
                 bobot.fireArtifact(States.Artifact.GREEN),
                 bobot.fireArtifact(States.Artifact.PURPLE),
@@ -92,12 +111,7 @@ public class AutonomousMovements {
             modifier = -1;
             angle = Math.toRadians(90);
         }
-        VelConstraint vel = new VelConstraint() {
-            @Override
-            public double maxRobotVel(@NonNull Pose2dDual<Arclength> pose2dDual, @NonNull PosePath posePath, double v) {
-                return 8;
-            }
-        };
+        VelConstraint vel = (pose2dDual, posePath, v) -> 8;
         return new SequentialAction(
                 drive.actionBuilder(startPose)
                         .strafeTo(new Vector2d(xCoordinate, -12*modifier))
@@ -122,4 +136,15 @@ public class AutonomousMovements {
         }
         return intake(xCoordinate, new Pose2d(new Vector2d(0, 0), angle));
     }
+    public class ScanTag implements Action{
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            if(motifTag == -1){
+                setMotifTag(bobot.bot.getMotifTag());
+            }
+            telemetryPacket.addLine("Tag Seen: "+motifTag);
+            return motifTag == -1;
+        }
+    }
+    public Action scanTag(){return new ScanTag();}
 }

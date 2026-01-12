@@ -117,7 +117,7 @@ public class DecodeBot {
         }
     }
     public int getMotifTag() {
-        if(state == States.General.LAUNCHING || state == States.General.PRIMED){
+        if(limelight.findAprilTags().size() <= 0){
             return -1;
         }
         return limelight.findAprilTags().get(0).getFiducialId();

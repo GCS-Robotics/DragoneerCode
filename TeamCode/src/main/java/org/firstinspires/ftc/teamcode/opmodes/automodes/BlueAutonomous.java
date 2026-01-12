@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 @Autonomous(name = "Blue Autonomous")
  public class BlueAutonomous extends LinearOpMode {
     AutonomousMovements bobot;
-    Pose2d startPose = new Pose2d(-50, -50, Math.toRadians(55));
+    Pose2d startPose = new Pose2d(-44, -50, Math.toRadians(55));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -33,15 +33,11 @@ import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
         if(isStopRequested()) return;
         Actions.runBlocking(
                 new SequentialAction(
-                        bobot.fireMotif(startPose),
-                        bobot.intake(-9),
-                        bobot.fireMotif()
+                        bobot.driveToMotif(startPose),
+                        bobot.fireMotif(new Pose2d(0, 0, 0)),
+                        bobot.intake(-9)
+                        //bobot.fireMotif()
                 )
         );
-        bobot.bobot.bot.kicker.retract();
-        bobot.bobot.bot.flywheels.setTargetRPM(0);
-        while(opModeIsActive()){
-            bobot.bobot.bot.flywheels.run(true);
-        }
     }
 }

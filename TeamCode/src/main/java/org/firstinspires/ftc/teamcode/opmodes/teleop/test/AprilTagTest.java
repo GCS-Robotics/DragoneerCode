@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop.test;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes.FiducialResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.resources.autonomous.LimelightHandler;
 
@@ -20,11 +22,13 @@ public class AprilTagTest extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
             List<FiducialResult> fiducialResults = limelight.findAprilTags();
-            telemetry.addLine("Fiducial Results:");
-            for(int i = 0 ; i < fiducialResults.size(); i ++){
-                telemetry.addData("Tag "+i, fiducialResults.get(i).getFiducialId());
+            for(Telemetry telemetry : new Telemetry[]{telemetry, FtcDashboard.getInstance().getTelemetry()}){
+                telemetry.addLine("Fiducial Results:");
+                for(int i = 0 ; i < fiducialResults.size(); i ++){
+                    telemetry.addData("Tag "+i, fiducialResults.get(i).getFiducialId());
+                }
+                telemetry.update();
             }
-            telemetry.update();
         }
     }
 }

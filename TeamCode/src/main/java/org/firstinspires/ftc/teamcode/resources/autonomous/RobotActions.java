@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.resources.base_function.DecodeBot;
 
 public class RobotActions {
     public DecodeBot bot;
-    final double launchRPM = 1800;
+    final double launchRPM = 1600;
     public RobotActions(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry){
         this(hardwareMap, telemetry, dashTelemetry, new States.Artifact[]{States.Artifact.GREEN , States.Artifact.PURPLE, States.Artifact.PURPLE});
     }
@@ -52,10 +52,11 @@ public class RobotActions {
                 bot.setOuttake(true, false, false, false);
                 init = false;
             }
-            bot.drum.run(true);
-            bot.flywheels.run(true);
-            telemetryPacket.addLine("Priming Launch!");
-            return bot.flywheels.state != States.Outtake.READY || bot.drum.state == States.DrumState.MOVING;
+            bot.run();
+            telemetryPacket.addLine("Preparing Launch");
+            telemetryPacket.addLine("Drum State: "+bot.drum.state);
+            telemetryPacket.addLine("Flywheel State: "+bot.flywheels.state);
+            return true;
         }
     }
     public Action primeLaunch(){return new PrimeLaunch();}

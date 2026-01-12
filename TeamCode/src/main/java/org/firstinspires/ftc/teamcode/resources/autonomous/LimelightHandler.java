@@ -57,10 +57,10 @@ public class LimelightHandler {
         int tag = result.getFiducialResults().get(0).getFiducialId();
         double RobotX = pose.getPosition().x;
         double RobotY = pose.getPosition().y;
-        int BlueGoalX = -63;
-        int BlueGoalY = -61;
-        int RedGoalX = 63;
-        int RedGoalY = 61;
+        double BlueGoalX = -3.66;
+        double BlueGoalY = -3.66;
+        double RedGoalX = -3.66;
+        double RedGoalY = 3.66;
         double distance = -1.0;
         if (tag == 20) {
             distance = Math.sqrt(((BlueGoalY - RobotY) * (BlueGoalY - RobotY)) + ((BlueGoalX - RobotX) * (BlueGoalX - RobotX)));

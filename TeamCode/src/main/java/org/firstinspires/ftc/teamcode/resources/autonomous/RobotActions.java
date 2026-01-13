@@ -36,9 +36,8 @@ public class RobotActions {
     public class StopIntake implements Action{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            bot.run();
             bot.runIntake(false);
-            return bot.state == States.General.INTAKE;
+            return bot.state != States.General.IDLE;
         }
     }
     public Action stopIntake(){return new StopIntake();}
@@ -56,7 +55,7 @@ public class RobotActions {
             telemetryPacket.addLine("Preparing Launch");
             telemetryPacket.addLine("Drum State: "+bot.drum.state);
             telemetryPacket.addLine("Flywheel State: "+bot.flywheels.state);
-            return true;
+            return false;
         }
     }
     public Action primeLaunch(){return new PrimeLaunch();}
@@ -66,7 +65,7 @@ public class RobotActions {
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             bot.run();
             bot.setOuttake(false, true, false, false);
-            return bot.state == States.General.IDLE;
+            return bot.state != States.General.IDLE;
         }
     }
     public Action cancelLaunch(){return new CancelLaunch();}

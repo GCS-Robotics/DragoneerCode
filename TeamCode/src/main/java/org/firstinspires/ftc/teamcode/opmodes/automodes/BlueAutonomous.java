@@ -32,12 +32,27 @@ import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
         waitForStart();
         if(isStopRequested()) return;
         Actions.runBlocking(
-                new SequentialAction(
-                        bobot.driveToMotif(startPose),
-                        bobot.fireMotif(new Pose2d(0, 0, 0)),
-                        bobot.intake(-9)
-                        //bobot.fireMotif()
-                )
+                bobot.driveToMotif(startPose)
+        );
+        if(isStopRequested()) return;
+        Actions.runBlocking(
+                bobot.fireMotif()
+        );
+        if(isStopRequested()) return;
+        Actions.runBlocking(
+                bobot.intake(-3)
+        );
+        if(isStopRequested()) return;
+        Actions.runBlocking(
+                bobot.fireMotif()
+        );
+        if(isStopRequested()) return;
+        Actions.runBlocking(
+                bobot.intake(20)
+        );
+        if(isStopRequested()) return;
+        Actions.runBlocking(
+                bobot.fireMotif()
         );
     }
 }

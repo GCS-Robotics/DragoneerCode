@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.resources.autonomous;
 
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes.FiducialResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -55,20 +57,18 @@ public class LimelightHandler {
         }
         Pose3D pose = result.getBotpose_MT2();
         int tag = result.getFiducialResults().get(0).getFiducialId();
-        double RobotX = pose.getPosition().x;
-        double RobotY = pose.getPosition().y;
-        double BlueGoalX = -3.66;
-        double BlueGoalY = -3.66;
-        double RedGoalX = -3.66;
-        double RedGoalY = 3.66;
-        double distance = -1.0;
-        if (tag == 20) {
-            distance = Math.sqrt(((BlueGoalY - RobotY) * (BlueGoalY - RobotY)) + ((BlueGoalX - RobotX) * (BlueGoalX - RobotX)));
+        Vector2d robotPose = new Vector2d(pose.getPosition().x, pose.getPosition().y);
+        Vector2d blueGoal = new Vector2d(-1.6002, -1.5494);
+        Vector2d redGoal = new Vector2d(1.6002, 1.5494);
+        Vector2d target;
+        if(tag == 20){
+            target = blueGoal;
+        } else if(tag == 24){
+            target = redGoal;
+        } else{
+            return -1;
         }
-        if (tag == 24) {
-            distance = Math.sqrt(((RedGoalY - RobotY) * (RedGoalY - RobotY)) + ((RedGoalX - RobotX) * (RedGoalX - RobotX)));
-        }
-        return distance;
+        return Math.sqrt(Math.pow(target.y - robotPose.y, 2) + Math.pow(target.x - robotPose.x, 2));
     }
 }
 

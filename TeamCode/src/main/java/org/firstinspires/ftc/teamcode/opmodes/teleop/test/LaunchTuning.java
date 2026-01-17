@@ -23,6 +23,7 @@ public class LaunchTuning extends LinearOpMode {
     DcMotorEx launcherLeft;
     private final double TICKS_PER_REV = 28.0;
     private boolean shooterEnabled = false;
+    private boolean shooterSwap = true;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -36,7 +37,7 @@ public class LaunchTuning extends LinearOpMode {
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
         PIDFController pidfController = new PIDFController(kP, kI, kD, kF);
-        telemetry.addLine("Ready to tune shooter PIDF. Press A to toggle shooter.");
+        telemetry.addLine("Ready to tune shooter PIDF. Press A to toggle shooter. Press B to change which shooter.");
         telemetry.update();
 
         waitForStart();
@@ -49,36 +50,40 @@ public class LaunchTuning extends LinearOpMode {
                     launcherRight.setPower(0);
                 }
             }
+            if (gamepad1.bWasPressed()){
+                shooterSwap = false;
+            }
             //This sends a telemetry packet to the FTC Dashboard so we can graph values
             TelemetryPacket packet = new TelemetryPacket();
             DcMotorEx[] shooters = new DcMotorEx[]{launcherLeft, launcherRight};
-            for(int i = 0; i < shooters.length; i++){
-                DcMotorEx shooter = shooters[i];
-                double outputPower = 0;
-                double currentRPM = ticksPerSecondToRPM(shooter.getVelocity());
-                double temp = targetRPM;
-                if (!shooterEnabled) {
-                    targetRPM = 0;
-                }
-                pidfController.setPIDF(kP, kI, kD, kF);
-
-                outputPower = pidfController.calculate(currentRPM, targetRPM);
-
-                shooter.setPower(outputPower);
-
-                targetRPM = temp;
-                //Here is us defining the "packet" of values to send to the Dashboard
-                packet.put("Launcher "+i+" Status", shooterEnabled ? "ENABLED" : "DISABLED");
-                telemetry.addData("Launcher "+i+" Status", shooterEnabled ? "ENABLED" : "DISABLED");
-                packet.put("Target RPM", targetRPM);
-                telemetry.addData("Target RPM", targetRPM);
-                packet.put("Motor "+i+" Actual RPM", currentRPM);
-                telemetry.addData("Motor "+i+" Actual RPM", currentRPM);
-                packet.put("Motor "+i+" Output Power", outputPower);
-                telemetry.addData("Motor "+i+" Output Power", outputPower);
-                packet.addLine("");
-                telemetry.addLine();
+            DcMotorEx shooter = shooters[0];
+            if(shooterSwap){
+                shooter = shooters[1];
             }
+            double outputPower = 0;
+            double currentRPM = ticksPerSecondToRPM(shooter.getVelocity());
+            double temp = targetRPM;
+            if (!shooterEnabled) {
+                targetRPM = 0;
+            }
+            pidfController.setPIDF(kP, kI, kD, kF);
+
+            outputPower = pidfController.calculate(currentRPM, targetRPM);
+
+            shooter.setPower(outputPower);
+
+            targetRPM = temp;
+
+            packet.put("Status", shooterEnabled ? "ENABLED" : "DISABLED");
+            telemetry.addData("Status", shooterEnabled ? "ENABLED" : "DISABLED");
+            packet.put("Target RPM", targetRPM);
+            telemetry.addData("Target RPM", targetRPM);
+            packet.put("Actual RPM", currentRPM);
+            telemetry.addData("Actual RPM", currentRPM);
+            packet.put("Output Power", outputPower);
+            telemetry.addData("Output Power", outputPower);
+            packet.addLine("");
+            telemetry.addLine();
             telemetry.update();
             dashboard.sendTelemetryPacket(packet);
         }

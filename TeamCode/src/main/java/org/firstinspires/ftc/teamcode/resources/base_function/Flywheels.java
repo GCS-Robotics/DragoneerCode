@@ -17,7 +17,7 @@ public class Flywheels extends Mechanism{
     PIDFController[] launchControls;
     private final DcMotorEx launcherLeft;
     private final DcMotorEx launcherRight;
-    private double targetRPM = 2000;
+    public double targetRPM = 2000;
     private final double TICKS_PER_REV = 28;
     private final double[][] pidf = new double[][]{
             {0.005, 0.05, 0.00003, 0},
@@ -44,7 +44,7 @@ public class Flywheels extends Mechanism{
         }
     }
     public void rpmFromDistance(double distance_to_goal){
-        targetRPM = 1000;
+
     }
     @Override
     public void run(boolean running){

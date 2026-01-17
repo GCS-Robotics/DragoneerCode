@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.resources.States;
 
 public class Drum extends Mechanism{
-    public final double ROTATION_TICK = 1425.1;
+    public final double ROTATION_TICK = 537.689839572;
     private final double ONE_DEGREE = ROTATION_TICK/360;
     private final DcMotorEx drum;
     private final double power;
@@ -37,6 +37,7 @@ public class Drum extends Mechanism{
     public Drum(HardwareMap hardwareMap, double pow){
         drum = hardwareMap.get(DcMotorEx.class, "drumRotor");
         drum.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        drum.setTargetPositionTolerance((int)ONE_DEGREE*2);
         power = pow;
         if(balls == null){
             resetStatics();

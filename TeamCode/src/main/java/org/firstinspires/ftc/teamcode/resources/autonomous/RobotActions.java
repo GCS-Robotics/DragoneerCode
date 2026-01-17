@@ -19,7 +19,6 @@ public class RobotActions {
     }
     public RobotActions(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry, States.Artifact[] preload){
         bot = new DecodeBot(hardwareMap, telemetry, dashTelemetry, preload);
-        bot.flywheels.setTargetRPM(launchRPM);
         bot.flywheels.cancel();
     }
     // Intake Action
@@ -47,7 +46,6 @@ public class RobotActions {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             if(init){
-                bot.flywheels.setTargetRPM(launchRPM);
                 bot.setOuttake(true, false, false, false);
                 init = false;
             }

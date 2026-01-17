@@ -22,11 +22,6 @@ public class MainDuoDrive extends LinearOpMode {
                     gamepad2.xWasPressed(),
                     gamepad2.aWasPressed()
             );
-            bot.tweakRPM(
-                    gamepad2.dpadUpWasPressed(),
-                    gamepad2.dpadDownWasPressed(),
-                    50
-            );
             bot.postTelemetry();
         }
         bot.drum.resetStatics();

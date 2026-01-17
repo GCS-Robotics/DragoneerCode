@@ -56,6 +56,10 @@ public class DecodeBot {
         }
         // Prime Mode
         if(state == States.General.PRIMED || state == States.General.LAUNCHING){
+            double distance_to_goal = limelight.getDistance(imu.getRobotYawPitchRollAngles().getYaw());
+            if(distance_to_goal != -1){
+                flywheels.rpmFromDistance(distance_to_goal);
+            }
             drum.outtakeMode();
             flywheels.prime();
             if(drum.state == States.DrumState.IDLE
@@ -107,13 +111,6 @@ public class DecodeBot {
             kicker.retract();
             state = States.General.LAUNCHING;
             drum.setDrumLaunch(States.Artifact.GREEN);
-        }
-    }
-    public void tweakRPM(boolean up, boolean down, double increment){
-        if(up){
-            flywheels.setTargetRPM(flywheels.getTargetRPM()+increment);
-        }if(down){
-            flywheels.setTargetRPM(flywheels.getTargetRPM()-increment);
         }
     }
     public int getMotifTag() {

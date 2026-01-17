@@ -27,12 +27,6 @@ public class Flywheels extends Mechanism{
         launcherLeft = hardwareMap.get(DcMotorEx.class, "launcherLeft");
         launcherLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-    public void setTargetRPM(double target){
-        targetRPM = target;
-    }
-    public double getTargetRPM(){
-        return targetRPM;
-    }
     public void prime(){
         if(state == States.Outtake.IDLE){
             state = States.Outtake.PRIMED;
@@ -42,6 +36,9 @@ public class Flywheels extends Mechanism{
         if(state != States.Outtake.IDLE){
             state = States.Outtake.BRAKING;
         }
+    }
+    public void rpmFromDistance(double distance_to_goal){
+        targetRPM = 1000;
     }
     @Override
     public void run(boolean running){

@@ -16,10 +16,10 @@ public class Color {
     }
     public States.Artifact isGreenOrPurple(){
         double[] rgb = getRGB();
-        if(rgb[1] > rgb[2] && rgb[1] > rgb[0] && rgb[1] > 150){
+        if(rgb[1] > rgb[2] && rgb[1] > rgb[0] && rgb[1] > 500){
             return States.Artifact.GREEN;
         }
-        if(rgb[2] > rgb[1] * 1.2 && rgb[2] > rgb[0] * 1.5 && rgb[2] > 150){
+        if(rgb[2] > rgb[1] * 1.2 && rgb[2] > rgb[0] * 1.5 && rgb[2] > 500){
             return States.Artifact.PURPLE;
         }
         return States.Artifact.NONE;

@@ -14,11 +14,6 @@ import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 public class Drive {
     // All the motors
     private final MecanumDrive drive;
-    // Used to convert the factor booleans to numbers, which are more useful
-    private int factor(boolean f) {
-        if(f){return 1;}
-        return -1;
-    }
     /**
      * Constructs an object in charge of all driving, for chassis that use Mecanum-Wheel Driving.
      * Needs the Motors, a drive-speed multiplier, and the "Factor."

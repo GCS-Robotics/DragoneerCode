@@ -20,8 +20,8 @@ public class Flywheels extends Mechanism{
     public double targetRPM = 2000;
     private final double TICKS_PER_REV = 28;
     private final double[][] pidf = new double[][]{
-            {0.005, 0.05, 0.00003, 0},
-            {0.005, 0.05, 0.00003, 0}};
+            {0.03, 0.05, 0, 0},
+            {0.02, 0.05, 0.00003, 0}};
     public States.Outtake state = States.Outtake.IDLE;
     public Flywheels(HardwareMap hardwareMap){
         launchControls1 = new PIDFController(pidf[0][0], pidf[0][1], pidf[0][2], pidf[0][3]);
@@ -64,6 +64,7 @@ public class Flywheels extends Mechanism{
                 outputPower = launchControls[i].calculate(currentRPM, 0);
                 if (launchersAtSpeed(0)) {
                     state = States.Outtake.IDLE;
+                    outputPower = 0;
                 }
             }
             shooter.setPower(outputPower);
@@ -84,8 +85,13 @@ public class Flywheels extends Mechanism{
         double rightRpm = abs(ticksPerSecondToRPM(launcherRight.getVelocity()));
         double leftRpm  = abs(ticksPerSecondToRPM(launcherLeft.getVelocity()));
 
-        boolean rightDone = abs(rightRpm - target) < 100;
-        boolean leftDone  = abs(leftRpm  - target) < 100;
+        double target_mod = target/10;
+        if(target_mod < 100){
+            target_mod = 100;
+        }
+
+        boolean rightDone = abs(rightRpm - target) < target_mod;
+        boolean leftDone  = abs(leftRpm  - target) < target_mod;
 
         return rightDone || leftDone; // It's this bad only because our tuning lowkey sucks.
     }

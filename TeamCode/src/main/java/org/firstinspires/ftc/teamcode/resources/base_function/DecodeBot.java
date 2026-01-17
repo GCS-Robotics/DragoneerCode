@@ -21,6 +21,7 @@ public class DecodeBot {
     public Telemetry telemetry;
     public Telemetry dashTelemetry;
     public States.General state;
+    public double distance;
     public DecodeBot(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry){
         imu = hardwareMap.get(IMU.class, "imu");
         limelight = new LimelightHandler(hardwareMap);
@@ -31,7 +32,7 @@ public class DecodeBot {
         kicker = new Kicker(hardwareMap);
         this.telemetry = telemetry;
         this.dashTelemetry = dashTelemetry;
-        drum = new Drum(hardwareMap, 1.0);
+        drum = new Drum(hardwareMap, 0.8);
         state = States.General.IDLE;
     }
     public DecodeBot(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry, States.Artifact[] balls){
@@ -56,14 +57,15 @@ public class DecodeBot {
         }
         // Prime Mode
         if(state == States.General.PRIMED || state == States.General.LAUNCHING){
-            double distance_to_goal = limelight.getDistance(imu.getRobotYawPitchRollAngles().getYaw());
-            if(distance_to_goal != -1){
-                flywheels.rpmFromDistance(distance_to_goal);
+            distance = limelight.getDistance(imu.getRobotYawPitchRollAngles().getYaw());
+            if(distance != -1){
+                flywheels.rpmFromDistance(distance);
             }
             drum.outtakeMode();
             flywheels.prime();
             if(drum.state == States.DrumState.IDLE
-                    && state == States.General.LAUNCHING) {
+                    && state == States.General.LAUNCHING
+                    && flywheels.launchersAtSpeed()) {
                 kicker.kick();
                 drum.launchBall();
                 state = States.General.PRIMED;
@@ -79,6 +81,7 @@ public class DecodeBot {
     public void postTelemetry(){
         for(Telemetry telemetry : new Telemetry[]{telemetry, dashTelemetry}){
             telemetry.addData("Robot State", state);
+            telemetry.addData("Distance to Bot", distance);
             drum.postTelemetry(telemetry);
             telemetry.addLine();
             flywheels.postTelemetry(telemetry);
@@ -118,12 +121,5 @@ public class DecodeBot {
             return -1;
         }
         return limelight.findAprilTags().get(0).getFiducialId();
-    }
-    public float getDistanceToGoal(){
-        if((state != States.General.LAUNCHING && state != States.General.PRIMED)){
-            return -1;
-        }
-        float distance = 0;
-        return distance;
     }
 }

@@ -59,7 +59,7 @@ public class LimelightHandler {
         int tag = result.getFiducialResults().get(0).getFiducialId();
         Vector2d robotPose = new Vector2d(pose.getPosition().x, pose.getPosition().y);
         Vector2d blueGoal = new Vector2d(-1.6002, -1.5494);
-        Vector2d redGoal = new Vector2d(1.6002, 1.5494);
+        Vector2d redGoal = new Vector2d(-1.6002, 1.5494);
         Vector2d target;
         if(tag == 20){
             target = blueGoal;

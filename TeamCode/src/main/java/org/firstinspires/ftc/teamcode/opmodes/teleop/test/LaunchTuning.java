@@ -51,7 +51,7 @@ public class LaunchTuning extends LinearOpMode {
                 }
             }
             if (gamepad1.bWasPressed()){
-                shooterSwap = false;
+                shooterSwap = !shooterSwap;
             }
             //This sends a telemetry packet to the FTC Dashboard so we can graph values
             TelemetryPacket packet = new TelemetryPacket();
@@ -73,7 +73,8 @@ public class LaunchTuning extends LinearOpMode {
             shooter.setPower(outputPower);
 
             targetRPM = temp;
-
+            packet.put("Motor in Use", shooterSwap ? "Motor 0" : "Motor 1");
+            telemetry.addData("Motor in Use", shooterSwap ? "Motor 0" : "Motor 1");
             packet.put("Status", shooterEnabled ? "ENABLED" : "DISABLED");
             telemetry.addData("Status", shooterEnabled ? "ENABLED" : "DISABLED");
             packet.put("Target RPM", targetRPM);

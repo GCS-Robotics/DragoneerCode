@@ -44,7 +44,12 @@ public class Flywheels extends Mechanism{
         }
     }
     public void rpmFromDistance(double distance_to_goal){
-
+        if(distance_to_goal >= 1.6){
+            targetRPM = 300*distance_to_goal + 1020;
+        }
+        if(distance_to_goal < 1.6){
+            targetRPM = -1075*distance_to_goal + 3220;
+        }
     }
     @Override
     public void run(boolean running){

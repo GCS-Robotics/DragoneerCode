@@ -74,8 +74,7 @@ public class AutonomousMovements {
         else{
             getReady = new SequentialAction(
                     drive.actionBuilder(drive.localizer.getPose())
-                            .strafeTo(new Vector2d(0, 0))
-                            .turnTo(angle)
+                            .strafeToLinearHeading(new Vector2d(0, 0), angle)
                             .build(),
                     bobot.stopIntake(),
                     bobot.primeLaunch());
@@ -113,8 +112,7 @@ public class AutonomousMovements {
             yMod = 1;
         }
         Action prepare = drive.actionBuilder(drive.localizer.getPose())
-                .strafeTo(new Vector2d(xCoordinate, 0))
-                .turnTo(loadAngle)
+                .strafeToLinearHeading(new Vector2d(xCoordinate, 0), loadAngle)
                 .build();
         Action intakeMove = drive.actionBuilder(new Pose2d(xCoordinate, 0, loadAngle))
                 .strafeTo(new Vector2d(xCoordinate, 14*yMod))

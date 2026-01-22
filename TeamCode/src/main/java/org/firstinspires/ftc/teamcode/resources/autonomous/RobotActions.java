@@ -25,6 +25,7 @@ public class RobotActions {
     public class Intake implements Action{
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            bot.flywheels.cancel();
             bot.run();
             bot.runIntake(true);
             return true;

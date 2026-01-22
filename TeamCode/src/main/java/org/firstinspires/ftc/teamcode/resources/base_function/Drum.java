@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.resources.States;
 
 public class Drum extends Mechanism{
@@ -116,7 +117,9 @@ public class Drum extends Mechanism{
             state = States.DrumState.MOVING;
         } else {
             drum.setPower(0);
-            state = States.DrumState.IDLE;
+            if(drum.getVelocity(AngleUnit.DEGREES) < 1){
+                state = States.DrumState.IDLE;
+            }
         }
     }
 

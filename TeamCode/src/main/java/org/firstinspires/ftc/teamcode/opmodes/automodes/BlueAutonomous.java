@@ -40,7 +40,7 @@ import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
         );
         if(isStopRequested()) return;
         Actions.runBlocking(
-                bobot.intake(-3)
+                bobot.intake(-2)
         );
         if(isStopRequested()) return;
         Actions.runBlocking(
@@ -48,7 +48,7 @@ import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
         );
         if(isStopRequested()) return;
         Actions.runBlocking(
-                bobot.intake(20)
+                bobot.intake(18)
         );
         if(isStopRequested()) return;
         Actions.runBlocking(

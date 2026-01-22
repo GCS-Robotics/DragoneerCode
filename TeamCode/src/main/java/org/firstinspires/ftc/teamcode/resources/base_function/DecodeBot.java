@@ -103,6 +103,7 @@ public class DecodeBot {
             state = States.General.PRIMED;
         }
         if(stop && state == States.General.PRIMED){
+            flywheels.cancel();
             state = States.General.IDLE;
         }
         if(launchPurple && state == States.General.PRIMED){

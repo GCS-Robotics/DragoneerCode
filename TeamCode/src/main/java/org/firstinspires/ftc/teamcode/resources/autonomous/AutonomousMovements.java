@@ -58,9 +58,9 @@ public class AutonomousMovements {
     }
     public Action fireMotif() {
         drive.updatePoseEstimate();
-        double angle = Math.toRadians(50);
+        double angle = Math.toRadians(45);
         if(redSide){
-            angle = Math.toRadians(360-50);
+            angle = Math.toRadians(360-45);
         }
         Action getReady;
         if(drive.localizer.getPose().position.equals(new Vector2d(0, 0))){
@@ -74,7 +74,8 @@ public class AutonomousMovements {
         else{
             getReady = new SequentialAction(
                     drive.actionBuilder(drive.localizer.getPose())
-                            .strafeToLinearHeading(new Vector2d(0, 0), angle)
+                            .strafeTo(new Vector2d(0, 0))
+                            .turnTo(angle)
                             .build(),
                     bobot.stopIntake(),
                     bobot.primeLaunch());
@@ -112,11 +113,17 @@ public class AutonomousMovements {
             yMod = 1;
         }
         Action prepare = drive.actionBuilder(drive.localizer.getPose())
-                .strafeToLinearHeading(new Vector2d(xCoordinate, 0), loadAngle)
+                .strafeTo(new Vector2d(xCoordinate, 0))
+                .turnTo(loadAngle)
                 .build();
+        double intakeDistance = 45;
+        if(xCoordinate > 0){
+            intakeDistance = 55;
+        }
         Action intakeMove = drive.actionBuilder(new Pose2d(xCoordinate, 0, loadAngle))
                 .strafeTo(new Vector2d(xCoordinate, 14*yMod))
-                .strafeTo(new Vector2d(xCoordinate, 45*yMod), velocity(6))
+                .strafeTo(new Vector2d(xCoordinate, intakeDistance*yMod), velocity(intakeDistance/4.5))
+                .strafeTo(new Vector2d(0, 0), velocity(20))
                 .build();
         Action intake = new RaceAction(
                 intakeMove,

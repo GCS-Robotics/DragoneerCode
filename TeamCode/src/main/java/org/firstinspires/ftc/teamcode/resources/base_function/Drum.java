@@ -11,6 +11,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.resources.States;
 
 public class Drum extends Mechanism{
+    // ===== Anti-Jam Tuning =====
+    private static final double JAM_TIMEOUT_SECONDS = 0.35; // <-- tune this
+    private static final int JAM_ENCODER_TOLERANCE = 5;      // ticks considered "no movement"
+    private static final long UNJAM_REVERSE_MS = 150;        // how long to reverse
+    private long lastMovementTime = 0;
+    private int lastEncoderPosition = 0;
+    private boolean unjamming = false;
+    private long unjamStartTime = 0;
+    private int jamDirection = 1;
+    // Other
     public final double ROTATION_TICK = 751.834710744;
     private final double ONE_DEGREE = ROTATION_TICK/360;
     private final DcMotorEx drum;
@@ -74,6 +84,17 @@ public class Drum extends Mechanism{
         }
     }
 
+    private boolean encoderMoved() {
+        int current = drum.getCurrentPosition();
+        boolean moved = abs(current - lastEncoderPosition) > JAM_ENCODER_TOLERANCE;
+        if (moved) {
+            lastEncoderPosition = current;
+            lastMovementTime = System.nanoTime();
+        }
+        return moved;
+    }
+
+
     /**
      * Moves the drum into a position to be ready for outtake mode.
      */
@@ -111,16 +132,56 @@ public class Drum extends Mechanism{
      */
     @Override
     public void run(boolean running){
-        if(!reachedTarget()){
+
+        // First call setup
+        if (lastMovementTime == 0) {
+            lastMovementTime = System.nanoTime();
+            lastEncoderPosition = drum.getCurrentPosition();
+        }
+
+        // Handle unjamming
+        if (unjamming) {
+            if ((System.currentTimeMillis() - unjamStartTime) < UNJAM_REVERSE_MS) {
+                drum.setPower(-power * jamDirection);
+                state = States.DrumState.MOVING;
+                return;
+            } else {
+                // Resume normal motion
+                unjamming = false;
+                drum.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+        }
+        // Normal movement
+        else if (!reachedTarget()) {
+            drum.setTargetPosition((int) targetPosition);
             drum.setPower(power);
-            drum.setTargetPosition((int)targetPosition);
             state = States.DrumState.MOVING;
+
+            encoderMoved();
+
+            double secondsStalled =
+                    (System.nanoTime() - lastMovementTime) / 1e9;
+
+            if (secondsStalled > JAM_TIMEOUT_SECONDS) {
+                triggerUnjam();
+            }
+
         } else {
             drum.setPower(0);
-            if(drum.getVelocity(AngleUnit.DEGREES) < 1){
+            if (drum.getVelocity(AngleUnit.DEGREES) < 1) {
                 state = States.DrumState.IDLE;
             }
         }
+    }
+    private void triggerUnjam() {
+        unjamming = true;
+        unjamStartTime = System.currentTimeMillis();
+
+        // Determine direction toward target
+        jamDirection = (targetPosition > drum.getCurrentPosition()) ? 1 : -1;
+
+        drum.setPower(0);
+        drum.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override

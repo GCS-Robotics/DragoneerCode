@@ -22,6 +22,12 @@ public class MainSoloDrive extends LinearOpMode {
                     gamepad1.xWasPressed(),
                     gamepad1.aWasPressed()
             );
+            if(gamepad1.dpadDownWasPressed()){
+                bot.flywheels.targetRPM -= 10;
+            }
+            if(gamepad1.dpadUpWasPressed()){
+                bot.flywheels.targetRPM += 10;
+            }
             bot.postTelemetry();
         }
         bot.drum.resetStatics();

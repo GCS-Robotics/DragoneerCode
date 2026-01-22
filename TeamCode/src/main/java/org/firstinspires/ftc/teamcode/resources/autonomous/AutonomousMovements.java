@@ -26,10 +26,10 @@ public class AutonomousMovements {
      * @param rm The object necessary for mechanisms.
      * @param m Set to false if on blue-side, set to true if on red-side.
      */
-    public AutonomousMovements(MecanumDrive md, RobotActions rm, boolean m){
+    public AutonomousMovements(MecanumDrive md, RobotActions rm, boolean rS){
         drive = md;
         bobot = rm;
-        redSide = m;
+        redSide = rS;
     }
 
     /**

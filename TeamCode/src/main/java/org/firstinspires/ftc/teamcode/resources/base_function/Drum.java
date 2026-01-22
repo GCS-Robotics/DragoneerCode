@@ -12,16 +12,16 @@ import org.firstinspires.ftc.teamcode.resources.States;
 
 public class Drum extends Mechanism{
     // ===== Anti-Jam Tuning =====
-    private static final double JAM_TIMEOUT_SECONDS = 0.35; // <-- tune this
-    private static final int JAM_ENCODER_TOLERANCE = 5;      // ticks considered "no movement"
-    private static final long UNJAM_REVERSE_MS = 150;        // how long to reverse
+    private static final double JAM_TIMEOUT_SECONDS = 1; // <-- tune this
+    private static final int JAM_ENCODER_TOLERANCE = 3;      // ticks considered "no movement"
+    private static final long UNJAM_REVERSE_MS = 200;        // how long to reverse
     private long lastMovementTime = 0;
     private int lastEncoderPosition = 0;
     private boolean unjamming = false;
     private long unjamStartTime = 0;
     private int jamDirection = 1;
     // Other
-    public final double ROTATION_TICK = 751.834710744;
+    public final double ROTATION_TICK = 751;
     private final double ONE_DEGREE = ROTATION_TICK/360;
     private final DcMotorEx drum;
     private final double power;
@@ -91,7 +91,7 @@ public class Drum extends Mechanism{
             lastEncoderPosition = current;
             lastMovementTime = System.nanoTime();
         }
-        return moved;
+        return moved && abs(current - targetPosition) > JAM_ENCODER_TOLERANCE*10;
     }
 
 
@@ -142,7 +142,7 @@ public class Drum extends Mechanism{
         // Handle unjamming
         if (unjamming) {
             if ((System.currentTimeMillis() - unjamStartTime) < UNJAM_REVERSE_MS) {
-                drum.setPower(-power * jamDirection);
+                drum.setPower((-power /5) * jamDirection);
                 state = States.DrumState.MOVING;
                 return;
             } else {
@@ -157,17 +157,18 @@ public class Drum extends Mechanism{
             drum.setPower(power);
             state = States.DrumState.MOVING;
 
-            encoderMoved();
-
-            double secondsStalled =
-                    (System.nanoTime() - lastMovementTime) / 1e9;
-
-            if (secondsStalled > JAM_TIMEOUT_SECONDS) {
-                triggerUnjam();
+            if(!encoderMoved()){
+                double secondsStalled =
+                        (System.nanoTime() - lastMovementTime) / 1e9;
+                if (secondsStalled > JAM_TIMEOUT_SECONDS) {
+                    triggerUnjam();
+                }
+            } else{
+                lastMovementTime = System.nanoTime();
             }
-
         } else {
             drum.setPower(0);
+            lastMovementTime = System.nanoTime();
             if (drum.getVelocity(AngleUnit.DEGREES) < 1) {
                 state = States.DrumState.IDLE;
             }

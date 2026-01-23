@@ -24,7 +24,7 @@ public class AutonomousMovements {
      * Creates the object that handles larger-scale actions in our autonomous modes.
      * @param md The object necessary for movement.
      * @param rm The object necessary for mechanisms.
-     * @param m Set to false if on blue-side, set to true if on red-side.
+     * @param rS Set to false if on blue-side, set to true if on red-side.
      */
     public AutonomousMovements(MecanumDrive md, RobotActions rm, boolean rS){
         drive = md;

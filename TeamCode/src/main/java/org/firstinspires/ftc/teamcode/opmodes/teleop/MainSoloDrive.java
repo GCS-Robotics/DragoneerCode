@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.resources.base_function.DecodeBot;
 
-@TeleOp(name = "Main Drive (1P)", group = "Main Drive")
+@TeleOp(name = "Main Drive (1P)", group = "A Main Drive")
 public class MainSoloDrive extends LinearOpMode {
     DecodeBot bot;
     @Override

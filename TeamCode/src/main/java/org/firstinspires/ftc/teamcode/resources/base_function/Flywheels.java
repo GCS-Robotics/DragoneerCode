@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.resources.base_function;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.pow;
 
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,26 +12,26 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.resources.States;
 
 public class Flywheels extends Mechanism{
-    private final PIDFController launchControls1;
-    private final PIDFController launchControls2;
     PIDFController[] launchControls;
     private final DcMotorEx launcherLeft;
     private final DcMotorEx launcherRight;
+    DcMotorEx[] shooters;
     public double targetRPM = 2000;
     private final double TICKS_PER_REV = 28;
-    private final double[][] pidf = new double[][]{
-            {0.03, 0.05, 0, 0},
-            {0.02, 0.05, 0.00003, 0}};
+    double[][] pidf = new double[][]{
+            {0.03, 0.05, 0, 1.0 / 6000},
+            {0.02, 0.05, 0, 1.0 / 6000}};
     public States.Outtake state = States.Outtake.IDLE;
     public Flywheels(HardwareMap hardwareMap){
-        launchControls1 = new PIDFController(pidf[0][0], pidf[0][1], pidf[0][2], pidf[0][3]);
-        launchControls2 = new PIDFController(pidf[1][0], pidf[1][1], pidf[1][2], pidf[1][3]);
+        PIDFController launchControls1 = new PIDFController(pidf[0][0], pidf[0][1], pidf[0][2], pidf[0][3]);
+        PIDFController launchControls2 = new PIDFController(pidf[1][0], pidf[1][1], pidf[1][2], pidf[1][3]);
         launchControls = new PIDFController[]{launchControls1, launchControls2};
         launcherRight = hardwareMap.get(DcMotorEx.class, "launcherRight");
         launcherRight.setDirection(DcMotorSimple.Direction.REVERSE);
         launcherRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         launcherLeft = hardwareMap.get(DcMotorEx.class, "launcherLeft");
         launcherLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooters = new DcMotorEx[]{launcherLeft, launcherRight};
     }
     public void prime(){
         if(state == States.Outtake.IDLE){
@@ -45,6 +44,7 @@ public class Flywheels extends Mechanism{
         }
     }
     public void rpmFromDistance(double distance_to_goal){
+        // Distance is in meters
         if(distance_to_goal >= 1.6){
             targetRPM = 300*distance_to_goal + 1020;
         }
@@ -54,7 +54,6 @@ public class Flywheels extends Mechanism{
     }
     @Override
     public void run(boolean running){
-        DcMotorEx[] shooters = new DcMotorEx[]{launcherLeft, launcherRight};
         for (int i = 0; i < shooters.length; i++) {
             DcMotorEx shooter = shooters[i];
             double outputPower = 0;
@@ -73,6 +72,7 @@ public class Flywheels extends Mechanism{
                     outputPower = 0;
                 }
             }
+            outputPower = Math.max(-1, Math.min(1, outputPower));
             shooter.setPower(outputPower);
         }
     }
@@ -94,7 +94,7 @@ public class Flywheels extends Mechanism{
         boolean rightDone = abs(rightRpm - target) < target_mod;
         boolean leftDone  = abs(leftRpm  - target) < target_mod;
 
-        return rightDone || leftDone; // It's this bad only because our tuning lowkey sucks.
+        return rightDone && leftDone;
     }
     public boolean launchersAtSpeed() {
         return launchersAtSpeed(targetRPM);

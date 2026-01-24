@@ -13,21 +13,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.resources.States;
 
 public class Flywheels extends Mechanism{
-    double[][] points = new double[][]{
-            {1.41, 1700},
-            {1.42, 1640},
-            {1.44, 1650},
-            {1.47, 1670},
-            {1.49, 1700},
-            {1.51, 1520},
-            {1.55, 1640},
-            {1.6, 1650},
-            {1.63, 1520},
-            {1.71, 1600},
-            {1.75, 1630},
-            {1.77, 1640},
-            {1.87, 1800}
-    };
     private final PIDFController launchControls1;
     private final PIDFController launchControls2;
     PIDFController[] launchControls;
@@ -59,20 +44,13 @@ public class Flywheels extends Mechanism{
             state = States.Outtake.BRAKING;
         }
     }
-    public void rpmFromDistance(double x){
-        targetRPM = getClosestVelocity(x);
-    }
-    double getClosestVelocity(double d) {
-        double minDif = abs(points[0][0] - d);
-        double closestY = points[0][1];
-        for (int i = 1; i < points.length; i++) {
-            double currentDif = abs(points[i][0] - d);
-            if (currentDif < minDif) {
-                minDif = currentDif;
-                closestY = points[i][1];
-            }
+    public void rpmFromDistance(double distance_to_goal){
+        if(distance_to_goal >= 1.6){
+            targetRPM = 300*distance_to_goal + 1020;
         }
-        return closestY;
+        if(distance_to_goal < 1.6){
+            targetRPM = -1075*distance_to_goal + 3220;
+        }
     }
     @Override
     public void run(boolean running){
@@ -103,8 +81,6 @@ public class Flywheels extends Mechanism{
         telemetry.addData("Target RPM", targetRPM);
         telemetry.addData("Left RPM", ticksPerSecondToRPM(launcherLeft.getVelocity()));
         telemetry.addData("Right RPM", ticksPerSecondToRPM(launcherRight.getVelocity()));
-        telemetry.addLine();
-        telemetry.addData("Spinner State", state);
     }
     private double ticksPerSecondToRPM(double tps) {
         return tps * 60.0 / TICKS_PER_REV;
@@ -113,7 +89,7 @@ public class Flywheels extends Mechanism{
         double rightRpm = abs(ticksPerSecondToRPM(launcherRight.getVelocity()));
         double leftRpm  = abs(ticksPerSecondToRPM(launcherLeft.getVelocity()));
 
-        double target_mod = 100;
+        double target_mod = 50;
 
         boolean rightDone = abs(rightRpm - target) < target_mod;
         boolean leftDone  = abs(leftRpm  - target) < target_mod;

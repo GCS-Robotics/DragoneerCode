@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.resources.autonomous.AutonomousMovements;
 import org.firstinspires.ftc.teamcode.resources.autonomous.RobotActions;
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
-@Autonomous(name = "Red Autonomous", preselectTeleOp="Main Drive (1P)")
+@Autonomous(name = "Red Autonomous", preselectTeleOp="Main Drive (2P)")
  public class RedAutonomous extends LinearOpMode {
     AutonomousMovements bobot;
     Pose2d startPose = new Pose2d(-44, -50, Math.toRadians(55));

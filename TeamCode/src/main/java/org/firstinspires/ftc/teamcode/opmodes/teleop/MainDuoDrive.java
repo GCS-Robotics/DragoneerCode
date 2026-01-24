@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.resources.base_function.DecodeBot;
+import org.firstinspires.ftc.teamcode.resources.base_function.Drum;
 
 @TeleOp(name = "Main Drive (2P)", group = "A Main Drive")
 public class MainDuoDrive extends LinearOpMode {
@@ -15,7 +16,7 @@ public class MainDuoDrive extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
             bot.run(gamepad1);
-            bot.runIntake(gamepad2.left_trigger > 0.2);
+            bot.runIntake(gamepad1.left_bumper);
             bot.setOuttake(
                     gamepad2.startWasPressed(),
                     gamepad2.backWasPressed(),
@@ -27,6 +28,12 @@ public class MainDuoDrive extends LinearOpMode {
             }
             if(gamepad2.dpadUpWasPressed()){
                 bot.flywheels.targetRPM += 10;
+            }
+            if(gamepad2.leftBumperWasReleased()){
+                Drum.targetPosition -=bot.drum.ROTATION_TICK/36;
+            }
+            if(gamepad2.rightBumperWasPressed()){
+                Drum.targetPosition +=bot.drum.ROTATION_TICK/36;
             }
             bot.postTelemetry();
         }

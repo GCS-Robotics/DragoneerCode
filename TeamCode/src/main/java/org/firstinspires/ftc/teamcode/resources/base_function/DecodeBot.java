@@ -80,13 +80,10 @@ public class DecodeBot {
     }
     public void postTelemetry(){
         for(Telemetry telemetry : new Telemetry[]{telemetry, dashTelemetry}){
-            telemetry.addData("Robot State", state);
-            telemetry.addData("Distance to Bot", distance);
             drum.postTelemetry(telemetry);
+            telemetry.addData("Distance", distance);
             telemetry.addLine();
             flywheels.postTelemetry(telemetry);
-            telemetry.addLine();
-            color.postTelemetry(telemetry);
             telemetry.update();
         }
     }
@@ -97,21 +94,25 @@ public class DecodeBot {
         if(!run && state == States.General.INTAKE){
             state = States.General.IDLE;
         }
+        if(run && state == States.General.PRIMED){
+            flywheels.cancel();
+            state = States.General.INTAKE;
+        }
     }
     public void setOuttake(boolean prime, boolean stop, boolean launchPurple, boolean launchGreen){
-        if(prime && state == States.General.IDLE){
+        if((prime || launchPurple || launchGreen) && state == States.General.IDLE){
             state = States.General.PRIMED;
         }
         if(stop && state == States.General.PRIMED){
             flywheels.cancel();
             state = States.General.IDLE;
         }
-        if(launchPurple && state == States.General.PRIMED){
+        if(launchPurple && drum.hasBall(States.Artifact.PURPLE) && state == States.General.PRIMED){
             kicker.retract();
             state = States.General.LAUNCHING;
             drum.setDrumLaunch(States.Artifact.PURPLE);
         }
-        if(launchGreen && state == States.General.PRIMED){
+        if(launchGreen && drum.hasBall(States.Artifact.GREEN) && state == States.General.PRIMED){
             kicker.retract();
             state = States.General.LAUNCHING;
             drum.setDrumLaunch(States.Artifact.GREEN);

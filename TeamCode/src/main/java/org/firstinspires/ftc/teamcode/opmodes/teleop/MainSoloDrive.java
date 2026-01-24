@@ -17,8 +17,8 @@ public class MainSoloDrive extends LinearOpMode {
             bot.run(gamepad1);
             bot.runIntake(gamepad1.left_bumper);
             bot.setOuttake(
-                    gamepad1.startWasPressed(),
-                    gamepad1.backWasPressed(),
+                    gamepad1.right_trigger > 0.2,
+                    gamepad1.rightBumperWasPressed(),
                     gamepad1.xWasPressed(),
                     gamepad1.aWasPressed()
             );

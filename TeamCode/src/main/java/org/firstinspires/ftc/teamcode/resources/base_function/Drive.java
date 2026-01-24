@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 public class Drive {
     // All the motors
     private final MecanumDrive drive;
+    private boolean toggleReverse;
     /**
      * Constructs an object in charge of all driving, for chassis that use Mecanum-Wheel Driving.
      * Needs the Motors, a drive-speed multiplier, and the "Factor."
@@ -24,11 +25,14 @@ public class Drive {
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
     }
     public void run(Gamepad gamepad){
-        double speed = 1 - gamepad.right_trigger;
+        double speed = 1 - gamepad.left_trigger;
         if(speed < 0.2){
             speed = 0.2;
         }
-        if(gamepad.left_trigger < 0.2){
+        if(gamepad.startWasPressed()){
+            toggleReverse = !toggleReverse;
+        }
+        if(toggleReverse){
             speed *= -1;
         }
         run(new Vector2d(gamepad.left_stick_y*speed, gamepad.left_stick_x*speed), -gamepad.right_stick_x*abs(speed));

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.resources.States;
 
 public class Drum extends Mechanism{
     // ===== Anti-Jam Tuning =====
-    private static final double JAM_TIMEOUT_SECONDS = 1; // <-- tune this
+    private static final double JAM_TIMEOUT_SECONDS = 0.5; // <-- tune this
     private static final int JAM_ENCODER_TOLERANCE = 3;      // ticks considered "no movement"
     private static final long UNJAM_REVERSE_MS = 200;        // how long to reverse
     private long lastMovementTime = 0;
@@ -21,11 +21,11 @@ public class Drum extends Mechanism{
     private long unjamStartTime = 0;
     private int jamDirection = 1;
     // Other
-    public final double ROTATION_TICK = 751;
+    public final double ROTATION_TICK = 756;
     private final double ONE_DEGREE = ROTATION_TICK/360;
     private final DcMotorEx drum;
     private final double power;
-    private static double targetPosition;
+    public static double targetPosition;
     private static States.Artifact[] balls;
     private static States.DrumMode mode = States.DrumMode.OUTTAKE;
     public States.DrumState state = States.DrumState.IDLE;
@@ -55,7 +55,14 @@ public class Drum extends Mechanism{
             resetDrum();
         }
     }
-
+    public boolean hasBall(States.Artifact ball){
+        for(States.Artifact b : balls){
+            if(ball == b){
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Checks if all the balls are full
      * @return Whether or not all the balls are filled
@@ -187,8 +194,6 @@ public class Drum extends Mechanism{
 
     @Override
     public void postTelemetry(Telemetry telemetry){
-        drumTelemetry(telemetry);
-        telemetry.addLine();
         storageTelemetry(telemetry);
     }
 

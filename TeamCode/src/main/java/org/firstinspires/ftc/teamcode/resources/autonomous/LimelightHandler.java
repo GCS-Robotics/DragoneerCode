@@ -17,6 +17,7 @@ public class LimelightHandler {
     Limelight3A limelight;
     final int APRILTAG_PIPELINE = 0;
     final int MEGATAG_PIPELINE = 1;
+    int pipeline;
 
     public LimelightHandler(HardwareMap hardwareMap) {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -24,8 +25,13 @@ public class LimelightHandler {
         limelight.start();
     }
 
+    public int getPipeline(){
+        return pipeline;
+    }
+
     public List<FiducialResult> findAprilTags() {
         LLResult result = limelight.getLatestResult();
+        pipeline = result.getPipelineIndex();
         // If the result we have isn't what we want
         if (result.getPipelineIndex() != APRILTAG_PIPELINE || !result.isValid()) {
             limelight.pipelineSwitch(APRILTAG_PIPELINE);
@@ -49,6 +55,7 @@ public class LimelightHandler {
 
     public double getDistance(double robotYaw) {
         LLResult result = limelight.getLatestResult();
+        pipeline = result.getPipelineIndex();
         limelight.updateRobotOrientation(robotYaw);
         // If the result we have isn't what we want
         if (result.getPipelineIndex() != MEGATAG_PIPELINE || !result.isValid()) {

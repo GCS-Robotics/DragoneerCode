@@ -32,7 +32,7 @@ public class DecodeBot {
         kicker = new Kicker(hardwareMap);
         this.telemetry = telemetry;
         this.dashTelemetry = dashTelemetry;
-        drum = new Drum(hardwareMap, 0.8);
+        drum = new Drum(hardwareMap, 1.0);
         state = States.General.IDLE;
     }
     public DecodeBot(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry, States.Artifact[] balls){
@@ -82,6 +82,9 @@ public class DecodeBot {
         for(Telemetry telemetry : new Telemetry[]{telemetry, dashTelemetry}){
             drum.postTelemetry(telemetry);
             telemetry.addData("Distance", distance);
+            telemetry.addLine();
+            telemetry.addData("Manual Speed Mode", flywheels.doRPM);
+            telemetry.addData("Drum Ticks", Drum.targetPosition);
             telemetry.addLine();
             flywheels.postTelemetry(telemetry);
             telemetry.update();

@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.resources.States;
 import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
 
 public class AutonomousMovements {
-    private MecanumDrive drive;
+    public MecanumDrive drive;
     public RobotActions bobot;
     private final boolean redSide;
     public int motifTag = -1;
@@ -31,39 +31,38 @@ public class AutonomousMovements {
         bobot = rm;
         redSide = rS;
     }
-
-    /**
-     * Sets the motif tag according to what was detected
-     * @param motifTag The AprilTag ID of the motif.
-     */
-
-    public void setMotifTag(int motifTag) {
-        this.motifTag = motifTag;
-    }
     public Action driveToMotif(Pose2d startPose){
-        double fireAngle = Math.toRadians(55);
+        double yMod = -1;
+        if(redSide){
+            yMod = 1;
+        }
+        double fireAngle = Math.toRadians(50);
         if(redSide){
             fireAngle = Math.toRadians(360)-fireAngle;
         }
         return new SequentialAction(
                 drive.actionBuilder(startPose)
-                        .strafeTo(new Vector2d(0, 0))
+                        .strafeTo(new Vector2d(-12, 12*yMod))
                         .build(),
                 new RaceAction(
-                        drive.actionBuilder(new Pose2d(0, 0, fireAngle))
+                        drive.actionBuilder(new Pose2d(-12, 12*yMod, fireAngle))
                                 .turnTo(0)
                                 .build(),
                         scanTag()
                 ));
     }
     public Action fireMotif() {
+        double yMod = -1;
+        if(redSide){
+            yMod = 1;
+        }
         drive.updatePoseEstimate();
-        double angle = Math.toRadians(55);
+        double angle = Math.toRadians(52);
         if(redSide){
             angle = Math.toRadians(360)-angle;
         }
         Action getReady;
-        if(drive.localizer.getPose().position.equals(new Vector2d(0, 0))){
+        if(drive.localizer.getPose().position.equals(new Vector2d(-12, 12*yMod))){
             getReady = new SequentialAction(
                     drive.actionBuilder(drive.localizer.getPose())
                             .turnTo(angle)
@@ -74,7 +73,7 @@ public class AutonomousMovements {
         else{
             getReady = new SequentialAction(
                     drive.actionBuilder(drive.localizer.getPose())
-                            .strafeTo(new Vector2d(0, 0))
+                            .strafeTo(new Vector2d(-12, 12*yMod))
                             .turnTo(angle)
                             .build(),
                     bobot.stopIntake(),

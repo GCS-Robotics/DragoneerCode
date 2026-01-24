@@ -19,8 +19,8 @@ public class Flywheels extends Mechanism{
     public double targetRPM = 2000;
     private final double TICKS_PER_REV = 28;
     double[][] pidf = new double[][]{
-            {0.03, 0.05, 0, 1.0 / 6000},
-            {0.02, 0.05, 0, 1.0 / 6000}};
+            {0.03, 0.05, 0, 1.0 / 3000},
+            {0.02, 0.05, 0, 1.0 / 3000}};
     public States.Outtake state = States.Outtake.IDLE;
     public Flywheels(HardwareMap hardwareMap){
         PIDFController launchControls1 = new PIDFController(pidf[0][0], pidf[0][1], pidf[0][2], pidf[0][3]);
@@ -43,13 +43,17 @@ public class Flywheels extends Mechanism{
             state = States.Outtake.BRAKING;
         }
     }
+    public boolean doRPM = true;
     public void rpmFromDistance(double distance_to_goal){
+        if(!doRPM){
+            return;
+        }
         // Distance is in meters
         if(distance_to_goal >= 1.6){
-            targetRPM = 300*distance_to_goal + 1020;
+            targetRPM = 300*distance_to_goal + 1040;
         }
         if(distance_to_goal < 1.6){
-            targetRPM = -1075*distance_to_goal + 3220;
+            targetRPM = -1075*distance_to_goal + 3200;
         }
     }
     @Override
@@ -93,8 +97,9 @@ public class Flywheels extends Mechanism{
 
         boolean rightDone = abs(rightRpm - target) < target_mod;
         boolean leftDone  = abs(leftRpm  - target) < target_mod;
+        boolean flywheelsClose = abs(rightRpm - leftRpm) < target_mod/2;
 
-        return rightDone && leftDone;
+        return rightDone && leftDone && flywheelsClose;
     }
     public boolean launchersAtSpeed() {
         return launchersAtSpeed(targetRPM);

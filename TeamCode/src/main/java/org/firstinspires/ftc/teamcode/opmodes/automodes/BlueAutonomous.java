@@ -32,19 +32,33 @@ import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
         waitForStart();
         if(isStopRequested()) return;
         Actions.runBlocking(
-                bobot.driveToMotif(startPose)
+                safe(bobot.driveToMotif(startPose), this)
         );
         if(isStopRequested()) return;
         Actions.runBlocking(
-                bobot.fireMotif()
+                safe(bobot.fireMotif(), this)
         );
         if(isStopRequested()) return;
         Actions.runBlocking(
-                bobot.intake(-2)
+                safe(bobot.intake(0), this)
         );
         if(isStopRequested()) return;
         Actions.runBlocking(
-                bobot.fireMotif()
+                safe(bobot.fireMotif(), this)
         );
+        Actions.runBlocking(
+                safe(bobot.drive.actionBuilder(new Pose2d(-12, 12, Math.toRadians(52)))
+                        .strafeTo(new Vector2d(-12, -36))
+                        .build(), this)
+        );
+
     }
+    public static Action safe(Action action, LinearOpMode opMode) {
+        return packet -> {
+            if (!opMode.opModeIsActive()) return false;
+            return action.run(packet);
+        };
+    }
+
+
 }

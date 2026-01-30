@@ -22,6 +22,12 @@ public class DecodeBot {
     public Telemetry dashTelemetry;
     public States.General state;
     public double distance;
+
+    // Color detection debounce state to avoid single-frame misclassifications
+    private States.Artifact lastColor = States.Artifact.NONE;
+    private int colorStableCount = 0;
+    private static final int COLOR_STABLE_THRESHOLD = 3;
+
     public DecodeBot(HardwareMap hardwareMap, Telemetry telemetry, Telemetry dashTelemetry){
         imu = hardwareMap.get(IMU.class, "imu");
         limelight = new LimelightHandler(hardwareMap);
@@ -47,9 +53,26 @@ public class DecodeBot {
             drum.intakeMode();
             kicker.retract();
             intake.run(true);
-            States.Artifact ball = color.isGreenOrPurple();
-            if(ball != States.Artifact.NONE && drum.state == States.DrumState.IDLE && drum.countBalls() < 3){
-                drum.intakeBall(ball);
+
+            // Sample detection and require it to be stable for several loop cycles
+            States.Artifact detected = color.isGreenOrPurple();
+            if(detected != States.Artifact.NONE && drum.state == States.DrumState.IDLE && drum.countBalls() < 3){
+                if(detected == lastColor){
+                    colorStableCount++;
+                } else {
+                    lastColor = detected;
+                    colorStableCount = 1;
+                }
+                if(colorStableCount >= COLOR_STABLE_THRESHOLD){
+                    drum.intakeBall(detected);
+                    // reset debounce after accepting
+                    colorStableCount = 0;
+                    lastColor = States.Artifact.NONE;
+                }
+            } else {
+                // Reset on no detection or when not intaking
+                colorStableCount = 0;
+                lastColor = States.Artifact.NONE;
             }
         }
         else {

@@ -79,6 +79,9 @@ public class AutonomousMovements {
                     bobot.stopIntake(),
                     bobot.primeLaunch());
         }
+        return new SequentialAction(getReady, motifOrder());
+    }
+    public Action motifOrder(){
         Action gpp = new SequentialAction(
                 bobot.fireArtifact(States.Artifact.GREEN),
                 bobot.fireArtifact(States.Artifact.PURPLE),
@@ -95,14 +98,13 @@ public class AutonomousMovements {
                 bobot.fireArtifact(States.Artifact.GREEN),
                 bobot.cancelLaunch());
         if (motifTag == 21) {
-            return new SequentialAction(getReady, gpp);
+            return gpp;
         }
         if (motifTag == 22) {
-            return new SequentialAction(getReady, pgp);
+            return pgp;
         }
-        return new SequentialAction(getReady, ppg);
+        return ppg;
     }
-
     public Action intake(int xCoordinate){
         drive.updatePoseEstimate();
         double loadAngle = Math.toRadians(270);

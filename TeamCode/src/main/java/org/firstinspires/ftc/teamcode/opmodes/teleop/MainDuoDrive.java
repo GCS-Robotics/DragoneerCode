@@ -38,6 +38,12 @@ public class MainDuoDrive extends LinearOpMode {
             if(gamepad2.yWasPressed()){
                 bot.flywheels.doRPM = !bot.flywheels.doRPM;
             }
+            if(gamepad2.b){
+                bot.kicker.retract();
+            }
+            if(gamepad2.bWasReleased()){
+                bot.kicker.kick();
+            }
             bot.postTelemetry();
         }
         bot.drum.resetStatics();

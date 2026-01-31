@@ -21,7 +21,7 @@ public class Drum extends Mechanism{
     private long unjamStartTime = 0;
     private int jamDirection = 1;
     // Other
-    public final double ROTATION_TICK = 751;
+    public final double ROTATION_TICK = 751.870;
     private final double ONE_DEGREE = ROTATION_TICK/360;
     private final DcMotorEx drum;
     private final double power;
@@ -182,7 +182,6 @@ public class Drum extends Mechanism{
         }
     }
     private void triggerUnjam() {
-        /*
         unjamming = true;
         unjamStartTime = System.currentTimeMillis();
 
@@ -191,7 +190,6 @@ public class Drum extends Mechanism{
 
         drum.setPower(0);
         drum.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-         */
     }
 
     @Override

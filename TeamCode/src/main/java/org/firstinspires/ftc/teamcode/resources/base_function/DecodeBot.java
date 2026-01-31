@@ -44,9 +44,14 @@ public class DecodeBot {
         flywheels.run(true);
         // Intake Mode
         if(state == States.General.INTAKE){
-            drum.intakeMode();
             kicker.retract();
-            intake.run(true);
+            if(drum.countBalls()<3){
+                intake.run(true);
+                drum.intakeMode();
+            } else{
+                intake.run(false);
+                drum.outtakeMode();
+            }
             States.Artifact ball = color.isGreenOrPurple();
             if(ball != States.Artifact.NONE && drum.state == States.DrumState.IDLE && drum.countBalls() < 3){
                 drum.intakeBall(ball);
@@ -83,7 +88,7 @@ public class DecodeBot {
             drum.postTelemetry(telemetry);
             telemetry.addData("Distance", distance);
             telemetry.addLine();
-            telemetry.addData("Manual Speed Mode", flywheels.doRPM);
+            telemetry.addData("Automatic Speed Mode", flywheels.doRPM);
             telemetry.addData("Drum Ticks", Drum.targetPosition);
             telemetry.addLine();
             flywheels.postTelemetry(telemetry);

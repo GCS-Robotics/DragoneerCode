@@ -48,13 +48,7 @@ public class Flywheels extends Mechanism{
         if(!doRPM){
             return;
         }
-        // Distance is in meters
-        if(distance_to_goal >= 1.6){
-            targetRPM = 300*distance_to_goal + 1040;
-        }
-        if(distance_to_goal < 1.6){
-            targetRPM = -1075*distance_to_goal + 3200;
-        }
+        targetRPM = 251.10*distance_to_goal + 893.13;
     }
     @Override
     public void run(boolean running){
@@ -93,11 +87,14 @@ public class Flywheels extends Mechanism{
         double rightRpm = abs(ticksPerSecondToRPM(launcherRight.getVelocity()));
         double leftRpm  = abs(ticksPerSecondToRPM(launcherLeft.getVelocity()));
 
-        double target_mod = 50;
+        double target_mod = 30;
 
-        boolean rightDone = abs(rightRpm - target) < target_mod;
-        boolean leftDone  = abs(leftRpm  - target) < target_mod;
-        boolean flywheelsClose = abs(rightRpm - leftRpm) < target_mod/2;
+        double rightDist = rightRpm - target;
+        double leftDist = leftRpm - target;
+
+        boolean rightDone = abs(rightDist) < target_mod; //TRUE if rightWheel in speed range
+        boolean leftDone  = abs(leftDist) < target_mod; // TRUE if leftWheel in speed Range
+        boolean flywheelsClose = (leftDist >= 0) == (rightDist >= 0); //TRUE if both are over or both are under
 
         return rightDone && leftDone && flywheelsClose;
     }

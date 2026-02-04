@@ -51,6 +51,7 @@ public class DecodeBot {
             } else{
                 intake.run(false);
                 drum.outtakeMode();
+                runIntake(false);
             }
             States.Artifact ball = color.isGreenOrPurple();
             if(ball != States.Artifact.NONE && drum.state == States.DrumState.IDLE && drum.countBalls() < 3){
@@ -96,7 +97,7 @@ public class DecodeBot {
         }
     }
     public void runIntake(boolean run){
-        if(run && state == States.General.IDLE){
+        if(run && state == States.General.IDLE && drum.countBalls()<3){
             state = States.General.INTAKE;
         }
         if(!run && state == States.General.INTAKE){

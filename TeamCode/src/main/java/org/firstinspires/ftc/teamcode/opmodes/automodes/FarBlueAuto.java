@@ -30,13 +30,21 @@ public class FarBlueAuto extends LinearOpMode {
 
         bobot.drive.updatePoseEstimate();
         Actions.runBlocking(safe(bobot.drive.actionBuilder(bobot.drive.localizer.getPose())
-                .strafeTo(new Vector2d(36, 12))
-                .turn(Math.toRadians(25))
+                .strafeTo(new Vector2d(56, 12))
+                .turn(Math.toRadians(18))
                 .build(), this));
         if(isStopRequested()){return;}
         Actions.runBlocking(safe(
                 bobot.motifOrder()
-        , this));
+                , this));
+        if(isStopRequested()){return;}
+
+        bobot.drive.updatePoseEstimate();
+        Actions.runBlocking(safe(bobot.drive.actionBuilder(bobot.drive.localizer.getPose())
+                .strafeTo(new Vector2d(36, -12))
+                .build(), this));
+        if(isStopRequested()){return;}
+
         while(opModeIsActive()){
             bobot.bobot.bot.run();
             bobot.bobot.bot.setOuttake(false, true, false, false);

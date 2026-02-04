@@ -16,7 +16,7 @@ public class MainDuoDrive extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
             bot.run(gamepad1);
-            bot.runIntake(gamepad1.left_bumper);
+            bot.runIntake(gamepad2.left_trigger > 0.2);
             bot.setOuttake(
                     gamepad2.startWasPressed(),
                     gamepad2.backWasPressed(),
@@ -30,10 +30,10 @@ public class MainDuoDrive extends LinearOpMode {
                 bot.flywheels.targetRPM += 10;
             }
             if(gamepad2.leftBumperWasReleased()){
-                Drum.targetPosition -=bot.drum.ROTATION_TICK/36;
+                Drum.targetPosition +=bot.drum.ROTATION_TICK/36;
             }
             if(gamepad2.rightBumperWasPressed()){
-                Drum.targetPosition +=bot.drum.ROTATION_TICK/36;
+                Drum.targetPosition -=bot.drum.ROTATION_TICK/36;
             }
             if(gamepad2.yWasPressed()){
                 bot.flywheels.doRPM = !bot.flywheels.doRPM;

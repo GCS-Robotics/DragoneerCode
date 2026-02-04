@@ -35,7 +35,7 @@ import org.firstinspires.ftc.teamcode.roadrunning_stuff.MecanumDrive;
         );
         if(isStopRequested()) return;
         Actions.runBlocking(
-               safe(bobot.intake(-2), this)
+               safe(bobot.intake(2), this)
         );
         if(isStopRequested()) return;
         Actions.runBlocking(

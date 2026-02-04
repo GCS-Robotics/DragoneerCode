@@ -25,7 +25,7 @@ public class Drive {
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
     }
     public void run(Gamepad gamepad){
-        double speed = 1 - gamepad.left_trigger;
+        double speed = 1 - gamepad.right_trigger;
         if(speed < 0.2){
             speed = 0.2;
         }

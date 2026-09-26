@@ -14,10 +14,10 @@ public class PollenDetectionTest extends LinearOpMode {
         waitForStart();
         limelight.start();
         while(opModeIsActive()){
-            runTelemetry();
+            trackBalls();
         }
     }
-    private void runTelemetry(){
+    private void trackBalls(){
         if (limelight != null) {
             com.qualcomm.hardware.limelightvision.LLResult result = limelight.getLatestResult();
             if (result != null && result.isValid()) {
@@ -40,4 +40,9 @@ public class PollenDetectionTest extends LinearOpMode {
         telemetry.update();
     }
 
+    private void robotPosition() {
+        if (limelight != null) {
+            com.qualcomm.hardware.limelightvision.LLResult positionResult = limelight.getLatestResult();
+        }
+    }
 }

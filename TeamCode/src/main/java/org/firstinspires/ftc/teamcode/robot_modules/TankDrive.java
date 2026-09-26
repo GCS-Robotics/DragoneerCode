@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class TankDrive extends Drive<Gamepad> {
     DcMotor leftDrive, rightDrive;
+    private float power = 0.2f;
     public TankDrive(HardwareMap hardwareMap, String name_left, String name_right){
         // Hardware Mapping
         leftDrive = hardwareMap.get(DcMotor.class, name_left);
@@ -23,8 +24,8 @@ public class TankDrive extends Drive<Gamepad> {
     public void run(Gamepad gamepad) {
         float forward = -gamepad.left_stick_y;
         float rotate = gamepad.right_stick_x;
-        leftDrive.setPower(forward+rotate);
-        rightDrive.setPower(forward-rotate);
+        leftDrive.setPower((forward+rotate)*power);
+        rightDrive.setPower((forward-rotate)*power);
     }
 
     @Override

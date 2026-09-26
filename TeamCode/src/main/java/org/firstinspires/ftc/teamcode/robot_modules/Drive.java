@@ -4,6 +4,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public abstract class Drive extends Module<Gamepad> {
+public abstract class Drive<T> extends Module<T> {
 
 }

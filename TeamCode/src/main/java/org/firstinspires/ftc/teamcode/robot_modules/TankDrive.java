@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class TankDrive extends Drive {
+public class TankDrive extends Drive<Gamepad> {
     DcMotor leftDrive, rightDrive;
     public TankDrive(HardwareMap hardwareMap, String name_left, String name_right){
         // Hardware Mapping

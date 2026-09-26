@@ -12,13 +12,14 @@ public class ShooterTuning extends LinearOpMode {
     private Shooter shooter;
     private Telemetry dashboardTelemetry;
     public static float P = 0, I = 0, D = 0, F = 0;
+    public static float TARGET = 2000;
     @Override
     public void runOpMode() throws InterruptedException {
         dashboardTelemetry = FtcDashboard.getInstance().getTelemetry();
         shooter = new Shooter(hardwareMap, "outtake");
         waitForStart();
         while (opModeIsActive()) {
-            shooter.run();
+            shooter.run(TARGET);
             Shooter.setPIDF(P, I, D, F);
             shooter.postTelemetry(telemetry);
             shooter.postTelemetry(dashboardTelemetry);

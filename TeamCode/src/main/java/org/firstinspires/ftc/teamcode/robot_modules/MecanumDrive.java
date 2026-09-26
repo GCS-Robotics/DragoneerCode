@@ -3,8 +3,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-public class MecanumDrive extends Drive {
+public abstract class MecanumDrive extends Drive {
     DcMotor front_right, back_right, front_left, back_left;
 
     public MecanumDrive(HardwareMap hardwareMap, String frontRight, String backRight, String frontLeft, String backLeft) {
@@ -27,25 +26,25 @@ public class MecanumDrive extends Drive {
 
     @Override
     public void run(Gamepad gamepad) {
-        double axial   = -gamepad.left_stick_y;
-        double lateral =  gamepad.left_stick_x;
-        double yaw     =  gamepad.right_stick_x;
+        double axial = -gamepad.left_stick_y;
+        double lateral = gamepad.left_stick_x;
+        double yaw =  gamepad.right_stick_x;
 
 
-        double frontLeftPower  = axial + lateral + yaw;
+        double frontLeftPower = axial + lateral + yaw;
         double frontRightPower = axial - lateral - yaw;
-        double backLeftPower   = axial - lateral + yaw;
-        double backRightPower  = axial + lateral - yaw;
+        double backLeftPower = axial - lateral + yaw;
+        double backRightPower = axial + lateral - yaw;
 
 
         double max = Math.max(Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower)),
                 Math.max(Math.abs(backLeftPower), Math.abs(backRightPower)));
 
         if (max > 1.0) {
-            frontLeftPower  /= max;
+            frontLeftPower /= max;
             frontRightPower /= max;
-            backLeftPower   /= max;
-            backRightPower  /= max;
+            backLeftPower /= max;
+            backRightPower /= max;
         }
 
 
@@ -57,7 +56,7 @@ public class MecanumDrive extends Drive {
     @Override
     public void stop() {
         front_right.setPower(0);
-        back_left.setPower(0);
+        back_right.setPower(0);
         front_left.setPower(0);
         back_left.setPower(0);
 

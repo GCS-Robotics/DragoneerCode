@@ -13,17 +13,18 @@ import org.firstinspires.ftc.teamcode.robot_modules.TankDrive;
 public class BiobuzzStarter extends LinearOpMode {
     public TankDrive drive;
     private DcMotor intake, outtake;
-    private CRServo leftIntake, rightIntake;
+    private CRServo leftIntake, rightIntake, transition;
     @Override
     public void runOpMode() throws InterruptedException {
         // Hardware Mapping Motors
         drive = new TankDrive(hardwareMap, "left_drive", "right_drive");
         intake = hardwareMap.get(DcMotor.class, "intake");
-        //outtake = hardwareMap.get(DcMotor.class, "outtake");
+        outtake = hardwareMap.get(DcMotor.class, "outtake");
         leftIntake = hardwareMap.get(CRServo.class, "left_intake_servo");
         rightIntake = hardwareMap.get(CRServo.class, "right_intake_servo");
+        transition = hardwareMap.get(CRServo.class, "transition");
         // Direction Configs
-        leftIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightIntake.setDirection(DcMotorSimple.Direction.REVERSE);
         // Other Initialization Things
         leftIntake.setPower(0);
         rightIntake.setPower(0);
@@ -31,22 +32,23 @@ public class BiobuzzStarter extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
             drive.run(gamepad1);
-            intake.setPower(gamepad1.left_trigger);
-            //outtake.setPower(gamepad1.right_trigger);
-            if(gamepad1.a) {
+            intake.setPower(gamepad2.left_trigger);
+            outtake.setPower(gamepad2.right_trigger);
+            if(gamepad2.a) {
                 leftIntake.setPower(1);
                 rightIntake.setPower(1);
-            }else{
+            } else{
                 leftIntake.setPower(0);
                 rightIntake.setPower(0);
+            }
+            if(gamepad2.b){
+                transition.setPower(1);
+            } else if(gamepad2.x){
+                transition.setPower(-1);
+            } else{
+                transition.setPower(0);
             }
         }
         drive.stop();
     }
 }
-
-
-
-
-
-//michael was here

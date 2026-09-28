@@ -2,37 +2,84 @@ package org.firstinspires.ftc.teamcode.testing;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot_modules.Shooter;
 
 @TeleOp(name = "Shooter Tuning", group = "Tuning")
 @Config
 public class ShooterTuning extends LinearOpMode {
-    private DcMotorEx shooter;
-    private Telemetry dashboardTelemetry;
-    public static float P = 0, I = 0, D = 0, F = 0;
-    public static float TARGET = 2000;
+    public static double kP = 0.0;
+    public static double kI = 0.0;
+    public static double kD = 0.0;
+    public static double kF = 6000.0; // Start with 1 / maxRPM
+    public static double targetRPM = 1000;
+    DcMotorEx shooter;
+    private final double TICKS_PER_REV = 28.0;
+    private boolean shooterEnabled = false;
+    private boolean shooterSwap = true;
+
     @Override
     public void runOpMode() throws InterruptedException {
-        dashboardTelemetry = FtcDashboard.getInstance().getTelemetry();
-        shooter = hardwareMap.get(DcMotorEx.class, "outtake");
+        shooter = hardwareMap.get(DcMotorEx.class, "launcherRight");
+        shooter.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        PIDFController pidfController = new PIDFController(kP, kI, kD, kF);
+        telemetry.addLine("Ready to tune shooter PIDF. Press A to toggle shooter. Press B to change which shooter.");
+        telemetry.update();
+
         waitForStart();
-        while (opModeIsActive()) {
-            shooter.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(P, I, D, F));
-            double targetTicksPerSecond = TARGET * 28/60;
-            shooter.setVelocity(targetTicksPerSecond);
-            telemetry.addData("Current RPM", shooter.getVelocity());
-            telemetry.addData("Target RPM", TARGET);
-            dashboardTelemetry.addData("Current RPM", shooter.getVelocity());
-            dashboardTelemetry.addData("Target RPM", TARGET);
+
+        while(opModeIsActive()) {
+            if (gamepad1.aWasPressed()) {
+                shooterEnabled = !shooterEnabled;
+                if (!shooterEnabled) {
+                    shooter.setPower(0);
+                }
+            }
+            if (gamepad1.bWasPressed()){
+                shooterSwap = !shooterSwap;
+            }
+            //This sends a telemetry packet to the FTC Dashboard so we can graph values
+            TelemetryPacket packet = new TelemetryPacket();
+            double outputPower = 0;
+            double currentRPM = ticksPerSecondToRPM(shooter.getVelocity());
+            double temp = targetRPM;
+            if (!shooterEnabled) {
+                targetRPM = 0;
+            }
+            pidfController.setPIDF(kP, kI, kD, kF);
+
+            outputPower = pidfController.calculate(currentRPM, targetRPM);
+
+            shooter.setPower(outputPower);
+
+            targetRPM = temp;
+            packet.put("Motor in Use", shooterSwap ? "Motor 0" : "Motor 1");
+            telemetry.addData("Motor in Use", shooterSwap ? "Motor 0" : "Motor 1");
+            packet.put("Status", shooterEnabled ? "ENABLED" : "DISABLED");
+            telemetry.addData("Status", shooterEnabled ? "ENABLED" : "DISABLED");
+            packet.put("Target RPM", targetRPM);
+            telemetry.addData("Target RPM", targetRPM);
+            packet.put("Actual RPM", currentRPM);
+            telemetry.addData("Actual RPM", currentRPM);
+            packet.put("Output Power", outputPower);
+            telemetry.addData("Output Power", outputPower);
+            packet.addLine("");
+            telemetry.addLine();
             telemetry.update();
-            dashboardTelemetry.update();
+            dashboard.sendTelemetryPacket(packet);
         }
+    }
+    private double ticksPerSecondToRPM(double tps) {
+        return tps * 60.0 / TICKS_PER_REV;
     }
 }

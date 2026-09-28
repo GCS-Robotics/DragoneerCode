@@ -20,8 +20,8 @@ public class BiobuzzStarter extends LinearOpMode {
         drive = new TankDrive(hardwareMap, "left_drive", "right_drive");
         intake = hardwareMap.get(DcMotor.class, "intake");
         outtake = hardwareMap.get(DcMotor.class, "outtake");
-        leftIntake = hardwareMap.get(CRServo.class, "left_intake_servo");
-        rightIntake = hardwareMap.get(CRServo.class, "right_intake_servo");
+        leftIntake = hardwareMap.get(CRServo.class, "left_intake");
+        rightIntake = hardwareMap.get(CRServo.class, "right_intake");
         transition = hardwareMap.get(CRServo.class, "transition");
         // Direction Configs
         rightIntake.setDirection(DcMotorSimple.Direction.REVERSE);

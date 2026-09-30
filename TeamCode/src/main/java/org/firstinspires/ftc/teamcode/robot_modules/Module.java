@@ -8,5 +8,14 @@ public abstract class Module<T> {
     public abstract void run(T parameter);
     public abstract void stop();
     public abstract void postTelemetry(Telemetry telemetry);
-    public abstract void run(Gamepad gamepad);
+    public static void stopModules(Module[] modules){
+        for(Module i : modules){
+            i.stop();
+        }
+    }
+    public static void postTelemetries(Module[] modules, Telemetry telemetry){
+        for(Module i : modules){
+            i.postTelemetry(telemetry);
+        }
+    }
 }

@@ -39,11 +39,6 @@ public class Shooter extends Module<Float> {
         telemetry.addData("Current RPM", "%.2f", currentRPM);
     }
 
-    @Override
-    public void run(Gamepad gamepad) {
-
-    }
-
     public static void setPIDF(float p, float i, float d, float f){
         P=p;
         I=i;

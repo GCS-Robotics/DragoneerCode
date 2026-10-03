@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.robot_modules;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class MotorTransition extends Module<Gamepad> {
+public class MotorTransition extends Module<Boolean[]> {
 
     private DcMotor motor;
 
@@ -15,10 +14,10 @@ public class MotorTransition extends Module<Gamepad> {
     }
 
     @Override
-    public void run(Gamepad gamepad) {
-        if(gamepad.b){
+    public void run(Boolean[] buttons) {
+        if(buttons[0]){
             motor.setPower(1);
-        } else if(gamepad.x){
+        } else if(buttons[1]){
             motor.setPower(-1);
         } else{
             motor.setPower(0);

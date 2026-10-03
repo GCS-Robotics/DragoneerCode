@@ -33,10 +33,10 @@ public class StarterBotDrive extends OpMode {
     @Override
     public void loop(){
         drive.run(gamepad1);
-        transition.run(gamepad2);
+        transition.run(new Boolean[]{gamepad2.b, gamepad2.x});
         intake.run(gamepad2.left_trigger);
         outtake.run(gamepad2);
-        flowerCollector.run(gamepad2);
+        flowerCollector.run(gamepad2.a);
         Module.postTelemetries(modules, telemetry);
     }
     @Override

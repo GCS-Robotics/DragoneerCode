@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class FlowerCollectors extends Module<Gamepad>{
+public class FlowerCollectors extends Module<Boolean>{
     private CRServo leftIntake, rightIntake;
     public FlowerCollectors(HardwareMap hardwareMap, String[] names){
         leftIntake = hardwareMap.get(CRServo.class, names[0]);
@@ -15,8 +15,8 @@ public class FlowerCollectors extends Module<Gamepad>{
         rightIntake.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     @Override
-    public void run(Gamepad gamepad) {
-        if(gamepad.a) {
+    public void run(Boolean running) {
+        if(running) {
             leftIntake.setPower(1);
             rightIntake.setPower(1);
         } else{

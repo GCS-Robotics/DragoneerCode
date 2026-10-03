@@ -6,16 +6,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class ServoTransition extends Module<Gamepad>{
+public class ServoTransition extends Module<Boolean[]>{
     private CRServo transition;
     public ServoTransition(HardwareMap hardwareMap, String name){
         transition = hardwareMap.get(CRServo.class, "transition");
     }
     @Override
-    public void run(Gamepad gamepad) {
-        if(gamepad.b){
+    public void run(Boolean servoButtons[]) {
+        if(servoButtons[0]){
             transition.setPower(1);
-        } else if(gamepad.x){
+        } else if(servoButtons[1]){
             transition.setPower(-1);
         } else{
             transition.setPower(0);

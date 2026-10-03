@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.robot_modules.TankDrive;
 
 @TeleOp(name = "Starter Bot Drive", group = "Drive")
 public class StarterBotDrive extends OpMode {
-    public Module drive, intake, transition, outtake, flowerCollector;
+    public Module drive, intake, transition, shooter, flowerCollector;
     private Module[] modules;
     @Override
     public void init(){
@@ -26,16 +26,16 @@ public class StarterBotDrive extends OpMode {
         drive = new TankDrive(hardwareMap, "left_drive", "right_drive");
         intake = new Intake(hardwareMap, "intake");
         transition = new ServoTransition(hardwareMap, "transition");
-        outtake = new Shooter(hardwareMap, "outtake");
+        shooter = new Shooter(hardwareMap, "outtake");
         flowerCollector = new FlowerCollectors(hardwareMap, new String[]{"left_intake", "right_intake"});
-        modules = new Module[]{drive, intake, transition, outtake, flowerCollector};
+        modules = new Module[]{drive, intake, transition, shooter, flowerCollector};
     }
     @Override
     public void loop(){
         drive.run(gamepad1);
         transition.run(new Boolean[]{gamepad2.b, gamepad2.x});
         intake.run(gamepad2.left_trigger);
-        outtake.run(gamepad2);
+        shooter.run(gamepad2);
         flowerCollector.run(gamepad2.a);
         Module.postTelemetries(modules, telemetry);
     }

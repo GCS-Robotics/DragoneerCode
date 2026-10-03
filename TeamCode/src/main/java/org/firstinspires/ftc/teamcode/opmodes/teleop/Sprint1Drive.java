@@ -12,13 +12,14 @@ import org.firstinspires.ftc.teamcode.robot_modules.MotorTransition;
 @TeleOp(name = "Sprint One Drive", group = "Drive")
 public class Sprint1Drive extends OpMode {
     public Module drive, intake, transition, shooter;
-    private final Module[] modules = {drive, intake, transition, shooter};
+    private Module[] modules;
     @Override
     public void init(){
         drive = new MecanumDrive(hardwareMap, "frontRight", "backRight", "frontLeft", "backLeft");
         intake = new Intake(hardwareMap, "intake");
         transition = new MotorTransition(hardwareMap, "transitionMotor");
         shooter = new SimpleShooter(hardwareMap, "shooter");
+        modules = new Module[]{drive, intake, transition, shooter};
     }
     @Override
     public void loop(){

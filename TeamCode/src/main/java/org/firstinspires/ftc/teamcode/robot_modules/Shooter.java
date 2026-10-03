@@ -8,11 +8,12 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Shooter extends Module<Float> {
+public class Shooter extends Module<Gamepad> {
     private DcMotorEx motor;
-    public static double P=0, I=0, D=0, F=0;
-    private static final double MOTOR_TICK_COUNT = 28;
-    public static double TARGET_RPM = 2000;
+    public double P=0.002, I=0.25, D=0.005, F=0;
+    private final double MOTOR_TICK_COUNT = 28;
+    public double TARGET_RPM = 0;
+    public boolean revving = false;
     public Shooter(HardwareMap hardwareMap, String name){
         motor = hardwareMap.get(DcMotorEx.class, name);
         motor.setDirection(DcMotor.Direction.REVERSE);
@@ -20,11 +21,23 @@ public class Shooter extends Module<Float> {
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     @Override
-    public void run(Float target_rpm){
-        TARGET_RPM = target_rpm;
+    public void run(Gamepad gamepad){
+        if(gamepad.dpadUpWasPressed()){
+            TARGET_RPM = Math.min(TARGET_RPM+100,6000);
+        }
+        if(gamepad.dpadDownWasPressed()){
+            TARGET_RPM = Math.max(TARGET_RPM-100, 0);
+        }
+        if(gamepad.aWasPressed()){
+            revving = !revving;
+        }
+        double target = 0;
+        if(revving){
+            target = TARGET_RPM;
+        }
         PIDFCoefficients pidf = new PIDFCoefficients(P, I, D, F);
         motor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidf);
-        double targetTicksPerSecond = TARGET_RPM * MOTOR_TICK_COUNT / 60;
+        double targetTicksPerSecond = target * MOTOR_TICK_COUNT / 60;
         motor.setVelocity(targetTicksPerSecond);
     }
     @Override
@@ -37,12 +50,5 @@ public class Shooter extends Module<Float> {
         double currentRPM = (currentVelocityTicks / MOTOR_TICK_COUNT) * 60;
         telemetry.addData("Target RPM", TARGET_RPM);
         telemetry.addData("Current RPM", "%.2f", currentRPM);
-    }
-
-    public static void setPIDF(float p, float i, float d, float f){
-        P=p;
-        I=i;
-        D=d;
-        F=f;
     }
 }

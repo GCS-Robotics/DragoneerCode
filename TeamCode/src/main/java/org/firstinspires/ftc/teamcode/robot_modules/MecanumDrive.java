@@ -3,7 +3,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public abstract class MecanumDrive extends Drive<Gamepad> {
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+public class MecanumDrive extends Drive<Gamepad> {
     DcMotor front_right, back_right, front_left, back_left;
     public MecanumDrive(HardwareMap hardwareMap, String frontRight, String backRight, String frontLeft, String backLeft) {
         front_right = hardwareMap.get(DcMotor.class, frontRight);
@@ -61,5 +63,10 @@ public abstract class MecanumDrive extends Drive<Gamepad> {
         back_right.setPower(0);
         front_left.setPower(0);
         back_left.setPower(0);
+    }
+
+    @Override
+    public void postTelemetry(Telemetry telemetry) {
+
     }
 }

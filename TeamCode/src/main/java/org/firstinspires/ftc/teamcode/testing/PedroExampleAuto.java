@@ -16,8 +16,7 @@ public class PedroExampleAuto extends OpMode {
         DRIVE2
     }
 
-    PathState pathStates;
-    private final
+
 
     @Override
     public void init() {

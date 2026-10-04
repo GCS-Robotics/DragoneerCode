@@ -10,22 +10,28 @@ public class Limelight extends Module<Boolean>{
 
     Limelight3A limelight;
 
+    double tx;
+    double ty;
+    double ta;
+
+    public Limelight(HardwareMap hardwareMap, String name) {
+        limelight = hardwareMap.get(Limelight3A.class, name);
+    }
+
     @Override
     public void run(Boolean aprilTagging) {
         if (aprilTagging == true) {
-            limelight.pipelineSwitch(0);
-            limelight.start();
-
+            trackBalls();
 
         }
     }
 
-    public void trackBalls(HardwareMap hardwareMap) {
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+    public void trackBalls() {
+        limelight.pipelineSwitch(0);
         LLResult result = limelight.getLatestResult();
-        double tx = result.getTx();
-        double ty = result.getTy();
-        double ta = result.getTa();
+        tx = result.getTx();
+        ty = result.getTy();
+        ta = result.getTa();
     }
 
     @Override
@@ -35,6 +41,8 @@ public class Limelight extends Module<Boolean>{
 
     @Override
     public void postTelemetry(Telemetry telemetry) {
-
+        telemetry.addData("Tx: ", tx);
+        telemetry.addData("Ty: ", ty);
+        telemetry.addData("Ta: ", ta);
     }
 }

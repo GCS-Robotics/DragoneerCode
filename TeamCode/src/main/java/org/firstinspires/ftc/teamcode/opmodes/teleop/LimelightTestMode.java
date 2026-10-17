@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.robot_modules.MotorTransition;
 @TeleOp(name = "LimelighttestMode", group = "Drive")
 public class LimelightTestMode extends OpMode {
     public Module limelight;
+    boolean aprilTagging = true;
 
     private Module[] modules;
     @Override
@@ -22,7 +23,7 @@ public class LimelightTestMode extends OpMode {
     }
     @Override
     public void loop(){
-        limelight.run(gamepad2.left_bumper);
+        limelight.run(aprilTagging);
         Module.postTelemetries(modules, telemetry);
     }
     @Override

@@ -23,16 +23,14 @@ public class Limelight extends Module<Boolean>{
         if (aprilTagging == true) {
             limelight.pipelineSwitch(1);
             trackBalls();
-
         }
     }
 
-    public Double[] trackBalls() {
+    public void trackBalls() {
         LLResult result = limelight.getLatestResult();
         tx = result.getTx();
         ty = result.getTy();
         ta = result.getTa();
-        return new Double[] {tx, ty, ta};
     }
 
     @Override
@@ -45,6 +43,5 @@ public class Limelight extends Module<Boolean>{
         telemetry.addData("Tx:", tx);
         telemetry.addData("Ty:", ty);
         telemetry.addData("Ta:", ta);
-        telemetry.update();
     }
 }

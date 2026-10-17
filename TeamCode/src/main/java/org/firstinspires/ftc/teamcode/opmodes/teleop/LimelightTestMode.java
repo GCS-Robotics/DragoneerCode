@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.robot_modules.MotorTransition;
 
 @TeleOp(name = "LimelighttestMode", group = "Drive")
 public class LimelightTestMode extends OpMode {
-    public Module drive, intake, transition, shooter, limelight;
+    public Module limelight;
 
     private Module[] modules;
     @Override

@@ -10,10 +10,9 @@ import org.firstinspires.ftc.teamcode.robot_modules.Module;
 import org.firstinspires.ftc.teamcode.robot_modules.SimpleShooter;
 import org.firstinspires.ftc.teamcode.robot_modules.MotorTransition;
 
-@TeleOp(name = "LimelightestMode", group = "Drive")
+@TeleOp(name = "LimelighttestMode", group = "Drive")
 public class LimelightTestMode extends OpMode {
     public Module limelight;
-    Boolean aprilTagging = true;
 
     private Module[] modules;
     @Override
@@ -23,7 +22,7 @@ public class LimelightTestMode extends OpMode {
     }
     @Override
     public void loop(){
-        limelight.run(aprilTagging);
+        limelight.run(gamepad2.left_bumper);
         Module.postTelemetries(modules, telemetry);
     }
     @Override

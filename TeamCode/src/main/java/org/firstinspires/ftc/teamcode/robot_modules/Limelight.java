@@ -23,7 +23,6 @@ public class Limelight extends Module<Boolean>{
     public void run(Boolean aprilTagging) {
         if (aprilTagging == true) {
             trackBalls();
-
         }
     }
 

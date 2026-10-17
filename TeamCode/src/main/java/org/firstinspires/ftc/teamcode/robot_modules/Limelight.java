@@ -21,17 +21,17 @@ public class Limelight extends Module<Boolean>{
     @Override
     public void run(Boolean aprilTagging) {
         if (aprilTagging == true) {
+            limelight.pipelineSwitch(0);
             trackBalls();
-
         }
     }
 
-    public void trackBalls() {
-        limelight.pipelineSwitch(0);
+    public Double[] trackBalls() {
         LLResult result = limelight.getLatestResult();
         tx = result.getTx();
         ty = result.getTy();
         ta = result.getTa();
+        return new Double[]{tx, ty, ta};
     }
 
     @Override
@@ -41,8 +41,6 @@ public class Limelight extends Module<Boolean>{
 
     @Override
     public void postTelemetry(Telemetry telemetry) {
-        telemetry.addData("Tx: ", tx);
-        telemetry.addData("Ty: ", ty);
-        telemetry.addData("Ta: ", ta);
+
     }
 }

@@ -27,11 +27,12 @@ public class Limelight extends Module<Boolean>{
         }
     }
 
-    public void trackBalls() {
+    public Double[] trackBalls() {
         LLResult result = limelight.getLatestResult();
         tx = result.getTx();
         ty = result.getTy();
         ta = result.getTa();
+        return new Double[] {tx, ty, ta};
     }
 
     @Override
@@ -41,8 +42,6 @@ public class Limelight extends Module<Boolean>{
 
     @Override
     public void postTelemetry(Telemetry telemetry) {
-        telemetry.addData("Tx: ", tx);
-        telemetry.addData("Ty: ", ty);
-        telemetry.addData("Ta: ", ta);
+
     }
 }

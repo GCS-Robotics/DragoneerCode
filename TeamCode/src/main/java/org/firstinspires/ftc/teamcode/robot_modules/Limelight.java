@@ -21,13 +21,13 @@ public class Limelight extends Module<Boolean>{
     @Override
     public void run(Boolean aprilTagging) {
         if (aprilTagging == true) {
+            limelight.pipelineSwitch(1);
             trackBalls();
 
         }
     }
 
     public void trackBalls() {
-        limelight.pipelineSwitch(0);
         LLResult result = limelight.getLatestResult();
         tx = result.getTx();
         ty = result.getTy();

@@ -42,6 +42,9 @@ public class Limelight extends Module<Boolean>{
 
     @Override
     public void postTelemetry(Telemetry telemetry) {
-
+        telemetry.addData("Tx:", tx);
+        telemetry.addData("Ty:", ty);
+        telemetry.addData("Ta:", ta);
+        telemetry.update();
     }
 }

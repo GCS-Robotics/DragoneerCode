@@ -16,12 +16,12 @@ public class Limelight extends Module<Boolean>{
 
     public Limelight(HardwareMap hardwareMap, String name) {
         limelight = hardwareMap.get(Limelight3A.class, name);
+        limelight.pipelineSwitch(1);
     }
 
     @Override
     public void run(Boolean aprilTagging) {
         if (aprilTagging == true) {
-            limelight.pipelineSwitch(1);
             trackBalls();
 
         }

@@ -17,6 +17,7 @@ public class Limelight extends Module<Boolean>{
     public Limelight(HardwareMap hardwareMap, String name) {
         limelight = hardwareMap.get(Limelight3A.class, name);
         limelight.pipelineSwitch(1);
+        limelight.start();
     }
 
     @Override

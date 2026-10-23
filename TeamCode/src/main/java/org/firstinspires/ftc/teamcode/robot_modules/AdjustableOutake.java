@@ -7,13 +7,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class AdjustableOutake extends Module<Float> {
-
     Servo servoGap;
     Servo servoHood;
     Servo servoRotate;
     DcMotor flywheelMotor;
-
-
 
     public AdjustableOutake(HardwareMap hardwareMap, String sHood, String sRotate, String sGap, String fMotor) {
         flywheelMotor = hardwareMap.get(DcMotor.class, fMotor);
@@ -23,11 +20,8 @@ public class AdjustableOutake extends Module<Float> {
     }
 
     @Override
-    public double run(Float parameter) {
+    public void run(Float parameter) {
         flywheelMotor.setPower(parameter);
-
-
-        return 0;
     }
 
     @Override

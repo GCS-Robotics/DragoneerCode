@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot_modules.Module;
 
-public class AdjustableOuttake extends Module<Boolean> {
+public class AdjustableOuttake extends Module<Gamepad> {
 
     DcMotor flywheel;
     Servo hoodAdjuster;
@@ -19,7 +19,6 @@ public class AdjustableOuttake extends Module<Boolean> {
     double minHood = -25;
     double minGap = -10;
     double maxGap = 10;
-    Gamepad gamepad2;
     double gapPose;
 
     public AdjustableOuttake(HardwareMap hardwareMap, String fName, String hName, String gName) {
@@ -28,50 +27,53 @@ public class AdjustableOuttake extends Module<Boolean> {
         gapAdjuster = hardwareMap.get(Servo.class, gName);
     }
 
-    public void runFlywheel() {
-        if (gamepad2.rightTriggerWasReleased()) {
+    public void runFlywheel(Gamepad gamepad) {
+        if (gamepad.rightTriggerWasReleased()) {
             power += 50;
-        } else if (gamepad2.rightBumperWasReleased()) {
+        } else if (gamepad.rightBumperWasReleased()) {
             power -= 50;
         }
         flywheel.setPower(power);
     }
 
-    public void runHoodAdjuster() {
-        if (gamepad2.aWasReleased()) {
+    public void runHoodAdjuster(Gamepad gamepad) {
+        if (gamepad.aWasReleased()) {
             hoodPose += 5;
-        } else if (gamepad2.bWasReleased()) {
+        }
+        if (gamepad.bWasReleased()) {
             hoodPose -= 5;
         }
         hoodPose = Math.min(Math.max(hoodPose, minHood), maxHood);
         hoodAdjuster.setPosition(hoodPose);
     }
 
-    public void runGapAdjuster() {
-        if (gamepad2.dpadDownWasReleased()) {
+    public void runGapAdjuster(Gamepad gamepad) {
+        if (gamepad.dpadDownWasReleased()) {
             gapPose -= 10;
-        } else if (gamepad2.dpadUpWasReleased()) {
+        }
+        if (gamepad.dpadUpWasReleased()) {
             gapPose += 10;
         }
         gapPose = Math.min(Math.max(gapPose, minGap), maxGap);
         gapAdjuster.setPosition(gapPose);
-
     }
 
     @Override
-    public void run(Boolean parameter) {
-        runFlywheel();
-        runHoodAdjuster();
-        runGapAdjuster();
+    public void run(Gamepad gamepad) {
+        runFlywheel(gamepad);
+        runHoodAdjuster(gamepad);
+        runGapAdjuster(gamepad);
     }
 
     @Override
     public void stop() {
-
+        flywheel.setPower(0);
     }
 
     @Override
     public void postTelemetry(Telemetry telemetry) {
-
+        telemetry.addData("Flywheel Power:", power);
+        telemetry.addData("Hood Position:", hoodPose);
+        telemetry.addData("Gap Postition:", gapPose);
     }
 }

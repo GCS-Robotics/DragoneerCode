@@ -17,5 +17,6 @@ public abstract class Module<T> {
         for(Module i : modules){
             i.postTelemetry(telemetry);
         }
+        telemetry.update();
     }
 }

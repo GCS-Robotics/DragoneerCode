@@ -1,11 +1,12 @@
-package org.firstinspires.ftc.teamcode.robot_modules;
+package org.firstinspires.ftc.teamcode.robot_modules.outtake;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robot_modules.Module;
 
-public class SimpleShooter extends Module<Float>{
+public class SimpleShooter extends Module<Float> {
     DcMotor motor;
     public SimpleShooter(HardwareMap hardwareMap, String name){
         motor = hardwareMap.get(DcMotor.class, name);

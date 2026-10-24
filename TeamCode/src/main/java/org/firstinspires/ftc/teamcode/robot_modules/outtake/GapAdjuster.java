@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode.robot_modules;
+package org.firstinspires.ftc.teamcode.robot_modules.outtake;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robot_modules.Module;
 
 public class GapAdjuster extends Module<Float> {
 

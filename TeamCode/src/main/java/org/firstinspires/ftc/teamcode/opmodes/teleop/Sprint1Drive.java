@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robot_modules.Intake;
 import org.firstinspires.ftc.teamcode.robot_modules.Limelight;
-import org.firstinspires.ftc.teamcode.robot_modules.MecanumDrive;
+import org.firstinspires.ftc.teamcode.robot_modules.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robot_modules.Module;
-import org.firstinspires.ftc.teamcode.robot_modules.SimpleShooter;
-import org.firstinspires.ftc.teamcode.robot_modules.MotorTransition;
+import org.firstinspires.ftc.teamcode.robot_modules.outtake.SimpleShooter;
+import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 
 @TeleOp(name = "Sprint One Drive", group = "Drive")
 public class Sprint1Drive extends OpMode {

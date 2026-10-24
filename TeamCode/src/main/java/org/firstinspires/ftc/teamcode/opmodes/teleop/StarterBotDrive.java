@@ -1,20 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import android.transition.Transition;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.robot_modules.FlowerCollectors;
 import org.firstinspires.ftc.teamcode.robot_modules.Intake;
 import org.firstinspires.ftc.teamcode.robot_modules.Module;
-import org.firstinspires.ftc.teamcode.robot_modules.ServoTransition;
+import org.firstinspires.ftc.teamcode.robot_modules.transition.ServoTransition;
 import org.firstinspires.ftc.teamcode.robot_modules.Shooter;
-import org.firstinspires.ftc.teamcode.robot_modules.SimpleShooter;
-import org.firstinspires.ftc.teamcode.robot_modules.TankDrive;
+import org.firstinspires.ftc.teamcode.robot_modules.outtake.SimpleShooter;
+import org.firstinspires.ftc.teamcode.robot_modules.drive.TankDrive;
 
 @TeleOp(name = "Starter Bot Drive", group = "Drive")
 public class StarterBotDrive extends OpMode {

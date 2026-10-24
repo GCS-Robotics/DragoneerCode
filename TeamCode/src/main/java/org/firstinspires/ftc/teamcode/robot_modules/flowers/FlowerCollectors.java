@@ -1,13 +1,13 @@
-package org.firstinspires.ftc.teamcode.robot_modules;
+package org.firstinspires.ftc.teamcode.robot_modules.flowers;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robot_modules.Module;
 
-public class FlowerCollectors extends Module<Boolean>{
+public class FlowerCollectors extends Module<Boolean> {
     private CRServo leftIntake, rightIntake;
     public FlowerCollectors(HardwareMap hardwareMap, String[] names){
         leftIntake = hardwareMap.get(CRServo.class, names[0]);

@@ -4,15 +4,16 @@ import static org.firstinspires.ftc.teamcode.Colors.YELLOW;
 import static org.firstinspires.ftc.teamcode.Colors.RED;
 import static org.firstinspires.ftc.teamcode.Colors.BLUE;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Colors;
 import org.firstinspires.ftc.teamcode.robot_modules.Module;
 
-public class ColorSensor extends Module<Boolean> {
+public class ColorSensing extends Module<Boolean> {
     private ColorSensor color;
-    public ColorSensor(HardwareMap hardwareMap, String name){
+    public ColorSensing(HardwareMap hardwareMap, String name){
         color = hardwareMap.get(ColorSensor.class, name);
     }
     @Override

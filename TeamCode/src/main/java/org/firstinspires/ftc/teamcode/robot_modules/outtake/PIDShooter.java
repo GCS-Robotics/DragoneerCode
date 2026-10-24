@@ -36,12 +36,12 @@ public class PIDShooter extends Module<Boolean> {
 
 
     @Override
-    public double run(Boolean parameter) {
+    public void run(Boolean parameter) {
         motor.setPower(Speed);
         if(gamepad1.rightBumperWasReleased()) {
             Speed += 5;
         }
-        return 2;
+
     }
 
 

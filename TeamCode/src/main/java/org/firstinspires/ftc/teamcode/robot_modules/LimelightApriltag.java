@@ -17,12 +17,9 @@ public class LimelightApriltag extends Module<Boolean> {
     final int APRILTAG_PIPELINE = 0;
     final int MEGATAG_PIPELINE = 1;
 
-    LLResult goalPose;
-    double goalY;
-    double goalX;
-    LLResult botPose;
-    double botY;
-    double botX;
+    LLResult goal;
+
+    double goalPose;
     double distance;
 
 
@@ -34,9 +31,7 @@ public class LimelightApriltag extends Module<Boolean> {
 
     @Override
     public void run(Boolean parameter) {
-        goalPose = Limelight.getLatestResult();
-        goalX = goalPose.getTx();
-        goalY = goalPose.getTy();
+        goal = Limelight.getLatestResult();
 
     }
     // not getting botPose for now, waiting for odometry.

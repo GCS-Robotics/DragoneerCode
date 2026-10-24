@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot_modules.outtake;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,33 +10,22 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot_modules.Module;
 
 public class AdjustableOuttake extends Module<Gamepad> {
-
-    DcMotor flywheel;
     Servo hoodAdjuster;
     Servo gapAdjuster;
-    double power = 1000;
+    Flywheel flywheel;
     double hoodPose = 0;
-    double maxHood = 25;
-    double minHood = -25;
-    double minGap = -10;
-    double maxGap = 10;
+    private final double MAX_HOOD = 25;
+    private final double MIN_HOOD = -25;
+    private final double MIN_GAP = 0;
+    private final double MAX_GAP = .5;
     double gapPose;
+    private boolean isSpinning = false;
 
     public AdjustableOuttake(HardwareMap hardwareMap, String fName, String hName, String gName) {
-        flywheel = hardwareMap.get(DcMotor.class, fName);
+        flywheel = new Flywheel(hardwareMap, fName);
         hoodAdjuster = hardwareMap.get(Servo.class, hName);
         gapAdjuster = hardwareMap.get(Servo.class, gName);
     }
-
-    public void runFlywheel(Gamepad gamepad) {
-        if (gamepad.rightTriggerWasReleased()) {
-            power += 50;
-        } else if (gamepad.rightBumperWasReleased()) {
-            power -= 50;
-        }
-        flywheel.setPower(power);
-    }
-
     public void runHoodAdjuster(Gamepad gamepad) {
         if (gamepad.aWasReleased()) {
             hoodPose += 5;
@@ -43,7 +33,7 @@ public class AdjustableOuttake extends Module<Gamepad> {
         if (gamepad.bWasReleased()) {
             hoodPose -= 5;
         }
-        hoodPose = Math.min(Math.max(hoodPose, minHood), maxHood);
+        hoodPose = Math.min(Math.max(hoodPose, MIN_HOOD), MAX_HOOD);
         hoodAdjuster.setPosition(hoodPose);
     }
 
@@ -54,26 +44,30 @@ public class AdjustableOuttake extends Module<Gamepad> {
         if (gamepad.dpadUpWasReleased()) {
             gapPose += 10;
         }
-        gapPose = Math.min(Math.max(gapPose, minGap), maxGap);
+        gapPose = Math.min(Math.max(gapPose, MIN_GAP), MAX_GAP);
         gapAdjuster.setPosition(gapPose);
     }
 
     @Override
     public void run(Gamepad gamepad) {
-        runFlywheel(gamepad);
+        if(gamepad.xWasPressed()){
+            isSpinning = !isSpinning;
+        }
+        flywheel.run(isSpinning);
         runHoodAdjuster(gamepad);
         runGapAdjuster(gamepad);
     }
 
     @Override
     public void stop() {
-        flywheel.setPower(0);
+
     }
 
     @Override
     public void postTelemetry(Telemetry telemetry) {
-        telemetry.addData("Flywheel Power:", power);
-        telemetry.addData("Hood Position:", hoodPose);
-        telemetry.addData("Gap Postition:", gapPose);
+        telemetry.addData("Is Spinning?", isSpinning);
+        telemetry.addData("Flywheel Target Power", flywheel.getTargetRPM());
+        telemetry.addData("Hood Position", hoodPose);
+        telemetry.addData("Gap Postition", gapPose);
     }
 }

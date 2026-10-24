@@ -12,15 +12,17 @@ import org.firstinspires.ftc.teamcode.robot_modules.Module;
 public class AdjustableOuttake extends Module<Gamepad> {
     Servo hoodAdjuster;
     Servo gapAdjuster;
-    double power = 1000;
+    Flywheel flywheel;
     double hoodPose = 0;
     private final double MAX_HOOD = 25;
     private final double MIN_HOOD = -25;
     private final double MIN_GAP = 0;
     private final double MAX_GAP = .5;
     double gapPose;
+    private boolean isSpinning = false;
 
     public AdjustableOuttake(HardwareMap hardwareMap, String fName, String hName, String gName) {
+        flywheel = new Flywheel(hardwareMap, fName);
         hoodAdjuster = hardwareMap.get(Servo.class, hName);
         gapAdjuster = hardwareMap.get(Servo.class, gName);
     }
@@ -48,7 +50,10 @@ public class AdjustableOuttake extends Module<Gamepad> {
 
     @Override
     public void run(Gamepad gamepad) {
-
+        if(gamepad.xWasPressed()){
+            isSpinning = !isSpinning;
+        }
+        flywheel.run(isSpinning);
         runHoodAdjuster(gamepad);
         runGapAdjuster(gamepad);
     }
@@ -60,8 +65,9 @@ public class AdjustableOuttake extends Module<Gamepad> {
 
     @Override
     public void postTelemetry(Telemetry telemetry) {
-        telemetry.addData("Flywheel Power:", power);
-        telemetry.addData("Hood Position:", hoodPose);
-        telemetry.addData("Gap Postition:", gapPose);
+        telemetry.addData("Is Spinning?", isSpinning);
+        telemetry.addData("Flywheel Target Power", flywheel.getTargetRPM());
+        telemetry.addData("Hood Position", hoodPose);
+        telemetry.addData("Gap Postition", gapPose);
     }
 }

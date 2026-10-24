@@ -16,14 +16,13 @@ public class Flywheel extends Module<Boolean> {
     private float targetVelocity;
     private final int TICKS_PER_REV = 28;
     double[] pidf = new double[] {0.03, 0.05, 0, 0};
-    PIDFController[] launchControls;
-    int targetRPM = 1000;
+    PIDFController launchControls;
+    private int targetRPM = 1000;
 
 
     public Flywheel(HardwareMap hardwareMap, String name){
-        PIDFController launchControls1 = new PIDFController(pidf[0], pidf[1], pidf[2], pidf[3]);
         flywheel = hardwareMap.get(DcMotorEx.class, name);
-        launchControls = new PIDFController[]{launchControls1};
+        launchControls = new PIDFController(pidf[0], pidf[1], pidf[2], pidf[3]);
         flywheel = hardwareMap.get(DcMotorEx.class, "launcherRight");
         flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
         flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -56,9 +55,9 @@ public class Flywheel extends Module<Boolean> {
         double outputPower = 0;
         double currentRPM = ticksPerSecondToRPM(shooter.getVelocity());
         if (parameter) {
-            outputPower = launchControls[0].calculate(currentRPM, targetRPM);
+            outputPower = launchControls.calculate(currentRPM, targetRPM);
         } else {
-            outputPower = launchControls[0].calculate(currentRPM, 0);
+            outputPower = launchControls.calculate(currentRPM, 0);
             if (launchersAtSpeed(0)) {
                 outputPower = 0;
             }
@@ -67,6 +66,9 @@ public class Flywheel extends Module<Boolean> {
         shooter.setPower(outputPower);
     }
 
+    public double getTargetRPM(){
+        return targetRPM;
+    }
 
     @Override
     public void stop() {

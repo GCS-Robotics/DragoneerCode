@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.robot_modules.flowers.FlowerCollectors;
 import org.firstinspires.ftc.teamcode.robot_modules.Intake;
 import org.firstinspires.ftc.teamcode.robot_modules.Module;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.ServoTransition;
-import org.firstinspires.ftc.teamcode.robot_modules.Shooter;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.SimpleShooter;
 import org.firstinspires.ftc.teamcode.robot_modules.drive.TankDrive;
 

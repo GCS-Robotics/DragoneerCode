@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.robot_modules.Module;
 
 public class Flywheel extends Module<Boolean> {
     DcMotorEx flywheel;
-    private float targetVelocity;
     private final int TICKS_PER_REV = 28;
     double[] pidf = new double[] {0.03, 0.05, 0, 0};
     PIDFController launchControls;

@@ -12,10 +12,11 @@ public class AdjustableOuttake extends RunModule<Gamepad> {
     Servo gapAdjuster;
     Flywheel flywheel;
     double hoodPose = 0;
-    private final double MAX_HOOD = 25;
-    private final double MIN_HOOD = -25;
-    private final double MIN_GAP = 0;
-    private final double MAX_GAP = .5;
+    private final double MAX_HOOD = 1;
+    private final double MIN_HOOD = 0;
+    private final double HOOD_ADJUST = 0.1;
+    private final double POLLEN_GAP = 0;
+    private final double NECTAR_GAP = 1;
     double gapPose;
     private boolean isSpinning = false;
 
@@ -26,10 +27,10 @@ public class AdjustableOuttake extends RunModule<Gamepad> {
     }
     public void runHoodAdjuster(Gamepad gamepad) {
         if (gamepad.aWasReleased()) {
-            hoodPose += 5;
+            hoodPose += HOOD_ADJUST;
         }
         if (gamepad.bWasReleased()) {
-            hoodPose -= 5;
+            hoodPose -= HOOD_ADJUST;
         }
         hoodPose = Math.min(Math.max(hoodPose, MIN_HOOD), MAX_HOOD);
         hoodAdjuster.setPosition(hoodPose);
@@ -37,13 +38,11 @@ public class AdjustableOuttake extends RunModule<Gamepad> {
 
     public void runGapAdjuster(Gamepad gamepad) {
         if (gamepad.dpadDownWasReleased()) {
-            gapPose -= 10;
+            gapAdjuster.setPosition(POLLEN_GAP);
         }
         if (gamepad.dpadUpWasReleased()) {
-            gapPose += 10;
+            gapAdjuster.setPosition(NECTAR_GAP);
         }
-        gapPose = Math.min(Math.max(gapPose, MIN_GAP), MAX_GAP);
-        gapAdjuster.setPosition(gapPose);
     }
 
     @Override
@@ -55,12 +54,10 @@ public class AdjustableOuttake extends RunModule<Gamepad> {
         runHoodAdjuster(gamepad);
         runGapAdjuster(gamepad);
     }
-
     @Override
     public void stop() {
 
     }
-
     @Override
     public void postTelemetry(Telemetry telemetry) {
         telemetry.addData("Is Spinning?", isSpinning);

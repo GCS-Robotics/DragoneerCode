@@ -15,9 +15,9 @@ import org.firstinspires.ftc.teamcode.robot_modules.Module;
 
 public class ColorSensing extends Module<Boolean> {
     private NormalizedColorSensor color;
-    private final double red_threshold = 0.62;
-    private final double blue_threshold = 0.62;
-    private final double green_threshold = 0.62;
+    private final double RED_THRESHOLD = 0.62;
+    private final double BLUE_THRESHOLD = 0.62;
+    private final double GREEN_THRESHOLD = 0.62;
     public ColorSensing(HardwareMap hardwareMap, String name){
         color = hardwareMap.get(NormalizedColorSensor.class, name);
     }
@@ -34,9 +34,9 @@ public class ColorSensing extends Module<Boolean> {
         return NONE;
     }
     private boolean color_test(NormalizedRGBA rgba, boolean red, boolean blue, boolean green){
-        boolean red_good = red ? (rgba.red > red_threshold) : (rgba.red < red_threshold);
-        boolean blue_good = blue ? (rgba.blue > blue_threshold) : (rgba.blue < blue_threshold);
-        boolean green_good = green ? (rgba.green > green_threshold) : (rgba.green < green_threshold);
+        boolean red_good = red ? (rgba.red > RED_THRESHOLD) : (rgba.red < RED_THRESHOLD);
+        boolean blue_good = blue ? (rgba.blue > BLUE_THRESHOLD) : (rgba.blue < BLUE_THRESHOLD);
+        boolean green_good = green ? (rgba.green > GREEN_THRESHOLD) : (rgba.green < GREEN_THRESHOLD);
         return red_good && blue_good && green_good;
     }
     @Override

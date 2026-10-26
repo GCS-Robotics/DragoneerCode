@@ -4,26 +4,26 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robot_modules.sensors.Limelight;
-import org.firstinspires.ftc.teamcode.robot_modules.Module;
+import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 
 @TeleOp(name = "LimelighttestMode", group = "Drive")
 public class LimelightTestMode extends OpMode {
-    public Module limelight;
+    public RunModule limelight;
     boolean aprilTagging = true;
 
-    private Module[] modules;
+    private RunModule[] modules;
     @Override
     public void init(){
         limelight = new Limelight(hardwareMap, "limelight");
-        modules = new Module[]{limelight};
+        modules = new RunModule[]{limelight};
     }
     @Override
     public void loop(){
         limelight.run(aprilTagging);
-        Module.postTelemetries(modules, telemetry);
+        RunModule.postTelemetries(modules, telemetry);
     }
     @Override
     public void stop(){
-        Module.stopModules(modules);
+        RunModule.stopModules(modules);
     }
 }

@@ -4,12 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.robot_modules.Intake;
 import org.firstinspires.ftc.teamcode.robot_modules.Module;
+import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 import org.firstinspires.ftc.teamcode.robot_modules.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robot_modules.flowers.DeployableRamp;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttake;
 
 public class GregoryDrive extends OpMode {
-    public Module drive, intake, deployableRamp, adjustableOuttake;
+    public RunModule drive, intake, deployableRamp, adjustableOuttake;
     private Module[] modules;
     private final double TRIGGER_THRESHOLD = 0.62;
     @Override

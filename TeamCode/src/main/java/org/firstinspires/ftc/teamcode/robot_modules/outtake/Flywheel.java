@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot_modules.Module;
+import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 
-public class Flywheel extends Module<Boolean> {
+public class Flywheel extends RunModule<Boolean> {
     DcMotorEx flywheel;
     private final int TICKS_PER_REV = 28;
     double[] pidf = new double[] {0.03, 0.05, 0, 0};

@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.robot_modules.outtake;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot_modules.Module;
+import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 
-public class AdjustableOuttake extends Module<Gamepad> {
+public class AdjustableOuttake extends RunModule<Gamepad> {
     Servo hoodAdjuster;
     Servo gapAdjuster;
     Flywheel flywheel;

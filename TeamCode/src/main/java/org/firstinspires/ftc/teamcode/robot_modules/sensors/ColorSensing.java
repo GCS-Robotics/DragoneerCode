@@ -1,19 +1,15 @@
 package org.firstinspires.ftc.teamcode.robot_modules.sensors;
 
 import static org.firstinspires.ftc.teamcode.Colors.YELLOW;
-import static org.firstinspires.ftc.teamcode.Colors.RED;
-import static org.firstinspires.ftc.teamcode.Colors.BLUE;
 
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Colors;
-import org.firstinspires.ftc.teamcode.robot_modules.Module;
+import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 
-public class ColorSensing extends Module<Boolean> {
+public class ColorSensing extends RunModule<Boolean> {
     private NormalizedColorSensor color;
     public ColorSensing(HardwareMap hardwareMap, String name){
         color = hardwareMap.get(NormalizedColorSensor.class, name);

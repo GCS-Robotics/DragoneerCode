@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot_modules.Module;
+import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 
-public class ServoTransition extends Module<Boolean[]> {
+public class ServoTransition extends RunModule<Boolean[]> {
     private CRServo transition;
     public ServoTransition(HardwareMap hardwareMap, String name){
         transition = hardwareMap.get(CRServo.class, "transition");

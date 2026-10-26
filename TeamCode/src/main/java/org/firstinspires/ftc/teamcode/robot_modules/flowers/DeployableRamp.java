@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot_modules.Module;
+import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 
-public class DeployableRamp extends Module<Boolean> {
+public class DeployableRamp extends RunModule<Boolean> {
     private Servo servo;
     private final double DOWN_POS = 1.0;
     private final double UP_POS = 0.0;

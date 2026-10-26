@@ -4,15 +4,17 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robot_modules.Intake;
+import org.firstinspires.ftc.teamcode.robot_modules.Module;
 import org.firstinspires.ftc.teamcode.robot_modules.sensors.Limelight;
 import org.firstinspires.ftc.teamcode.robot_modules.drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.robot_modules.Module;
+import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.SimpleShooter;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 
 @TeleOp(name = "Sprint One Drive", group = "Drive")
 public class Sprint1Drive extends OpMode {
-    public Module drive, intake, transition, shooter, limelight;
+    public RunModule drive, intake, transition, shooter;
+    public Module limelight;
     private Module[] modules;
     @Override
     public void init(){
@@ -29,11 +31,10 @@ public class Sprint1Drive extends OpMode {
         intake.run(gamepad2.left_trigger);
         transition.run(new Boolean[]{gamepad2.b, gamepad2.x});
         shooter.run(gamepad2.right_trigger);
-        limelight.run(gamepad2.left_bumper);
-        Module.postTelemetries(modules, telemetry);
+        RunModule.postTelemetries(modules, telemetry);
     }
     @Override
     public void stop(){
-        Module.stopModules(modules);
+        RunModule.stopModules(modules);
     }
 }

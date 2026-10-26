@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.testing;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.robot_modules.Limelight;
+import org.firstinspires.ftc.teamcode.robot_modules.sensors.Limelight;
 import org.firstinspires.ftc.teamcode.robot_modules.Module;
 
 @TeleOp(name = "LimelighttestMode", group = "Drive")

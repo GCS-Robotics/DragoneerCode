@@ -29,15 +29,17 @@ public class Limelight extends Module<Boolean> {
         limelight.pipelineSwitch(BALL_PIPELINE);
         ballResult = limelight.getLatestResult();
     }
-    public double aprilTag(){
+    public void aprilTag(){
         limelight.pipelineSwitch(APRILTAG_PIPELINE);
         tagResult = limelight.getLatestResult();
+
+    }
+    public double getDistance(){
         ty = tagResult.getTy();
         distanceFloor = (GOAL_HEIGHT - CAMERA_HEIGHT) / Math.tan(MOUNTING_ANGLE + ty);
         distance = Math.sqrt(Math.pow(distanceFloor, 2) + Math.pow(GOAL_HEIGHT - CAMERA_HEIGHT, 2));
         return distance;
     }
-
     @Override
     public void postTelemetry(Telemetry telemetry) {
 

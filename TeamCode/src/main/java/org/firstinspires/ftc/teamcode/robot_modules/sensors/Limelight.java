@@ -5,9 +5,10 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robot_modules.Module;
 import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 
-public class Limelight extends RunModule<Boolean> {
+public class Limelight extends Module<Boolean> {
     Limelight3A limelight;
     private LLResult ballResult;
     private LLResult tagResult;
@@ -19,14 +20,6 @@ public class Limelight extends RunModule<Boolean> {
         limelight = hardwareMap.get(Limelight3A.class, name);
         limelight.start();
     }
-    @Override
-    public void run(Boolean aprilTagging) {
-        if (aprilTagging == false) {
-            trackBalls();
-        } else {
-            aprilTag();
-        }
-    }
     public void trackBalls() {
         limelight.pipelineSwitch(BALL_PIPELINE);
         ballResult = limelight.getLatestResult();
@@ -34,10 +27,6 @@ public class Limelight extends RunModule<Boolean> {
     public void aprilTag(){
         limelight.pipelineSwitch(APRILTAG_PIPELINE);
         tagResult = limelight.getLatestResult();
-    }
-    @Override
-    public void stop() {
-
     }
     @Override
     public void postTelemetry(Telemetry telemetry) {

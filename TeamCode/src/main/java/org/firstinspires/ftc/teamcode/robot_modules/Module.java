@@ -12,7 +12,7 @@ public abstract class Module<T> {
     }
     public static void stopModules(Module[] modules){
         for(Module i : modules){
-            if(i.getClass() == RunModule.class){
+            if(i instanceof RunModule){
                 ((RunModule)i).stop();
             }
         }

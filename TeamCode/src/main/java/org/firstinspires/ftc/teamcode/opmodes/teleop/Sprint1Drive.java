@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robot_modules.Intake;
-import org.firstinspires.ftc.teamcode.robot_modules.Limelight;
+import org.firstinspires.ftc.teamcode.robot_modules.sensors.Limelight;
 import org.firstinspires.ftc.teamcode.robot_modules.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.robot_modules.Module;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.SimpleShooter;

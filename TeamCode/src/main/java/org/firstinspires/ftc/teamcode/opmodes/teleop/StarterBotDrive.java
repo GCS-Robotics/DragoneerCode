@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.robot_modules.flowers.FlowerCollectors;
 import org.firstinspires.ftc.teamcode.robot_modules.Intake;
 import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
+import org.firstinspires.ftc.teamcode.robot_modules.outtake.Flywheel;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.ServoTransition;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.SimpleShooter;
 import org.firstinspires.ftc.teamcode.robot_modules.drive.TankDrive;
@@ -14,24 +15,36 @@ import org.firstinspires.ftc.teamcode.robot_modules.drive.TankDrive;
 public class StarterBotDrive extends OpMode {
     public RunModule drive, intake, transition, shooter, flowerCollector;
     private RunModule[] modules;
+    private double[] pidf = new double[]{0.003, 0.123, 0, 0};
+    private boolean shooterRunning = false;
     @Override
     public void init(){
         // Initializing Modules
         drive = new TankDrive(hardwareMap, "left_drive", "right_drive");
         intake = new Intake(hardwareMap, "intake");
         transition = new ServoTransition(hardwareMap, "transition");
-        shooter = new SimpleShooter(hardwareMap, "outtake");
+        shooter = new Flywheel(hardwareMap, "outtake");
         flowerCollector = new FlowerCollectors(hardwareMap, new String[]{"left_intake", "right_intake"});
         modules = new RunModule[]{drive, intake, transition, shooter, flowerCollector};
+        ((Flywheel)shooter).setPIDF(pidf);
     }
     @Override
     public void loop(){
         drive.run(gamepad1);
         transition.run(new Boolean[]{gamepad2.b, gamepad2.x});
         intake.run(gamepad2.left_trigger);
-        shooter.run(gamepad2.right_trigger);
+        shooter.run(shooterRunning);
+        if(gamepad2.yWasPressed()){
+            shooterRunning = !shooterRunning;
+        }
         flowerCollector.run(gamepad2.a);
         RunModule.postTelemetries(modules, telemetry);
+        if (gamepad2.dpadUpWasPressed()) {
+            ((Flywheel)shooter).setTargetRPM(Math.min(6000, ((Flywheel)shooter).getTargetRPM()+100));
+        }
+        if (gamepad2.dpadUpWasPressed()) {
+            ((Flywheel)shooter).setTargetRPM(Math.max(0, ((Flywheel)shooter).getTargetRPM()-100));
+        }
     }
     @Override
     public void stop(){

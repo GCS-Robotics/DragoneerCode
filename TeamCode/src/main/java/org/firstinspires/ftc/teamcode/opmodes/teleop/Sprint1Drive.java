@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.robot_modules.Intake;
 import org.firstinspires.ftc.teamcode.robot_modules.Module;
 import org.firstinspires.ftc.teamcode.robot_modules.sensors.Limelight;
-import org.firstinspires.ftc.teamcode.robot_modules.drive.MecanumDrive;
+import org.firstinspires.ftc.teamcode.robot_modules.drive.Mecanum;
 import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.SimpleShooter;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
@@ -18,7 +18,7 @@ public class Sprint1Drive extends OpMode {
     private Module[] modules;
     @Override
     public void init(){
-        drive = new MecanumDrive(hardwareMap, "frontRight", "backRight", "frontLeft", "backLeft");
+        drive = new Mecanum(hardwareMap, "frontRight", "backRight", "frontLeft", "backLeft");
         intake = new Intake(hardwareMap, "intake");
         transition = new MotorTransition(hardwareMap, "transitionMotor");
         shooter = new SimpleShooter(hardwareMap, "shooter");

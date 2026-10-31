@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.robot_modules.Intake;
 import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.ServoTransition;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.SimpleShooter;
-import org.firstinspires.ftc.teamcode.robot_modules.drive.TankDrive;
+import org.firstinspires.ftc.teamcode.robot_modules.drive.Tank;
 
 @TeleOp(name = "Starter Bot Drive", group = "Drive")
 public class StarterBotDrive extends OpMode {
@@ -17,7 +17,7 @@ public class StarterBotDrive extends OpMode {
     @Override
     public void init(){
         // Initializing Modules
-        drive = new TankDrive(hardwareMap, "left_drive", "right_drive");
+        drive = new Tank(hardwareMap, "left_drive", "right_drive");
         intake = new Intake(hardwareMap, "intake");
         transition = new ServoTransition(hardwareMap, "transition");
         shooter = new SimpleShooter(hardwareMap, "outtake");

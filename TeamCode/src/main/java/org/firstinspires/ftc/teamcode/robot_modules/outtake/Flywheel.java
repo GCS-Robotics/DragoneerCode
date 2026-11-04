@@ -17,14 +17,15 @@ public class Flywheel extends RunModule<Boolean> {
     private final int TICKS_PER_REV = 28;
     private double[] pidf = new double[]{0, 0, 0, 0};
     PIDFController launchControls;
-    private int targetRPM = 1000;
+    private int targetRPM = 2000;
     private final int TARGET_LEEWAY = 10;
 
     public Flywheel(HardwareMap hardwareMap, String name) {
         flywheel = hardwareMap.get(DcMotorEx.class, name);
         launchControls = new PIDFController(pidf[0], pidf[1], pidf[2], pidf[3]);
-        flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        flywheel.setDirection(DcMotorSimple.Direction.FORWARD);
         flywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        flywheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
@@ -35,10 +36,7 @@ public class Flywheel extends RunModule<Boolean> {
         if (parameter) {
             outputPower = launchControls.calculate(currentRPM, targetRPM);
         } else {
-            outputPower = launchControls.calculate(currentRPM, 0);
-            if (launchersAtSpeed(0)) {
-                outputPower = 0;
-            }
+            outputPower = 0;
         }
         outputPower = Math.max(-1, Math.min(1, outputPower));
         shooter.setPower(outputPower);

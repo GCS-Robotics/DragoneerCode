@@ -31,10 +31,10 @@ public class StarterBotDrive extends OpMode {
     @Override
     public void loop(){
         drive.run(gamepad1);
-        transition.run(new Boolean[]{gamepad2.b, gamepad2.x});
+        transition.run(new Boolean[]{false, gamepad2.x});
         intake.run(gamepad2.left_trigger);
         shooter.run(shooterRunning);
-        if(gamepad2.yWasPressed()){
+        if(gamepad2.bWasPressed()){
             shooterRunning = !shooterRunning;
         }
         flowerCollector.run(gamepad2.a);
@@ -42,7 +42,7 @@ public class StarterBotDrive extends OpMode {
         if (gamepad2.dpadUpWasPressed()) {
             ((Flywheel)shooter).setTargetRPM(Math.min(6000, ((Flywheel)shooter).getTargetRPM()+100));
         }
-        if (gamepad2.dpadUpWasPressed()) {
+        if (gamepad2.dpadDownWasPressed()) {
             ((Flywheel)shooter).setTargetRPM(Math.max(0, ((Flywheel)shooter).getTargetRPM()-100));
         }
     }

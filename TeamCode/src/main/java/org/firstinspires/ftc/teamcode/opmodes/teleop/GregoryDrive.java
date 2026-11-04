@@ -19,7 +19,7 @@ public class GregoryDrive extends OpMode {
         drive = new Mecanum(hardwareMap, "frontRight", "backRight", "frontLeft", "backLeft");
         intake = new Intake(hardwareMap, "intake");
         deployableRamp = new DeployableRamp(hardwareMap, "ramp");
-        adjustableOuttake = new AdjustableOuttake(hardwareMap, "flywheel", "hood", "gap");
+        adjustableOuttake = new AdjustableOuttake(hardwareMap, "flywheel", "hood", "gap", "yaw", "limelight");
         motorTransition = new MotorTransition(hardwareMap, "moTran");
         modules = new Module[]{drive, intake, deployableRamp, adjustableOuttake, motorTransition};
 

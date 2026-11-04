@@ -1,16 +1,20 @@
 package org.firstinspires.ftc.teamcode.robot_modules.outtake;
 
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
+import org.firstinspires.ftc.teamcode.robot_modules.sensors.Limelight;
 
 public class AdjustableOuttake extends RunModule<Gamepad> {
     Servo hoodAdjuster;
     Servo gapAdjuster;
+    Servo yawAdjuster;
     Flywheel flywheel;
+    double yawServoPosition = 0;
     double hoodPose = 0;
     private final double MAX_HOOD = 1;
     private final double MIN_HOOD = 0;
@@ -20,10 +24,14 @@ public class AdjustableOuttake extends RunModule<Gamepad> {
     double gapPose;
     private boolean isSpinning = false;
 
-    public AdjustableOuttake(HardwareMap hardwareMap, String fName, String hName, String gName) {
+    Limelight limelight;
+
+    public AdjustableOuttake(HardwareMap hardwareMap, String fName, String hName, String gName, String yName, String lName) {
         flywheel = new Flywheel(hardwareMap, fName);
+        limelight = new Limelight(hardwareMap, lName);
         hoodAdjuster = hardwareMap.get(Servo.class, hName);
         gapAdjuster = hardwareMap.get(Servo.class, gName);
+        yawAdjuster = hardwareMap.get(Servo.class, yName);
     }
     public void runHoodAdjuster(Gamepad gamepad) {
         if (gamepad.aWasReleased()) {
@@ -45,6 +53,11 @@ public class AdjustableOuttake extends RunModule<Gamepad> {
         }
     }
 
+    public void runYawAdjuster(Gamepad gamepad) {
+        yawAdjuster.setPosition(yawServoPosition + ((limelight.getYaw() * 2.75) / 100));
+        yawServoPosition = yawAdjuster.getPosition();
+    }
+
     @Override
     public void run(Gamepad gamepad) {
         if(gamepad.xWasPressed()){
@@ -53,6 +66,7 @@ public class AdjustableOuttake extends RunModule<Gamepad> {
         flywheel.run(isSpinning);
         runHoodAdjuster(gamepad);
         runGapAdjuster(gamepad);
+        runYawAdjuster(gamepad);
     }
     @Override
     public void stop() {

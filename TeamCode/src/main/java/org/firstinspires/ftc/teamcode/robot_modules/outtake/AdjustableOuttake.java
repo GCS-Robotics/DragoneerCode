@@ -54,8 +54,12 @@ public class AdjustableOuttake extends RunModule<Gamepad> {
     }
 
     public void runYawAdjuster(Gamepad gamepad) {
-        yawAdjuster.setPosition(yawServoPosition + ((limelight.getYaw() * 2.75) / 100));
-        yawServoPosition = yawAdjuster.getPosition();
+        if (gamepad.dpadLeftWasPressed()) {
+            yawAdjuster.setPosition(yawServoPosition + ((limelight.getYaw() * 2.75) / 100));
+            yawServoPosition = yawAdjuster.getPosition();
+        } else {
+            yawAdjuster.setPosition(gamepad.left_stick_x * 2.75);
+        }
     }
 
     @Override

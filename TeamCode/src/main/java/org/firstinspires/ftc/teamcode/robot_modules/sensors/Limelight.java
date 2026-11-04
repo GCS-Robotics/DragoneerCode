@@ -60,6 +60,10 @@ public class Limelight extends Module<Boolean> {
         return Math.sqrt(numerator / denominator);
     }
 
+    public double getYaw() {
+        return tagResult.getTx();
+    }
+
 
     @Override
     public void postTelemetry(Telemetry telemetry) {

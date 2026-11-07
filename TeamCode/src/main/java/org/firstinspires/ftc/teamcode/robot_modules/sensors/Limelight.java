@@ -17,7 +17,7 @@ public class Limelight extends Module<Boolean> {
     double distance;
     double ty;
     final double GOAL_HEIGHT = 54;
-    final double CAMERA_HEIGHT = 8.5;
+    final double CAMERA_HEIGHT = 13;
     final double MOUNTING_ANGLE = 0;
     final double G = 9.81;
     public Limelight(HardwareMap hardwareMap, String name) {
@@ -67,6 +67,8 @@ public class Limelight extends Module<Boolean> {
 
     @Override
     public void postTelemetry(Telemetry telemetry) {
-
+        telemetry.addData("Distance: ", getDistance());
+        telemetry.addData("Angle: ", getAngleRads(0.383972435, 0.785398));
+        telemetry.addData("Velocity: ", getVelocity(getAngleRads(0.383972435, 0.785398)));
     }
 }

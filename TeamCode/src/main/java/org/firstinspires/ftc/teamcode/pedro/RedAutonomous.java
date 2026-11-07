@@ -1,13 +1,19 @@
 package org.firstinspires.ftc.teamcode.pedro;
 
-import static com.pedropathing.api.Paths.*;
 import com.pedropathing.api.Paths;
 
+import static com.pedropathing.ivy.Scheduler.schedule;
+
 import com.pedropathing.api.PoseFactory;
+import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-public class PathMethods {
+
+public class RedAutonomous extends OpMode {
+
+    private Follower follower;
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
 
@@ -66,5 +72,67 @@ public class PathMethods {
 
     public Path park() {
         return Paths.curve(parkStart, parkControl1, park).linear(parkStart, park);
+    }
+
+
+    public enum pathState {
+        START_AUTO,
+        COLLECT_CORNER,
+        MOVE_TO_GOAL1,
+        COLLECT_FLOWER1,
+        MOVE_TO_GOAL2,
+        COLLECT_FLOWER2,
+        MOVE_TO_GOAL3,
+        PARK
+    }
+
+    pathState pathState;
+
+    public void statePathUpdate() {
+        switch(pathState) {
+            case START_AUTO:
+                follower.follow(startAuto());
+                pathState = pathState.COLLECT_CORNER;
+                break;
+            case COLLECT_CORNER:
+                follower.follow(collectCorner());
+                pathState = pathState.MOVE_TO_GOAL1;
+                break;
+            case MOVE_TO_GOAL1:
+                follower.follow(moveToGoal1());
+                pathState = pathState.COLLECT_FLOWER1;
+                break;
+            case COLLECT_FLOWER1:
+                follower.follow(collectFower1());
+                pathState = pathState.MOVE_TO_GOAL2;
+                break;
+            case MOVE_TO_GOAL2:
+                follower.follow(moveToGoal2());
+                pathState = pathState.COLLECT_FLOWER2;
+                break;
+            case MOVE_TO_GOAL3:
+                follower.follow(moveToGoal3());
+                pathState = pathState.PARK;
+                break;
+            case PARK:
+                follower.follow(park());
+        }
+    }
+
+    public void setPathState(pathState newState) {
+        pathState = newState;
+    }
+
+
+    @Override
+    public void init() {
+        pathState = pathState.START_AUTO;
+        follower = Constants.create(hardwareMap);
+    }
+
+    @Override
+    public void loop() {
+        follower.update();
+        statePathUpdate();
     }
 }

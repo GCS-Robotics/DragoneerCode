@@ -92,7 +92,6 @@ public class RedAutonomous extends OpMode {
         switch(pathState) {
             case START_AUTO:
                 follower.follow(startAuto());
-
                 pathState = pathState.COLLECT_CORNER;
                 break;
             case COLLECT_CORNER:
@@ -129,6 +128,7 @@ public class RedAutonomous extends OpMode {
     public void init() {
         pathState = pathState.START_AUTO;
         follower = Constants.create(hardwareMap);
+        follower.setPose(start);
     }
 
     @Override

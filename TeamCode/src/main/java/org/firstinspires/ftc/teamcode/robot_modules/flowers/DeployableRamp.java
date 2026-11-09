@@ -8,6 +8,8 @@ import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 
 public class DeployableRamp extends RunModule<Boolean> {
     private Servo servo;
+
+    public boolean requestedDown;
     private final double DOWN_POS = 1.0;
     private final double UP_POS = 0.0;
     public DeployableRamp(HardwareMap hardwareMap, String name){
@@ -33,4 +35,25 @@ public class DeployableRamp extends RunModule<Boolean> {
         boolean is_deployed = servo.getPosition() == DOWN_POS;
         telemetry.addData("Is Deployed?", is_deployed);
     }
+
+    rampState rampState;
+    public enum rampState {
+        UP,
+        DOWN
+    }
+
+    public void updateState() {
+        switch(rampState) {
+            case UP:
+                if (requestedDown) {
+                    rampState = rampState.DOWN;
+                } else {
+                    rampState = rampState.UP;
+                }
+            case DOWN:
+                servo.setPosition(DOWN_POS);
+        }
+
+    }
+
 }

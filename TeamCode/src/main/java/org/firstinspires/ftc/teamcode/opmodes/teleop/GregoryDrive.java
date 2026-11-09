@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.robot_modules.Module;
 import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 import org.firstinspires.ftc.teamcode.robot_modules.drive.Mecanum;
 import org.firstinspires.ftc.teamcode.robot_modules.flowers.DeployableRamp;
-import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttake;
+import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttakeManual;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 
 public class GregoryDrive extends OpMode {
@@ -19,7 +19,7 @@ public class GregoryDrive extends OpMode {
         drive = new Mecanum(hardwareMap, "frontRight", "backRight", "frontLeft", "backLeft");
         intake = new Intake(hardwareMap, "intake");
         deployableRamp = new DeployableRamp(hardwareMap, "ramp");
-        adjustableOuttake = new AdjustableOuttake(hardwareMap, "flywheel", "hood", "gap", "yaw", "limelight");
+        adjustableOuttake = new AdjustableOuttakeManual(hardwareMap, "flywheel", "hood", "gap", "yaw", "limelight");
         motorTransition = new MotorTransition(hardwareMap, "moTran");
         modules = new Module[]{drive, intake, deployableRamp, adjustableOuttake, motorTransition};
 

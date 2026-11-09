@@ -9,16 +9,11 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.robot_modules.Intake;
 
-import org.firstinspires.ftc.teamcode.robot_modules.Intake;
-import org.firstinspires.ftc.teamcode.robot_modules.Module;
-import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 import org.firstinspires.ftc.teamcode.robot_modules.flowers.DeployableRamp;
-import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttake;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 
 

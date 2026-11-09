@@ -60,6 +60,14 @@ public class Limelight extends Module<Boolean> {
         return Math.sqrt(numerator / denominator);
     }
 
+    public double getAngleDegrees(double min, double max) {
+        double h = getYDistance();
+        double d = getXDistance();
+        double angle = Math.atan((h+Math.sqrt(h*h+d*d)/d));
+        double angleDegrees = Math.toDegrees(angle);
+        return Math.min(Math.max(angleDegrees,min), max);
+    }
+
     public double getYaw() {
         return tagResult.getTx();
     }

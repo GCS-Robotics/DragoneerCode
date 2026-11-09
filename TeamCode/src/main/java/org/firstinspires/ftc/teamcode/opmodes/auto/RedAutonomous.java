@@ -9,8 +9,17 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
+import org.firstinspires.ftc.teamcode.robot_modules.Intake;
+
+import org.firstinspires.ftc.teamcode.robot_modules.Intake;
+import org.firstinspires.ftc.teamcode.robot_modules.Module;
+import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
+import org.firstinspires.ftc.teamcode.robot_modules.flowers.DeployableRamp;
+import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttake;
+import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 
 
 public class RedAutonomous extends OpMode {
@@ -18,6 +27,11 @@ public class RedAutonomous extends OpMode {
     private Follower follower;
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
+    Intake intake;
+
+    DeployableRamp deployableRamp;
+
+    MotorTransition motorTransition;
 
     private final Pose start = poseFactory.of(56, 8, 90);
     private final Pose startAuto = poseFactory.of(56.0964, 16.5964, 90);
@@ -97,6 +111,7 @@ public class RedAutonomous extends OpMode {
                 pathState = pathState.COLLECT_CORNER;
                 break;
             case COLLECT_CORNER:
+
                 follower.follow(collectCorner());
                 pathState = pathState.MOVE_TO_GOAL1;
                 break;
@@ -131,6 +146,10 @@ public class RedAutonomous extends OpMode {
         pathState = pathState.START_AUTO;
         follower = Constants.create(hardwareMap);
         follower.setPose(start);
+        intake = new Intake(hardwareMap, "intake");
+        deployableRamp = new DeployableRamp(hardwareMap, "deployableRamp");
+        motorTransition = new MotorTransition(hardwareMap, "transition");
+
     }
 
     @Override

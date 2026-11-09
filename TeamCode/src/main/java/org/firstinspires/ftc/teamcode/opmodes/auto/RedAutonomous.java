@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.robot_modules.Intake;
 
 import org.firstinspires.ftc.teamcode.robot_modules.flowers.DeployableRamp;
+import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttake;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 
 
@@ -30,6 +31,8 @@ public class RedAutonomous extends OpMode {
     DeployableRamp deployableRamp;
 
     MotorTransition motorTransition;
+
+    AdjustableOuttake adjustableOuttake;
 
     private final Pose start = poseFactory.of(56, 8, 90);
     private final Pose startAuto = poseFactory.of(56.0964, 16.5964, 90);
@@ -117,6 +120,7 @@ public class RedAutonomous extends OpMode {
                 intake.stop();
                 motorTransition.run(directions);
                 follower.follow(moveToGoal1());
+                adjustableOuttake.run(true);
                 pathState = pathState.COLLECT_FLOWER1;
                 break;
             case COLLECT_FLOWER1:
@@ -166,6 +170,7 @@ public class RedAutonomous extends OpMode {
         intake = new Intake(hardwareMap, "intake");
         deployableRamp = new DeployableRamp(hardwareMap, "deployableRamp");
         motorTransition = new MotorTransition(hardwareMap, "transition");
+        adjustableOuttake = new AdjustableOuttake(hardwareMap, "flywheel", "hood", "gap", "yaw", "limelight");
     }
 
     @Override

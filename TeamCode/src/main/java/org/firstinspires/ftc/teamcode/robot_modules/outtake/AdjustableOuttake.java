@@ -72,6 +72,7 @@ public class AdjustableOuttake extends RunModule<Gamepad> {
         runGapAdjuster(gamepad);
         runYawAdjuster(gamepad);
     }
+
     @Override
     public void stop() {
 

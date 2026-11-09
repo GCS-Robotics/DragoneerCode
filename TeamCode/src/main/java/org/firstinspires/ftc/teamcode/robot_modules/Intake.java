@@ -5,14 +5,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Intake extends RunModule<Float> {
+public class Intake extends RunModule<Boolean> {
     DcMotor motor;
     public Intake(HardwareMap hardwareMap, String name){
         motor = hardwareMap.get(DcMotor.class, name);
     }
     @Override
-    public void run(Float parameter) {
-        motor.setPower(parameter);
+    public void run(Boolean running) {
+        if (running) {
+            motor.setPower(1);
+        } else {
+            stop();
+        }
     }
 
     @Override

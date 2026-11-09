@@ -35,25 +35,4 @@ public class DeployableRamp extends RunModule<Boolean> {
         boolean is_deployed = servo.getPosition() == DOWN_POS;
         telemetry.addData("Is Deployed?", is_deployed);
     }
-
-    rampState rampState;
-    public enum rampState {
-        UP,
-        DOWN
-    }
-
-    public void updateState() {
-        switch(rampState) {
-            case UP:
-                if (requestedDown) {
-                    rampState = rampState.DOWN;
-                } else {
-                    rampState = rampState.UP;
-                }
-            case DOWN:
-                servo.setPosition(DOWN_POS);
-        }
-
-    }
-
 }

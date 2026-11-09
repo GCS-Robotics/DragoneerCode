@@ -25,6 +25,9 @@ import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 public class RedAutonomous extends OpMode {
 
     private Follower follower;
+    boolean forwards = true;
+    boolean backwards = false;
+    public Boolean[] directions = {forwards, backwards};
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
     Intake intake;
@@ -111,27 +114,46 @@ public class RedAutonomous extends OpMode {
                 pathState = pathState.COLLECT_CORNER;
                 break;
             case COLLECT_CORNER:
-
+                intake.run(true);
                 follower.follow(collectCorner());
                 pathState = pathState.MOVE_TO_GOAL1;
                 break;
             case MOVE_TO_GOAL1:
+                intake.stop();
+                motorTransition.run(directions);
                 follower.follow(moveToGoal1());
                 pathState = pathState.COLLECT_FLOWER1;
                 break;
             case COLLECT_FLOWER1:
+                motorTransition.stop();
+                deployableRamp.run(true);
+                intake.run(true);
                 follower.follow(collectFower1());
                 pathState = pathState.MOVE_TO_GOAL2;
                 break;
             case MOVE_TO_GOAL2:
+                deployableRamp.stop();
+                intake.stop();
+                motorTransition.run(directions);
                 follower.follow(moveToGoal2());
                 pathState = pathState.COLLECT_FLOWER2;
                 break;
+            case COLLECT_FLOWER2:
+                motorTransition.stop();
+                deployableRamp.run(true);
+                intake.run(true);
+                follower.follow(collectFlower2());
+                pathState = pathState.PARK;
+                break;
             case MOVE_TO_GOAL3:
+                motorTransition.run(directions);
+                deployableRamp.stop();
+                intake.stop();
                 follower.follow(moveToGoal3());
                 pathState = pathState.PARK;
                 break;
             case PARK:
+                motorTransition.stop();
                 follower.follow(park());
         }
     }
@@ -149,7 +171,6 @@ public class RedAutonomous extends OpMode {
         intake = new Intake(hardwareMap, "intake");
         deployableRamp = new DeployableRamp(hardwareMap, "deployableRamp");
         motorTransition = new MotorTransition(hardwareMap, "transition");
-
     }
 
     @Override

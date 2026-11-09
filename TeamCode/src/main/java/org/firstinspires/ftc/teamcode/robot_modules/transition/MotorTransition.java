@@ -15,10 +15,10 @@ public class MotorTransition extends RunModule<Boolean[]> {
     }
 
     @Override
-    public void run(Boolean[] buttons) {
-        if(buttons[0]){
+    public void run(Boolean[] directions) {
+        if(directions[0]){
             motor.setPower(1);
-        } else if(buttons[1]){
+        } else if(directions[1]){
             motor.setPower(-1);
         } else{
             motor.setPower(0);

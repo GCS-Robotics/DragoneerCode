@@ -92,6 +92,7 @@ public class RedAutonomous extends OpMode {
         switch(pathState) {
             case START_AUTO:
                 follower.follow(startAuto());
+
                 pathState = pathState.COLLECT_CORNER;
                 break;
             case COLLECT_CORNER:

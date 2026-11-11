@@ -83,6 +83,7 @@ public class RedAutonomousShort extends OpMode {
     public void statePathUpdate() {
         switch(pathState) {
             case START_AUTO:
+                adjustableOuttake.run(true);
                 follower.follow(startAuto());
                 pathState = pathState.COLLECT_CORNER;
                 break;
@@ -95,7 +96,6 @@ public class RedAutonomousShort extends OpMode {
                 intake.stop();
                 motorTransition.run(directions);
                 follower.follow(moveToGoal1());
-                adjustableOuttake.run(true);
                 pathState = pathState.COLLECT_FLOWER1;
                 break;
             case COLLECT_FLOWER1:

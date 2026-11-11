@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttake;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 
 
-public class RedAutonomous extends OpMode {
+public class RedAutonomousLong extends OpMode {
 
     private Follower follower;
     boolean forwards = true;

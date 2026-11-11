@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot_modules.outtake;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -11,9 +13,9 @@ import org.firstinspires.ftc.teamcode.robot_modules.sensors.Limelight;
 public class AdjustableOuttake extends RunModule<Boolean> {
     Servo hoodAdjuster;
     Servo gapAdjuster;
-    Servo yawAdjuster;
+    DcMotorEx yawAdjuster;
     Flywheel flywheel;
-    double yawServoPosition = 0;
+    double yawPosition = 0;
     double hoodPose = 0;
     private final double MAX_HOOD = .23;
     private final double MIN_HOOD = .45;
@@ -30,7 +32,7 @@ public class AdjustableOuttake extends RunModule<Boolean> {
         limelight = new Limelight(hardwareMap, lName);
         hoodAdjuster = hardwareMap.get(Servo.class, hName);
         gapAdjuster = hardwareMap.get(Servo.class, gName);
-        yawAdjuster = hardwareMap.get(Servo.class, yName);
+        yawAdjuster = hardwareMap.get(DcMotorEx.class, yName);
     }
     public void runHoodAdjuster() {
         hoodPose = limelight.getAngleDegrees(23, 45)/100;
@@ -38,8 +40,10 @@ public class AdjustableOuttake extends RunModule<Boolean> {
     }
 
     public void runYawAdjuster() {
-        yawAdjuster.setPosition(yawServoPosition + ((limelight.getYaw() * 2.75) / 100));
-        yawServoPosition = yawAdjuster.getPosition();
+        yawAdjuster.setTargetPosition((int) ((yawPosition + ((limelight.getYaw() * 2.75) / 100)) * 28));
+        yawAdjuster.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        yawAdjuster.setVelocity(6000);
+
     }
 
     @Override

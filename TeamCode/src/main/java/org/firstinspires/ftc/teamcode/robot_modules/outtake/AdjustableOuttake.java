@@ -31,6 +31,7 @@ public class AdjustableOuttake extends RunModule<Boolean> {
         hoodAdjuster = hardwareMap.get(Servo.class, hName);
         gapAdjuster = hardwareMap.get(Servo.class, gName);
         yawAdjuster = hardwareMap.get(DcMotorEx.class, yName);
+        hoodAdjuster.setPosition(.23);
     }
     public void runHoodAdjuster() {
         hoodPose = limelight.getAngleDegrees(23, 45)/100;

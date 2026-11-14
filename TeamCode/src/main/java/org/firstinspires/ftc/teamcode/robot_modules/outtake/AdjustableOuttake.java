@@ -17,8 +17,6 @@ public class AdjustableOuttake extends RunModule<Boolean> {
     Flywheel flywheel;
     double yawPosition = 0;
     double hoodPose = 0;
-    private final double MAX_HOOD = .23;
-    private final double MIN_HOOD = .45;
     private final double HOOD_ADJUST = 0.1;
     private final double POLLEN_GAP = 0;
     private final double NECTAR_GAP = 1;

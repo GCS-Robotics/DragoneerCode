@@ -17,6 +17,9 @@ public class AdjustableOuttake extends RunModule<Boolean> {
     Flywheel flywheel;
     double yawPosition = 0;
     double hoodPose = 0;
+    int ticksPerRev = 1425;
+
+    int ticksLimit = 1069;
     private final double HOOD_ADJUST = 0.1;
     private final double POLLEN_GAP = 0;
     private final double NECTAR_GAP = 1;
@@ -39,9 +42,9 @@ public class AdjustableOuttake extends RunModule<Boolean> {
     }
 
     public void runYawAdjuster() {
-        yawAdjuster.setTargetPosition(Math.max(Math.min((int) ((yawPosition + ((limelight.getYaw() * 2.75) / 100)) * 28), 21), -21));
+        yawAdjuster.setTargetPosition(Math.max(Math.min((int) ((yawPosition + ((limelight.getYaw() * 2.75) / 100)) * ticksPerRev), ticksLimit), -ticksLimit));
         yawAdjuster.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        yawAdjuster.setVelocity(6000);
+        yawAdjuster.setVelocity(2800);
     }
 
     @Override

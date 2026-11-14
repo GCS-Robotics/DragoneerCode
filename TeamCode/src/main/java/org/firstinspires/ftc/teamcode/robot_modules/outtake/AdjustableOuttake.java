@@ -42,6 +42,7 @@ public class AdjustableOuttake extends RunModule<Boolean> {
     }
 
     public void runYawAdjuster() {
+        yawPosition = yawAdjuster.getCurrentPosition();
         yawAdjuster.setTargetPosition(Math.max(Math.min((int) ((yawPosition + ((limelight.getYaw() * 2.75) / 100)) * ticksPerRev), ticksLimit), -ticksLimit));
         yawAdjuster.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         yawAdjuster.setVelocity(2800);

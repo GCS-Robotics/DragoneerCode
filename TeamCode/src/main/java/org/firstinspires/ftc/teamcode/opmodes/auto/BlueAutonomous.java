@@ -147,8 +147,8 @@ public class BlueAutonomous extends OpMode {
         follower = Constants.create(hardwareMap);
         follower.setPose(start);
         intake = new Intake(hardwareMap, "intake");
-        deployableRamp = new DeployableRamp(hardwareMap, "deployableRamp");
-        motorTransition = new MotorTransition(hardwareMap, "transition");
+        deployableRamp = new DeployableRamp(hardwareMap, "ramp");
+        motorTransition = new MotorTransition(hardwareMap, "transitionMotor");
         adjustableOuttake = new AdjustableOuttake(hardwareMap, "flywheel", "hood", "gap", "yaw", "limelight");
     }
 

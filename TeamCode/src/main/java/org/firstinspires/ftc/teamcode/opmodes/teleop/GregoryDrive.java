@@ -23,7 +23,7 @@ public class GregoryDrive extends OpMode {
         intake = new Intake(hardwareMap, "intake");
         deployableRamp = new DeployableRamp(hardwareMap, "ramp");
         adjustableOuttake = new AdjustableOuttakeManual(hardwareMap, "flywheel", "hood", "gap", "yaw", "limelight");
-        motorTransition = new MotorTransition(hardwareMap, "moTran");
+        motorTransition = new MotorTransition(hardwareMap, "transitionMotor");
         modules = new Module[]{drive, intake, deployableRamp, adjustableOuttake, motorTransition};
         ((Flywheel)adjustableOuttake).setPIDF(pidf);
 

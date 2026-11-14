@@ -28,7 +28,7 @@ public class GregoryDrive extends OpMode {
     @Override
     public void loop() {
         drive.run(gamepad1);
-        intake.run(gamepad2.left_trigger);
+        intake.run(gamepad2.left_trigger > TRIGGER_THRESHOLD);
         deployableRamp.run(gamepad2.right_trigger > TRIGGER_THRESHOLD);
         adjustableOuttake.run(gamepad2);
         motorTransition.run(new Boolean[]{gamepad2.a, gamepad1.b});

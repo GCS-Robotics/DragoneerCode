@@ -49,7 +49,7 @@ public class Limelight extends Module<Boolean> {
         update();
         double h = getYDistance();
         double d = getXDistance();
-        double angle = Math.atan((h+Math.sqrt(h*h+d*d)/d));
+        double angle = Math.atan((h+Math.sqrt(h*h+d*d))/d);
         return Math.min(Math.max(angle,min), max);
     }
     public double getVelocity(double launchAngle){
@@ -66,7 +66,7 @@ public class Limelight extends Module<Boolean> {
         update();
         double h = getYDistance();
         double d = getXDistance();
-        double angle = Math.atan((h+Math.sqrt(h*h+d*d)/d));
+        double angle = Math.atan((h+Math.sqrt(h*h+d*d))/d);
         double angleDegrees = Math.toDegrees(angle);
         return Math.min(Math.max(angleDegrees,min), max);
     }

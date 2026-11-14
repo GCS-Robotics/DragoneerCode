@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttake;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 
 @Autonomous (name = "Red Auto")
-public class RedAutonomousShort extends OpMode {
+public class RedAutonomous extends OpMode {
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
 

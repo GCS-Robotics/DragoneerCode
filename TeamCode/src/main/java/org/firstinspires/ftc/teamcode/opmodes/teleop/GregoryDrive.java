@@ -35,7 +35,7 @@ public class GregoryDrive extends OpMode {
         intake.run(gamepad2.left_trigger > TRIGGER_THRESHOLD);
         deployableRamp.run(gamepad2.right_trigger > TRIGGER_THRESHOLD);
         adjustableOuttake.run(gamepad2);
-        motorTransition.run(new Boolean[]{gamepad2.a, gamepad1.b});
+        motorTransition.run(new Boolean[]{gamepad2.x, gamepad2.y});
         Module.postTelemetries(modules, telemetry);
     }
 

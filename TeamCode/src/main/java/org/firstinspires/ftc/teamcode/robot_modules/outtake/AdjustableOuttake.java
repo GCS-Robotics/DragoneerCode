@@ -27,7 +27,7 @@ public class AdjustableOuttake extends RunModule<Boolean> {
     private boolean isSpinning = false;
 
     Limelight limelight;
-
+    private double[] pidf = new double[]{0.003, 0.123, 0, 0};
     public AdjustableOuttake(HardwareMap hardwareMap, String fName, String hName, String gName, String yName, String lName) {
         flywheel = new Flywheel(hardwareMap, fName);
         limelight = new Limelight(hardwareMap, lName);
@@ -36,6 +36,7 @@ public class AdjustableOuttake extends RunModule<Boolean> {
         yawAdjuster = hardwareMap.get(DcMotorEx.class, yName);
         hoodAdjuster.setPosition(.23);
         yawAdjuster.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        flywheel.setPIDF(pidf);
     }
     public void runHoodAdjuster() {
         hoodPose = limelight.getAngleDegrees(23, 45)/100;

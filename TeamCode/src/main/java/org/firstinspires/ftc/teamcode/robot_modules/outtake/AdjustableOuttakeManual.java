@@ -18,6 +18,7 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
     int ticksPerRev = 1425;
     double yawPosition = 0;
     double hoodPose = 0;
+    private double[] pidf = new double[]{0.003, 0.123, 0, 0};
     private final double MAX_HOOD = 1;
     private final double MIN_HOOD = 0;
     private final double HOOD_ADJUST = 0.1;
@@ -34,6 +35,7 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
         hoodAdjuster = hardwareMap.get(Servo.class, hName);
         gapAdjuster = hardwareMap.get(Servo.class, gName);
         yawAdjuster = hardwareMap.get(DcMotorEx.class, yName);
+        flywheel.setPIDF(pidf);
     }
     public void runHoodAdjuster(Gamepad gamepad) {
         if (gamepad.aWasReleased()) {

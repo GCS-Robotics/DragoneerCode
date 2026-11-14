@@ -8,12 +8,15 @@ import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 import org.firstinspires.ftc.teamcode.robot_modules.drive.Mecanum;
 import org.firstinspires.ftc.teamcode.robot_modules.flowers.DeployableRamp;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttakeManual;
+import org.firstinspires.ftc.teamcode.robot_modules.outtake.Flywheel;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 
 public class GregoryDrive extends OpMode {
     public RunModule drive, intake, deployableRamp, adjustableOuttake, motorTransition;
     private Module[] modules;
     private final double TRIGGER_THRESHOLD = 0.62;
+
+    private double[] pidf = new double[]{0.003, 0.123, 0, 0};
     @Override
     public void init() {
         drive = new Mecanum(hardwareMap, "frontRight", "backRight", "frontLeft", "backLeft");
@@ -22,6 +25,7 @@ public class GregoryDrive extends OpMode {
         adjustableOuttake = new AdjustableOuttakeManual(hardwareMap, "flywheel", "hood", "gap", "yaw", "limelight");
         motorTransition = new MotorTransition(hardwareMap, "moTran");
         modules = new Module[]{drive, intake, deployableRamp, adjustableOuttake, motorTransition};
+        ((Flywheel)adjustableOuttake).setPIDF(pidf);
 
     }
 

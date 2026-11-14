@@ -12,8 +12,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.robot_modules.Intake;
+import org.firstinspires.ftc.teamcode.robot_modules.Module;
+import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
 import org.firstinspires.ftc.teamcode.robot_modules.flowers.DeployableRamp;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttake;
+import org.firstinspires.ftc.teamcode.robot_modules.outtake.Flywheel;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 
 @Autonomous (name = "Blue Auto")
@@ -33,6 +36,7 @@ public class BlueAutonomous extends OpMode {
     MotorTransition motorTransition;
 
     AdjustableOuttake adjustableOuttake;
+    private double[] pidf = new double[]{0.003, 0.123, 0, 0};
 
     private final Pose start = poseFactory.of(84.0311, 134.5018, 270);
     private final Pose startAuto = poseFactory.of(84.2379, 125.7822, 270);

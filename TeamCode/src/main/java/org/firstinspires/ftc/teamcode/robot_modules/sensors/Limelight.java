@@ -16,12 +16,14 @@ public class Limelight extends Module<Boolean> {
     double distanceFloor;
     double distance;
     double ty;
+    boolean hasTarget;
     final double GOAL_HEIGHT = 54;
     final double CAMERA_HEIGHT = 13;
     final double MOUNTING_ANGLE = 0;
     final double G = 9.81;
     public Limelight(HardwareMap hardwareMap, String name) {
         limelight = hardwareMap.get(Limelight3A.class, name);
+        limelight.pipelineSwitch(APRILTAG_PIPELINE);
         limelight.start();
     }
     public void trackBalls() {
@@ -29,9 +31,7 @@ public class Limelight extends Module<Boolean> {
         ballResult = limelight.getLatestResult();
     }
     public void aprilTag(){
-        limelight.pipelineSwitch(APRILTAG_PIPELINE);
         tagResult = limelight.getLatestResult();
-
     }
     private double getDistance(){
         ty = tagResult.getTy();
@@ -46,12 +46,14 @@ public class Limelight extends Module<Boolean> {
         return GOAL_HEIGHT - CAMERA_HEIGHT;
     }
     public double getAngleRads(double min, double max){
+        update();
         double h = getYDistance();
         double d = getXDistance();
         double angle = Math.atan((h+Math.sqrt(h*h+d*d)/d));
         return Math.min(Math.max(angle,min), max);
     }
     public double getVelocity(double launchAngle){
+        update();
         double h = getYDistance();
         double d = getXDistance();
         // Returns ball velocity in Meters per Second
@@ -61,11 +63,21 @@ public class Limelight extends Module<Boolean> {
     }
 
     public double getAngleDegrees(double min, double max) {
+        update();
         double h = getYDistance();
         double d = getXDistance();
         double angle = Math.atan((h+Math.sqrt(h*h+d*d)/d));
         double angleDegrees = Math.toDegrees(angle);
         return Math.min(Math.max(angleDegrees,min), max);
+    }
+    public void update() {
+        LLResult result = limelight.getLatestResult();
+        hasTarget = (result != null && result.isValid());
+        if (hasTarget) {
+            tagResult = result;
+            double ty = result.getTy();
+            distanceFloor = (GOAL_HEIGHT - CAMERA_HEIGHT) / Math.tan(MOUNTING_ANGLE + ty);
+        }
     }
 
     public double getYaw() {

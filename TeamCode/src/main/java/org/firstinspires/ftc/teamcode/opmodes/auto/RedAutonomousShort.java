@@ -6,6 +6,7 @@ import com.pedropathing.api.PoseFactory;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.robot_modules.flowers.DeployableRamp;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttake;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 
+@Autonomous (name = "Red Auto")
 public class RedAutonomousShort extends OpMode {
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
@@ -75,7 +77,8 @@ public class RedAutonomousShort extends OpMode {
         MOVE_TO_GOAL1,
         COLLECT_FLOWER1,
         MOVE_TO_GOAL2,
-        PARK
+        PARK,
+        DONE
     }
 
     pathState pathState;
@@ -83,38 +86,53 @@ public class RedAutonomousShort extends OpMode {
     public void statePathUpdate() {
         switch(pathState) {
             case START_AUTO:
-                adjustableOuttake.run(true);
-                follower.follow(startAuto());
-                pathState = pathState.COLLECT_CORNER;
+                if (!follower.isBusy()) {
+                    adjustableOuttake.run(true);
+                    follower.follow(startAuto());
+                    pathState = pathState.COLLECT_CORNER;
+                }
                 break;
             case COLLECT_CORNER:
-                intake.run(true);
-                follower.follow(collectCorner());
-                pathState = pathState.MOVE_TO_GOAL1;
+                if (!follower.isBusy()) {
+                    intake.run(true);
+                    follower.follow(collectCorner());
+                    pathState = pathState.MOVE_TO_GOAL1;
+                }
                 break;
             case MOVE_TO_GOAL1:
-                intake.stop();
-                motorTransition.run(directions);
-                follower.follow(moveToGoal1());
-                pathState = pathState.COLLECT_FLOWER1;
+                if (!follower.isBusy()) {
+                    intake.stop();
+                    motorTransition.run(directions);
+                    follower.follow(moveToGoal1());
+                    pathState = pathState.COLLECT_FLOWER1;
+                }
                 break;
             case COLLECT_FLOWER1:
-                motorTransition.stop();
-                deployableRamp.run(true);
-                intake.run(true);
-                follower.follow(collectFlower());
-                pathState = pathState.MOVE_TO_GOAL2;
+                if (!follower.isBusy()) {
+                    motorTransition.stop();
+                    deployableRamp.run(true);
+                    intake.run(true);
+                    follower.follow(collectFlower());
+                    pathState = pathState.MOVE_TO_GOAL2;
+                }
                 break;
             case MOVE_TO_GOAL2:
-                deployableRamp.stop();
-                intake.stop();
-                motorTransition.run(directions);
-                follower.follow(moveToGoal2());
-                pathState = pathState.PARK;
+                if (!follower.isBusy()) {
+                    deployableRamp.stop();
+                    intake.stop();
+                    motorTransition.run(directions);
+                    follower.follow(moveToGoal2());
+                    pathState = pathState.PARK;
+                }
                 break;
             case PARK:
-                motorTransition.stop();
-                follower.follow(park());
+                if (!follower.isBusy()) {
+                    motorTransition.stop();
+                    follower.follow(park());
+                }
+                break;
+            case DONE:
+                break;
         }
     }
 

@@ -17,8 +17,8 @@ public class Limelight extends Module<Boolean> {
     double distance;
     double ty;
     boolean hasTarget;
-    final double GOAL_HEIGHT = 54;
-    final double CAMERA_HEIGHT = 13;
+    final double GOAL_HEIGHT = 1.3716;
+    final double CAMERA_HEIGHT = 0.3302;
     final double MOUNTING_ANGLE = 0;
     final double G = 9.81;
     public Limelight(HardwareMap hardwareMap, String name) {
@@ -35,16 +35,14 @@ public class Limelight extends Module<Boolean> {
     }
     private double getDistance(){
         ty = tagResult.getTy();
-        distanceFloor = (GOAL_HEIGHT - CAMERA_HEIGHT) / Math.tan(MOUNTING_ANGLE + ty);
+        distanceFloor = (GOAL_HEIGHT - CAMERA_HEIGHT) / Math.tan(MOUNTING_ANGLE + Math.toRadians(ty));
         distance = Math.sqrt(Math.pow(distanceFloor, 2) + Math.pow(GOAL_HEIGHT - CAMERA_HEIGHT, 2));
         return distance;
     }
     private double getXDistance(){
         return distanceFloor;
     }
-    private double getYDistance(){
-        return GOAL_HEIGHT - CAMERA_HEIGHT;
-    }
+    private double getYDistance(){ return GOAL_HEIGHT - CAMERA_HEIGHT; }
     public double getAngleRads(double min, double max){
         update();
         double h = getYDistance();

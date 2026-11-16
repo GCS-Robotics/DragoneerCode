@@ -132,6 +132,7 @@ public class RedAutonomous extends OpMode {
                 }
                 break;
             case DONE:
+                adjustableOuttake.stop();
                 break;
         }
     }

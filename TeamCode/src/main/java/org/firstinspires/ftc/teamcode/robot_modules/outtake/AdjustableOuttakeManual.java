@@ -60,9 +60,10 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
     public void runYawAdjuster(Gamepad gamepad) {
         if (gamepad.dpadLeftWasPressed()) {
             yawAdjuster.setTargetPosition((int) (yawPosition + ((limelight.getYaw() * 2.75) / 100)) * ticksPerRev);
-            yawPosition = yawAdjuster.getTargetPosition();
+            yawPosition = yawAdjuster.getCurrentPosition();
         } else {
             yawAdjuster.setTargetPosition((int) (gamepad.left_stick_x * 2.75) * ticksPerRev);
+            yawPosition = yawAdjuster.getCurrentPosition();
         }
         yawAdjuster.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         yawAdjuster.setVelocity(2800);

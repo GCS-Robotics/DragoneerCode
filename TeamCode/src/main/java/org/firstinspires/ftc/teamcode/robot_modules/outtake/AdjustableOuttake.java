@@ -38,24 +38,28 @@ public class AdjustableOuttake extends RunModule<Boolean> {
         yawAdjuster.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         flywheel.setPIDF(pidf);
     }
-    public void runHoodAdjuster() {
-        hoodPose = limelight.getAngleDegrees(23, 45)/100;
-        hoodAdjuster.setPosition(hoodPose);
+    public void runHoodAdjuster(Boolean run) {
+        if (run) {
+            hoodPose = limelight.getAngleDegrees(23, 45)/100;
+            hoodAdjuster.setPosition(hoodPose);
+        }
     }
 
-    public void runYawAdjuster() {
-        yawPosition = yawAdjuster.getCurrentPosition();
-        yawAdjuster.setTargetPosition(Math.max(Math.min((int) ((yawPosition + ((limelight.getYaw() * 2.75) / 100)) * ticksPerRev), ticksLimit), -ticksLimit));
-        yawAdjuster.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        yawAdjuster.setVelocity(2800);
+    public void runYawAdjuster(Boolean run) {
+        if (run) {
+            yawPosition = yawAdjuster.getCurrentPosition();
+            yawAdjuster.setTargetPosition(Math.max(Math.min((int) ((yawPosition + ((limelight.getYaw() * 2.75) / 100)) * ticksPerRev), ticksLimit), -ticksLimit));
+            yawAdjuster.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            yawAdjuster.setVelocity(2800);
+        }
     }
 
     @Override
     public void run(Boolean isRunning) {
         if (isRunning) {
             flywheel.run(isRunning);
-            runHoodAdjuster();
-            runYawAdjuster();
+            runHoodAdjuster(true);
+            runYawAdjuster(true);
         } else {
             stop();
         }
@@ -64,7 +68,9 @@ public class AdjustableOuttake extends RunModule<Boolean> {
 
     @Override
     public void stop() {
-
+        flywheel.stop();
+        runHoodAdjuster(false);
+        runYawAdjuster(false);
     }
     @Override
     public void postTelemetry(Telemetry telemetry) {

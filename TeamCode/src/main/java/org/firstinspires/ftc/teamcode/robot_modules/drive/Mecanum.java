@@ -14,7 +14,7 @@ public class Mecanum extends Drive<Gamepad> {
         back_left = hardwareMap.get(DcMotor.class, backLeft);
 
         front_right.setDirection(DcMotor.Direction.FORWARD);
-        back_right.setDirection(DcMotor.Direction.REVERSE);
+        back_right.setDirection(DcMotor.Direction.FORWARD);
         front_left.setDirection(DcMotor.Direction.FORWARD);
         back_left.setDirection(DcMotor.Direction.REVERSE);
 

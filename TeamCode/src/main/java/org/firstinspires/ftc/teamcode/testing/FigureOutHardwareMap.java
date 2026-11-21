@@ -36,7 +36,9 @@ public class FigureOutHardwareMap extends LinearOpMode {
             motorIndex = indexBounds(motorIndex, motors.length);
             servoIndex = indexBounds(servoIndex, servos.length);
             if(gamepad1.a){
-                motors[motorIndex].setPower(0.1);
+                motors[motorIndex].setPower(1.0);
+            } else if(gamepad1.b) {
+                motors[motorIndex].setPower(-1.0);
             } else{
                 motors[motorIndex].setPower(0);
             }
@@ -44,7 +46,7 @@ public class FigureOutHardwareMap extends LinearOpMode {
                 servos[servoIndex].setPosition(0);
             }
             if(gamepad2.b){
-                servos[servoIndex].setPosition(0.1);
+                servos[servoIndex].setPosition(1.0);
             }
             telemetry.addData("Motor Index", motorIndex);
             telemetry.addData("Servo Index", servoIndex);

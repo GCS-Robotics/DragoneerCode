@@ -15,8 +15,8 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
     Servo gapAdjuster;
     DcMotorEx yawAdjuster;
     Flywheel flywheel;
-    int ticksPerRev = 1425;
-    double yawPosition = 0;
+    final int TICKS_PER_REV = 1425;
+    int yawPosition = 0;
     double hoodPose = 0;
     private double[] pidf = new double[]{0.003, 0.123, 0, 0};
     private final double HOOD_ADJUST = 0.1;
@@ -25,11 +25,8 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
     double gapPose;
     private boolean isSpinning = false;
 
-    Limelight limelight;
-
     public AdjustableOuttakeManual(HardwareMap hardwareMap, String fName, String hName, String gName, String yName, String lName) {
         flywheel = new Flywheel(hardwareMap, fName);
-        limelight = new Limelight(hardwareMap, lName);
         hoodAdjuster = hardwareMap.get(Servo.class, hName);
         gapAdjuster = hardwareMap.get(Servo.class, gName);
         yawAdjuster = hardwareMap.get(DcMotorEx.class, yName);
@@ -42,7 +39,6 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
         if (gamepad.bWasReleased()) {
             hoodPose -= HOOD_ADJUST;
         }
-        hoodPose = limelight.getAngleDegrees(0, 100)/100;
         hoodAdjuster.setPosition(hoodPose);
     }
 
@@ -57,12 +53,12 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
 
     public void runYawAdjuster(Gamepad gamepad) {
         if (gamepad.dpadLeftWasPressed()) {
-            yawAdjuster.setTargetPosition((int) (yawPosition + ((limelight.getYaw() * 2.75) / 100)) * ticksPerRev);
-            yawPosition = yawAdjuster.getCurrentPosition();
-        } else {
-            yawAdjuster.setTargetPosition((int) (gamepad.left_stick_x * 2.75) * ticksPerRev);
-            yawPosition = yawAdjuster.getCurrentPosition();
+            yawPosition += TICKS_PER_REV / 20;
         }
+        if (gamepad.dpadRightWasPressed()){
+            yawPosition -= TICKS_PER_REV / 20;
+        }
+        yawAdjuster.setTargetPosition(yawPosition);
         yawAdjuster.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         yawAdjuster.setVelocity(2800);
     }
@@ -80,7 +76,7 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
 
     @Override
     public void stop() {
-
+        yawAdjuster.setPower(0);
     }
     @Override
     public void postTelemetry(Telemetry telemetry) {
@@ -88,5 +84,6 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
         telemetry.addData("Flywheel Target Power", flywheel.getTargetRPM());
         telemetry.addData("Hood Position", hoodPose);
         telemetry.addData("Gap Postition", gapPose);
+        telemetry.addData("Yaw Position", yawPosition);
     }
 }

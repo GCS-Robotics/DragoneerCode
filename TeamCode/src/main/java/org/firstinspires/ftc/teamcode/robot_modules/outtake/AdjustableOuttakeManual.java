@@ -19,8 +19,6 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
     double yawPosition = 0;
     double hoodPose = 0;
     private double[] pidf = new double[]{0.003, 0.123, 0, 0};
-    private final double MAX_HOOD = 1;
-    private final double MIN_HOOD = 0;
     private final double HOOD_ADJUST = 0.1;
     private final double POLLEN_GAP = 0;
     private final double NECTAR_GAP = 1;
@@ -71,7 +69,7 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
 
     @Override
     public void run(Gamepad gamepad) {
-        if(gamepad.xWasPressed()){
+        if(gamepad.rightBumperWasPressed()){
             isSpinning = !isSpinning;
         }
         flywheel.run(isSpinning);

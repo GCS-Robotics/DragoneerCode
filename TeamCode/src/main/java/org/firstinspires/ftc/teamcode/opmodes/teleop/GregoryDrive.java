@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robot_modules.Intake;
 import org.firstinspires.ftc.teamcode.robot_modules.Module;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttakeMan
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.Flywheel;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 
+@TeleOp (name = "gregDrive")
 public class GregoryDrive extends OpMode {
     public RunModule drive, intake, deployableRamp, adjustableOuttake, motorTransition;
     private Module[] modules;

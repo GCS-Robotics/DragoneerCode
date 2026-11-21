@@ -44,7 +44,7 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
         if (gamepad.bWasReleased()) {
             hoodPose -= HOOD_ADJUST;
         }
-        hoodPose = Math.min(Math.max(hoodPose, MIN_HOOD), MAX_HOOD);
+        hoodPose = limelight.getAngleDegrees(0, 100)/100;
         hoodAdjuster.setPosition(hoodPose);
     }
 

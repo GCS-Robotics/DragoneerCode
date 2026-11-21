@@ -40,7 +40,7 @@ public class AdjustableOuttake extends RunModule<Boolean> {
     }
     public void runHoodAdjuster(Boolean run) {
         if (run) {
-            hoodPose = limelight.getAngleDegrees(23, 45)/100;
+            hoodPose = limelight.getAngleDegrees(0, 100)/100;
             hoodAdjuster.setPosition(hoodPose);
         }
     }

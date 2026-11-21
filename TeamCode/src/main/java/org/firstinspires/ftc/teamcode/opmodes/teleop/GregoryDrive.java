@@ -11,10 +11,11 @@ import org.firstinspires.ftc.teamcode.robot_modules.flowers.DeployableRamp;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttakeManual;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.Flywheel;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
+import org.firstinspires.ftc.teamcode.robot_modules.transition.ServoTransition;
 
 @TeleOp (name = "gregDrive")
 public class GregoryDrive extends OpMode {
-    public RunModule drive, intake, deployableRamp, adjustableOuttake, motorTransition;
+    public RunModule drive, intake, deployableRamp, adjustableOuttake, motorTransition, servoTransition;
     private Module[] modules;
     private final double TRIGGER_THRESHOLD = 0.62;
 
@@ -26,7 +27,8 @@ public class GregoryDrive extends OpMode {
         deployableRamp = new DeployableRamp(hardwareMap, "ramp");
         adjustableOuttake = new AdjustableOuttakeManual(hardwareMap, "flywheel", "hood", "gap", "yaw", "limelight");
         motorTransition = new MotorTransition(hardwareMap, "transitionMotor");
-        modules = new Module[]{drive, intake, deployableRamp, adjustableOuttake, motorTransition};
+        servoTransition = new ServoTransition(hardwareMap, "transitionServo");
+        modules = new Module[]{drive, intake, deployableRamp, adjustableOuttake, motorTransition, servoTransition};
     }
 
     @Override
@@ -36,6 +38,7 @@ public class GregoryDrive extends OpMode {
         deployableRamp.run(gamepad2.right_trigger > TRIGGER_THRESHOLD);
         adjustableOuttake.run(gamepad2);
         motorTransition.run(new Boolean[]{gamepad2.x, gamepad2.y});
+        servoTransition.run(new Boolean[]{gamepad2.x, gamepad2.y});
         Module.postTelemetries(modules, telemetry);
     }
 

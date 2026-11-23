@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robot_modules.outtake;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,6 +15,7 @@ public class AdjustableOuttake extends RunModule<Boolean> {
     Servo gapAdjuster;
     DcMotorEx yawAdjuster;
     Flywheel flywheel;
+    Gamepad gamepad2;
     double yawPosition = 0;
     double hoodPose = 0;
     int ticksPerRev = 1425;
@@ -43,6 +45,15 @@ public class AdjustableOuttake extends RunModule<Boolean> {
         }
     }
 
+    public void runGapAdjuster(Boolean nectar) {
+        if (nectar) {
+            gapAdjuster.setPosition(0);
+        } else {
+            gapAdjuster.setPosition(1);
+        }
+    }
+
+
     public void runYawAdjuster(Boolean run) {
         if (run) {
             yawPosition = yawAdjuster.getCurrentPosition();
@@ -58,6 +69,7 @@ public class AdjustableOuttake extends RunModule<Boolean> {
             flywheel.run(isRunning);
             runHoodAdjuster(true);
             runYawAdjuster(true);
+            runGapAdjuster(gamepad2.dpadLeftWasPressed());
         } else {
             stop();
         }

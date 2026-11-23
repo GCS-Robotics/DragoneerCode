@@ -19,7 +19,7 @@ public class Limelight extends Module<Boolean> {
     boolean hasTarget;
     final double GOAL_HEIGHT = 1.3716;
     final double CAMERA_HEIGHT = 0.3302;
-    final double MOUNTING_ANGLE = 0;
+    final double MOUNTING_ANGLE = 45;
     final double G = 9.81;
     public Limelight(HardwareMap hardwareMap, String name) {
         limelight = hardwareMap.get(Limelight3A.class, name);

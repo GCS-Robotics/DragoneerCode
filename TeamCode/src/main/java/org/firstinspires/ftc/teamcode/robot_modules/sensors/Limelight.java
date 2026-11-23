@@ -34,7 +34,7 @@ public class Limelight extends Module<Boolean> {
         tagResult = limelight.getLatestResult();
     }
     private double getDistance(){
-        ty = tagResult.getTy();
+        ty = -tagResult.getTy();
         distanceFloor = (GOAL_HEIGHT - CAMERA_HEIGHT) / Math.tan(MOUNTING_ANGLE + Math.toRadians(ty));
         distance = Math.sqrt(Math.pow(distanceFloor, 2) + Math.pow(GOAL_HEIGHT - CAMERA_HEIGHT, 2));
         return distance;

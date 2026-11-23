@@ -19,7 +19,6 @@ public class AdjustableOuttake extends RunModule<Boolean> {
     int ticksPerRev = 1425;
 
     int ticksLimit = 1069;
-    private final double HOOD_ADJUST = 0.1;
     private final double POLLEN_GAP = 0;
     private final double NECTAR_GAP = 1;
     double gapPose;

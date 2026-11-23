@@ -10,12 +10,14 @@ import org.firstinspires.ftc.teamcode.robot_modules.drive.Mecanum;
 import org.firstinspires.ftc.teamcode.robot_modules.flowers.DeployableRamp;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.AdjustableOuttakeManual;
 import org.firstinspires.ftc.teamcode.robot_modules.outtake.Flywheel;
+import org.firstinspires.ftc.teamcode.robot_modules.sensors.LimelightModule;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.MotorTransition;
 import org.firstinspires.ftc.teamcode.robot_modules.transition.ServoTransition;
 
 @TeleOp (name = "gregDrive")
 public class GregoryDrive extends OpMode {
-    public RunModule drive, intake, deployableRamp, adjustableOuttake, motorTransition, servoTransition;
+    public RunModule drive, intake, deployableRamp, adjustableOuttake, motorTransition;
+    public Module limelight;
     private Module[] modules;
     private final double TRIGGER_THRESHOLD = 0.62;
 
@@ -27,18 +29,20 @@ public class GregoryDrive extends OpMode {
         deployableRamp = new DeployableRamp(hardwareMap, "ramp");
         adjustableOuttake = new AdjustableOuttakeManual(hardwareMap, "flywheel", "hood", "gap", "yaw", "limelight");
         motorTransition = new MotorTransition(hardwareMap, "transitionMotor");
-        servoTransition = new ServoTransition(hardwareMap, "transitionServo");
-        modules = new Module[]{drive, intake, deployableRamp, adjustableOuttake, motorTransition, servoTransition};
+        limelight = new LimelightModule(hardwareMap, "limelight");
+        //servoTransition = new ServoTransition(hardwareMap, "transitionServo");
+        modules = new Module[]{drive, intake, deployableRamp, adjustableOuttake, motorTransition, limelight};
     }
 
     @Override
     public void loop() {
         drive.run(gamepad1);
+        ((LimelightModule)limelight).aprilTag();
         intake.run(gamepad2.left_trigger > TRIGGER_THRESHOLD);
         deployableRamp.run(gamepad2.right_trigger > TRIGGER_THRESHOLD);
         adjustableOuttake.run(gamepad2);
         motorTransition.run(new Boolean[]{gamepad2.x, gamepad2.y});
-        servoTransition.run(new Boolean[]{gamepad2.x, gamepad2.y});
+        //servoTransition.run(new Boolean[]{gamepad2.x, gamepad2.y});
         Module.postTelemetries(modules, telemetry);
     }
 

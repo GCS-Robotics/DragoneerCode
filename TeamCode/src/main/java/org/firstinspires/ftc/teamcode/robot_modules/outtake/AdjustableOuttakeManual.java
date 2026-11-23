@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
-import org.firstinspires.ftc.teamcode.robot_modules.sensors.Limelight;
 
 public class AdjustableOuttakeManual extends RunModule<Gamepad> {
     Servo hoodAdjuster;

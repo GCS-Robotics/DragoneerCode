@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robot_modules.Module;
-import org.firstinspires.ftc.teamcode.robot_modules.sensors.Limelight;
-import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
+import org.firstinspires.ftc.teamcode.robot_modules.sensors.LimelightModule;
 
 @TeleOp(name = "LimelighttestMode", group = "Drive")
 public class LimelightTestMode extends OpMode {
@@ -15,7 +14,7 @@ public class LimelightTestMode extends OpMode {
     private Module[] modules;
     @Override
     public void init(){
-        limelight = new Limelight(hardwareMap, "limelight");
+        limelight = new LimelightModule(hardwareMap, "limelight");
         modules = new Module[]{limelight};
     }
     @Override

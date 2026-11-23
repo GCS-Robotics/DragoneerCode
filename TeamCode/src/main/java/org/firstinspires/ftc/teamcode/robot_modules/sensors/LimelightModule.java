@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot_modules.Module;
 
-public class Limelight extends Module<Boolean> {
+public class LimelightModule extends Module<Boolean> {
     Limelight3A limelight;
     private LLResult ballResult;
     private LLResult tagResult;
@@ -21,7 +21,7 @@ public class Limelight extends Module<Boolean> {
     final double CAMERA_HEIGHT = 0.3302;
     final double MOUNTING_ANGLE = 45;
     final double G = 9.81;
-    public Limelight(HardwareMap hardwareMap, String name) {
+    public LimelightModule(HardwareMap hardwareMap, String name) {
         limelight = hardwareMap.get(Limelight3A.class, name);
         limelight.pipelineSwitch(APRILTAG_PIPELINE);
         limelight.start();

@@ -2,13 +2,12 @@ package org.firstinspires.ftc.teamcode.robot_modules.outtake;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot_modules.RunModule;
-import org.firstinspires.ftc.teamcode.robot_modules.sensors.Limelight;
+import org.firstinspires.ftc.teamcode.robot_modules.sensors.LimelightModule;
 
 public class AdjustableOuttake extends RunModule<Boolean> {
     Servo hoodAdjuster;
@@ -26,11 +25,11 @@ public class AdjustableOuttake extends RunModule<Boolean> {
     double gapPose;
     private boolean isSpinning = false;
 
-    Limelight limelight;
+    LimelightModule limelight;
     private double[] pidf = new double[]{0.003, 0.123, 0, 0};
     public AdjustableOuttake(HardwareMap hardwareMap, String fName, String hName, String gName, String yName, String lName) {
         flywheel = new Flywheel(hardwareMap, fName);
-        limelight = new Limelight(hardwareMap, lName);
+        limelight = new LimelightModule(hardwareMap, lName);
         hoodAdjuster = hardwareMap.get(Servo.class, hName);
         gapAdjuster = hardwareMap.get(Servo.class, gName);
         yawAdjuster = hardwareMap.get(DcMotorEx.class, yName);
@@ -63,7 +62,7 @@ public class AdjustableOuttake extends RunModule<Boolean> {
         } else {
             stop();
         }
-
+        limelight.aprilTag();
     }
 
     @Override

@@ -21,8 +21,8 @@ public class PedroMecanum extends Drive<Gamepad> {
     public void run(Gamepad gamepad) {
         DrivePowers powers = ManualDrive.fieldCentric(
                 -gamepad.left_stick_y,
-                gamepad.left_stick_x,
-                gamepad.right_stick_x,
+                -gamepad.left_stick_x,
+                -gamepad.right_stick_x,
                 follower.pose().heading()
         );
         ManualDrive.driveOrHold(follower, powers);

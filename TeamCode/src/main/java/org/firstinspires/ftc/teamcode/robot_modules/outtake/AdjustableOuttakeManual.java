@@ -23,6 +23,11 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
     private final double NECTAR_GAP = 1;
     double gapPose;
     private boolean isSpinning = false;
+    private final double FLYWHEEL_ADJUST_SPEED = 100; // RPM per second
+    private final double STICK_DEADZONE = 0.1;
+    private int minRPM = 1000;
+    private int maxRPM = 5000;
+    private long lastUpdateTime = 0;
 
     public AdjustableOuttakeManual(HardwareMap hardwareMap, String fName, String hName, String gName, String yName, String lName) {
         flywheel = new Flywheel(hardwareMap, fName);
@@ -62,6 +67,27 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
         yawAdjuster.setVelocity(2800);
     }
 
+    public void runFlywheelAdjuster(Gamepad gamepad) {
+        double stickY = -gamepad.left_stick_y;
+
+        if (Math.abs(stickY) < STICK_DEADZONE) {
+            return;
+        }
+
+        long currentTime = System.currentTimeMillis();
+        double deltaTime = (currentTime - lastUpdateTime) / 1000.0;
+        lastUpdateTime = currentTime;
+
+        int currentRPM = flywheel.getTargetRPM();
+
+        int newRPM = (int) (currentRPM +
+                stickY * FLYWHEEL_ADJUST_SPEED * deltaTime);
+
+        newRPM = Math.max(minRPM, Math.min(maxRPM, newRPM));
+
+        flywheel.setTargetRPM(newRPM);
+    }
+
     @Override
     public void run(Gamepad gamepad) {
         if(gamepad.rightBumperWasPressed()){
@@ -71,6 +97,7 @@ public class AdjustableOuttakeManual extends RunModule<Gamepad> {
         runHoodAdjuster(gamepad);
         runGapAdjuster(gamepad);
         runYawAdjuster(gamepad);
+        runFlywheelAdjuster(gamepad);
     }
 
     @Override
